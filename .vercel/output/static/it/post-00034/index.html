@@ -1,0 +1,285 @@
+<!DOCTYPE html><html lang="en"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><meta name="generator" content="Astro v5.18.2"><!-- Font preloads --><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin><!-- Canonical URL --><link rel="canonical" href="http://www.cassettas-reboot.xyz/it/post-00034/"><!-- Primary Meta Tags --><title>Gezellig | The Cassetta&#39;s Reboot</title><meta name="title" content="Gezellig | The Cassetta's Reboot"><meta name="description" content="Pedalata verso la spiaggia e fantasticherie varie"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="http://www.cassettas-reboot.xyz/it/post-00034/"><meta property="og:title" content="Gezellig | The Cassetta's Reboot"><meta property="og:description" content="Pedalata verso la spiaggia e fantasticherie varie"><meta property="og:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="http://www.cassettas-reboot.xyz/it/post-00034/"><meta property="twitter:title" content="Gezellig | The Cassetta's Reboot"><meta property="twitter:description" content="Pedalata verso la spiaggia e fantasticherie varie"><meta property="twitter:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- PageFind --><link href="/pagefind/pagefind-ui.css" rel="stylesheet"><script src="/pagefind/pagefind-ui.js">
+	import { Image, Picture } from "astro:assets";
+	import { Code, Debug } from "astro:components";
+</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><script>
+	function init() {
+		preloadTheme();
+		onScroll();
+		animate();
+		updateThemeButtons();
+		addCopyCodeButtons();
+		setGiscusTheme();
+
+		const backToTop = document.getElementById("back-to-top");
+		backToTop?.addEventListener("click", (event) => scrollToTop(event));
+
+		const backToPrev = document.getElementById("back-to-prev");
+		backToPrev?.addEventListener("click", () => window.history.back());
+
+		const lightThemeButton = document.getElementById("light-theme-button");
+		lightThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "light");
+			toggleTheme(false);
+			updateThemeButtons();
+		});
+
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		darkThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "dark");
+			toggleTheme(true);
+			updateThemeButtons();
+		});
+
+		const systemThemeButton = document.getElementById("system-theme-button");
+		systemThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "system");
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+			updateThemeButtons();
+		});
+
+		window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+			if (localStorage.theme === "system") {
+				toggleTheme(event.matches);
+			}
+		});
+
+		document.addEventListener("scroll", onScroll);
+	}
+
+	function updateThemeButtons() {
+		const theme = localStorage.getItem("theme");
+		const lightThemeButton = document.getElementById("light-theme-button");
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		const systemThemeButton = document.getElementById("system-theme-button");
+
+		function removeActiveButtonTheme(button) {
+			button?.classList.remove("bg-black/5");
+			button?.classList.remove("dark:bg-white/5");
+		}
+
+		function addActiveButtonTheme(button) {
+			button?.classList.add("bg-black/5");
+			button?.classList.add("dark:bg-white/5");
+		}
+
+		removeActiveButtonTheme(lightThemeButton);
+		removeActiveButtonTheme(darkThemeButton);
+		removeActiveButtonTheme(systemThemeButton);
+
+		if (theme === "light") {
+			addActiveButtonTheme(lightThemeButton);
+		} else if (theme === "dark") {
+			addActiveButtonTheme(darkThemeButton);
+		} else {
+			addActiveButtonTheme(systemThemeButton);
+		}
+	}
+
+	function animate() {
+		const animateElements = document.querySelectorAll(".animate");
+
+		animateElements.forEach((element, index) => {
+			setTimeout(() => {
+				element.classList.add("show");
+			}, index * 100);
+		});
+	}
+
+	function onScroll() {
+		if (window.scrollY > 0) {
+			document.documentElement.classList.add("scrolled");
+		} else {
+			document.documentElement.classList.remove("scrolled");
+		}
+	}
+
+	function scrollToTop(event) {
+		event.preventDefault();
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	}
+
+	function toggleTheme(dark) {
+		const css = document.createElement("style");
+
+		css.appendChild(
+			document.createTextNode(
+				`* {
+             -webkit-transition: none !important;
+             -moz-transition: none !important;
+             -o-transition: none !important;
+             -ms-transition: none !important;
+             transition: none !important;
+          }
+        `,
+			),
+		);
+
+		document.head.appendChild(css);
+
+		if (dark) {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+
+		window.getComputedStyle(css).opacity;
+		document.head.removeChild(css);
+
+		setGiscusTheme();
+	}
+
+	function preloadTheme() {
+		const userTheme = localStorage.theme;
+
+		if (userTheme === "light" || userTheme === "dark") {
+			toggleTheme(userTheme === "dark");
+		} else {
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+		}
+	}
+
+	function addCopyCodeButtons() {
+		let copyButtonLabel = "📋";
+		let codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+		async function copyCode(codeBlock, copyButton) {
+			const codeText = codeBlock.innerText;
+			const buttonText = copyButton.innerText;
+			const textToCopy = codeText.replace(buttonText, "");
+
+			await navigator.clipboard.writeText(textToCopy);
+			copyButton.innerText = "✅";
+
+			setTimeout(() => {
+				copyButton.innerText = copyButtonLabel;
+			}, 2000);
+		}
+
+		for (let codeBlock of codeBlocks) {
+			const wrapper = document.createElement("div");
+			wrapper.style.position = "relative";
+
+			const copyButton = document.createElement("button");
+			copyButton.innerText = copyButtonLabel;
+			copyButton.classList = "copy-code";
+
+			codeBlock.setAttribute("tabindex", "0");
+			codeBlock.appendChild(copyButton);
+
+			codeBlock.parentNode.insertBefore(wrapper, codeBlock);
+			wrapper.appendChild(codeBlock);
+
+			copyButton?.addEventListener("click", async () => {
+				await copyCode(codeBlock, copyButton);
+			});
+		}
+	}
+
+	const setGiscusTheme = () => {
+		const giscus = document.querySelector(".giscus-frame");
+
+		const isDark = document.documentElement.classList.contains("dark");
+
+		if (giscus) {
+			const url = new URL(giscus.src);
+			url.searchParams.set("theme", isDark ? "dark" : "light");
+			giscus.src = url.toString();
+		}
+	};
+
+	document.addEventListener("DOMContentLoaded", () => init());
+	document.addEventListener("astro:after-swap", () => init());
+	preloadTheme();
+</script><link rel="stylesheet" href="/_astro/users.Cdr_gJz1.css"></head> <body> <header> <div class="mx-auto max-w-screen-sm px-3"> <div class="flex flex-wrap justify-between gap-y-2"> <a href="/it" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out">  <div class="text-2xl font-semibold"> The Cassetta&#39;s Reboot </div>  </a> <nav class="flex items-center gap-5 text-sm"> <a href="/it/blog" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out underline underline-offset-[3px]"> blog </a> <a href="/en/post-00034/" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out"> English </a> <button id="magnifying-glass" aria-label="Search" class="flex items-center rounded border border-black/15 bg-neutral-100 px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:bg-neutral-900 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 7C3.5 5.067 5.067 3.5 7 3.5C8.933 3.5 10.5 5.067 10.5 7C10.5 7.88461 10.1718 8.69256 9.63058 9.30876L9.30876 9.63058C8.69256 10.1718 7.88461 10.5 7 10.5C5.067 10.5 3.5 8.933 3.5 7ZM9.96544 11.0261C9.13578 11.6382 8.11014 12 7 12C4.23858 12 2 9.76142 2 7C2 4.23858 4.23858 2 7 2C9.76142 2 12 4.23858 12 7C12 8.11014 11.6382 9.13578 11.0261 9.96544L14.0303 12.9697L14.5607 13.5L13.5 14.5607L12.9697 14.0303L9.96544 11.0261Z" fill="currentColor"></path></svg>
+&nbsp;Search
+</button> </nav> </div> </div> </header> <main>  <div class="mx-auto max-w-screen-sm px-3"> <div class="animate"> <a href="/it/blog" class="not-prose group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-7 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm"> Back to blog </div> </a> </div> <div class="my-10 space-y-1"> <div class="animate flex items-center gap-1.5"> <div class="font-base text-sm"> <time datetime="2024-09-30T00:00:00.000Z"> September 30, 2024 </time> </div>
+&bull;
+<div class="font-base text-sm"> 7 min read </div> </div> <h1 class="animate text-3xl font-semibold text-black dark:text-white"> Gezellig </h1> </div> <article class="animate"> <p><img alt="Surfisti si aggirano in ambiente urbano" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-1.Ds7SPN-e_1Wx4jT.webp" >
+<em>Sul lungomare a Scheveningen</em></p>
+<p>Ieri siamo andati a Scheveningen in bicicletta, tutti e quattro, c’era il sole ma faceva un freddo frizzante. C’e’ una pista ciclabile che corre lungo la costa e da Katwijk, vicino a Leiden, si arriva all’Aja, passando appunto per Scheveningen. E’ un percorso bellissimo tra dune di sabbia, arbusti e conifere. C’era un sacco di gente in bici e di corsa. Il cielo era limpido, il sole luminosissimo ma per niente caldo.
+A Scheveningen c’erano diversi surfisti che si dirigevano verso la spiaggia, le onde non erano enormi ma regolari e lunghe, perfette per imparare. Ne abbiamo visti arrivare due in bicicletta, con la muta addosso, scalzi, e la tavola sotto braccio. Che contrasto!<br>
+L’idea di fare questa uscita e’ venuta a Hilly dopo aver fatto lo stesso percorso, 35 km tra andata e ritorno, Lunedì scorso.<br>
+Era andata ad un colloquio di lavoro per fare la rappresentante di vini per un azienda agricola Sudafricana. Al colloquio c’erano un Italiano e un Sudafricano, entrambi proprietari di diverse attività legate al vino e alla ristorazione. Tra tutti i curricula che hanno ricevuto hanno preso in considerazione solo quello di Hilly e quello di un altro candidato. Il colloquio è andato bene, e sono rimasti d’accordo che le faranno una proposta al ritorno di uno dei due, non ricordo se l’italiano o il sudafricano, dalle vacanze. Probabilmente la proposta andrebbe nella direzione del lavoro con commissioni piuttosto che verso l’assunzione con stipendio fisso, cosa che per noi al momento non andrebbe bene. Per questo Hilly ha deciso di rifiutare l’offerta, qualsiasi essa sia.<br>
+Nel frattempo pero’ ha fatto altri due colloqui per Johnson&#x26;Johnson e verra’ assunta da loro. Non ha ancora firmato un contratto ma le e’ stato detto che lo fara’ nei prossimi giorni.<br>
+Il lavoro sarebbe quello a turni di cui ho già parlato in un post precedente. L’ambiente di lavoro le e’ sembrato all’apparenza positivo, stimolante e internazionale. Il lavoro si svolge tutto in inglese e iniziera’ nel reparto di “inscatolamento delle protesi per seno” con la possibilita’ di scalare in poco tempo a livelli piu’ alti.<br>
+La notizia della futura assunzione di Hilly per J&#x26;J e’ arrivata Venerdì, lo stesso giorno in cui io ho fatto una giornata di lavoro in un negozio di bici a Zeist, la cittadina attaccata a Utrecht dove vado ogni giorno per il corso di Bici. Il negozio si chiama “Fietsvakman” (Fiets vuole dire bicicletta in Olandese) e collabora con Maintec (dove faccio il corso) per far fare pratica agli apprendisti. Il proprietario di Fietsvakman e’ Roger, un salvadoregno/canadese che vive da 25 anni in Olanda, sposato con una donna Olandese, e con un figlio di 17 anni. Roger ha fatto diversi lavori in Olanda e poi per passione, nel 2017, ha aperto un negozio di bici. Il suo unico collega è Jost, un Olandese che lavora con lui fin dall’inizio.<br>
+Mi hanno fatto vedere come funziona il negozio nei minimi dettagli. Durante la giornata sono arrivati decine di clienti. In pratica quando il cliente arriva di solito porta una bicicletta, a meno che ne voglia comprare una nuova oppure voglia rifornirsi di parti o materiali. Durante la presa in carico della bicicletta bisogna molto rapidamente fare un’analisi visiva della bici in modo che se ci sono altri problemi, oltre a quelli elencati dal cliente, possono essere discussi subito.<br>
+In tutta la giornata ho messo a posto diverse bici, ognuna con i suoi problemi, più o meno facili da risolvere. Lavorare con Jost e Roger e’ stato molto divertente. Roger e’ un buontempone e scherza in continuazione. Le postazioni di lavoro erano abbastanza incasinate, tutta un’altra storia rispetto alla scuola di bici. Mi sono dovuto ricavare uno spazietto dove appoggiare i miei attrezzi e i pezzi che smontavo, tra una montagna di altri attrezzi, pezzi di ricambio usati, pezzi rotti, contenitori di grasso mezzi vuoti, camere d’aria bucate, packaging vari e spazzatura. Un delirio assurdo in cui Roger e Jost probabilmente vedevano un certo criterio ma neanche poi tanto visto che passavano un sacco di tempo a cercare la chiave del 15 oppure lo smaglia catene. La scusante è che stanno allestendo un nuovo negozio, nella stessa via di questo, ma grande il doppio e si devono trasferire prima di Natale. La giornata e’ stata estremamente stimolante e non vedo l’ora di iniziare a lavorare per un negozio, dove non transigero’ assolutamente sull’ordine e la pulizia della postazione di lavoro.</p>
+<p>La particolare congiunzione astrale per cui Venerdi, il lavoro di Hilly, ma anche il mio, si concretizzavano maggiormente, in concomitanza con il fatto che Sophia e Gemma avevano organizzato una serata a casa nostra con amici, e la loro gentile richiesta di allontanarci per qualche ora, hanno posto le basi per un’uscita straordinaria mia e di Hilly, in un bellissimo bar sui canali nel centro di Leiden, e la conseguente rottura del patto di astinenza alcolica che portavo avanti da quasi 9 mesi. Come me la sono goduta quella birra! Cin cin!<br>
+Durante la cena, circondati da decine di studenti, mentre io mi gustavo una birra artigianale locale e Hilly un bicchiere di Primitivo, abbiamo fantasticato sull’idea di aprire una ciclofficina, annessa ad una caffetteria, a Leiden, creando un ambiente dove portare la propria bici per la manutenzione e gustarsi una fetta di torta oppure un piatto di lasagne come si deve. L’idea ha fatto brillare esageratamente gli occhi di Hilly e ci siamo persi in fantasticherie e brainstorming sull’arredamento degli interni e sul possibile menu’. Chissa’, forse fra un paio d’anni, una nuova avventura?</p>
+<p>Sophia e Gemma sono sempre piu’ contente della nuova situazione. Gemma e’ sbocciata. Non l’ho mai confrontata sul fatto che giurava che non si sarebbe mai adattata all’Olanda, mentre io le dicevo il contrario. Testarda com’e’ per non darmela vinta si inventerebbe qualsiasi cosa, ma uno di questi giorni glielo dico.<br>
+Venerdì sera scorso sono andate con gli amici a fare un picnic ad un lago vicinissimo a casa nostra, a meno di 5 minuti di bici. Sono rimasti lì fino al tramonto.<br>
+Dietro casa nostra ci sono dei bellissimi canali lungo i quali vado a correre e, all’imbrunire, quando nei piccoli giardini si accendono le luci e’ tutto molto “gezellig”, parola Olandese che non si puo’ tradurre precisamente in inglese, se non con “cozy” che a sua volta e’ una parola inglese che in Italiano non ha un equivalente e significa un misto tra accogliente e intimo.</p>
+<p><img alt="Sophia in bicicletta" loading="lazy" decoding="async" fetchpriority="auto" width="900" height="1200" src="/_astro/pic-2.BuD9tZIM_21U27m.webp" >
+<em>Verso Scheveningen</em></p>
+<p><img alt="Negozio di biciclette visto da fuori" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-3.BRp7AhEX_ZjKYiN.webp" >
+<em>Il negozio di bici di Roger</em></p>
+<p><img alt="Cristian beve una birra" loading="lazy" decoding="async" fetchpriority="auto" width="901" height="1200" src="/_astro/pic-4.D3r0FveU_Z1iopTe.webp" >
+<em>Salute a tutti, me la sono proprio goduta</em></p>
+<p><img alt="Case e salice sul canale" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-5.DMeWsZc2_oHJ0u.webp" >
+<em>I canali dietro casa</em></p>
+<p><img alt="Canali all&amp;#x27;imbrunire" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-6.D15CH8Rg_2v3wf9.webp" >
+<em>Gezellig!</em></p>
+<p><img alt="Un ragazzo porta sulle spalle un altro ragazzo al tramonto" loading="lazy" decoding="async" fetchpriority="auto" width="900" height="1200" src="/_astro/pic-7.CfRgJxjV_1R3PLs.webp" >
+<em>Photo fatta da Sophia al lago</em></p>
+<p><img alt="Sotto un ponte e fuori c&amp;#x27;e&amp;#x27; l&amp;#x27;arcobaleno" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="900" src="/_astro/pic-8.BuHdwj3T_1eypP8.webp" >
+<em>Qualche giorno fa Sophia si e’ rintanata sotto ad un ponte a fianco alla sua scuola, con dei compagni, per evitare la pioggia</em></p> <div class="mt-24"> <div class="grid grid-cols-2 gap-1.5 sm:gap-3"> <a href="/it/post-00033" class="group relative flex flex-nowrap rounded-lg border border-black/15 px-4 py-3 pl-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">Cullati dalla routine</div> </a> <a href="/it/post-00035" class="group relative flex flex-grow flex-row-reverse flex-nowrap rounded-lg border border-black/15 px-4 py-4 pr-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="-translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">Grandi celebrazioni a Leiden</div> </a> </div> </div> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="Z1hpATj" prefix="r1" component-url="/_astro/CommentsSection.B3TSinQT.js" component-export="default" renderer-url="/_astro/client.Fd5LK8aS.js" props="{&quot;postId&quot;:[0,&quot;post-00034&quot;],&quot;lang&quot;:[0,&quot;it&quot;]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="not-prose mt-16 space-y-6"><h2 class="text-xl font-semibold text-black dark:text-white">Commenti</h2><p class="text-sm text-black/60 dark:text-white/60">Caricamento commenti…</p></section><!--astro:end--></astro-island> </article> </div>  </main> <footer class="animate"> <div class="mx-auto max-w-screen-sm px-3"> <div class="relative"> <div class="absolute -top-12 right-0"> <button id="back-to-top" class="group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-8 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 rotate-90 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm">Back to top</div> </button> </div> </div> <div class="flex items-center justify-between"> <div>&copy; 2026 • The Cassetta&#39;s Reboot</div> <div class="flex flex-wrap items-center gap-1.5"> <button id="light-theme-button" aria-label="Light theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </button> <button id="dark-theme-button" aria-label="Dark theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="system-theme-button" aria-label="System theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect> <line x1="8" y1="21" x2="16" y2="21"></line> <line x1="12" y1="17" x2="12" y2="21"></line> </svg> </button> </div> </div> </div> </footer> <div id="backdrop" class="bg-[rgba(0, 0, 0, 0.5] invisible fixed left-0 top-0 z-50 flex h-screen w-full justify-center p-6 backdrop-blur-sm"> <div id="pagefind-container" class="m-0 flex h-fit max-h-[80%] w-full max-w-screen-sm flex-col overflow-auto rounded border border-black/15 bg-neutral-100 p-2 px-4 py-3 shadow-lg dark:border-white/20 dark:bg-neutral-900"> <div id="search" class="pagefind-ui pagefind-init" data-pagefind-ui data-bundle-path="/pagefind/" data-ui-options="{&#34;showImages&#34;:false,&#34;excerptLength&#34;:15,&#34;resetStyles&#34;:false}"></div> <script type="module" src="/_astro/Search.astro_astro_type_script_index_0_lang.DExfVQkA.js"></script> <div class="mr-2 pb-1 pt-4 text-right text-xs dark:prose-invert">
+Press <span class="prose text-xs dark:prose-invert"><kbd class="">Esc</kbd></span> or click anywhere to close
+</div> </div> </div> <script>
+  const magnifyingGlass = document.getElementById("magnifying-glass");
+  const backdrop = document.getElementById("backdrop");
+
+  function openPagefind() {
+    const searchDiv = document.getElementById("search");
+    const search = searchDiv.querySelector("input");
+    setTimeout(() => {
+      search.focus();
+    }, 0);
+    backdrop?.classList.remove("invisible");
+    backdrop?.classList.add("visible");
+  }
+
+  function closePagefind() {
+    const search = document.getElementById("search");
+    search.value = "";
+    backdrop?.classList.remove("visible");
+    backdrop?.classList.add("invisible");
+  }
+
+  // open pagefind
+  magnifyingGlass?.addEventListener("click", () => {
+    openPagefind();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/") {
+      e.preventDefault();
+      openPagefind();
+    } else if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      openPagefind();
+    }
+  });
+
+  // close pagefind
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" || e.keyCode === 27) {
+      closePagefind();
+    }
+  });
+
+  backdrop?.addEventListener("click", (event) => {
+    if (!event.target.closest("#pagefind-container")) {
+      closePagefind();
+    }
+  });
+
+  // prevent form submission
+  const form = document.getElementById("form");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
+</script>  </body></html>

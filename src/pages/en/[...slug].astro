@@ -1,0 +1,69 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
+import FormattedDate from "@components/FormattedDate.astro";
+import { readingTime, cleanSlug } from "@lib/utils";
+import BackToPrevious from "@components/BackToPrevious.astro";
+import PostNavigation from "@components/PostNavigation.astro";
+import CommentsSection from "@components/CommentsSection.tsx";
+
+export async function getStaticPaths() {
+	const posts = (await getCollection("blog"))
+		.filter((post) => !post.data.draft && post.data.language === "en")
+		.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+	return posts.map((post, i) => ({
+		params: { slug: cleanSlug(post.id) },
+		props: {
+			post,
+			prevPost: posts[i + 1],
+			nextPost: posts[i - 1],
+		},
+	}));
+}
+
+type Props = {
+	post: CollectionEntry<"blog">;
+	prevPost: CollectionEntry<"blog"> | undefined;
+	nextPost: CollectionEntry<"blog"> | undefined;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+	<Container>
+		<div class="animate">
+			<BackToPrevious href="/en/blog">Back to blog</BackToPrevious>
+		</div>
+		<div class="my-10 space-y-1">
+			<div class="animate flex items-center gap-1.5">
+				<div class="font-base text-sm">
+					<FormattedDate date={post.data.date} />
+				</div>
+				&bull;
+				<div class="font-base text-sm">
+					{readingTime(post.body)}
+				</div>
+			</div>
+			<h1
+				class="animate text-3xl font-semibold text-black dark:text-white"
+			>
+				{post.data.title}
+			</h1>
+		</div>
+
+		<article class="animate">
+			<Content />
+			<div class="mt-24">
+				<PostNavigation
+					prevPost={prevPost}
+					nextPost={nextPost}
+					lang="/en"
+				/>
+			</div>
+			<CommentsSection postId={cleanSlug(post.id)} lang="en" client:visible />
+		</article>
+	</Container>
+</Layout>

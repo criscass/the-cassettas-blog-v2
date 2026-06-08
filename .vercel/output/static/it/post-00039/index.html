@@ -1,0 +1,287 @@
+<!DOCTYPE html><html lang="en"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><meta name="generator" content="Astro v5.18.2"><!-- Font preloads --><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin><!-- Canonical URL --><link rel="canonical" href="http://www.cassettas-reboot.xyz/it/post-00039/"><!-- Primary Meta Tags --><title>Il lungo e temuto inverno e&#39; arrivato | The Cassetta&#39;s Reboot</title><meta name="title" content="Il lungo e temuto inverno e' arrivato | The Cassetta's Reboot"><meta name="description" content="Un po di notizie dai Cassetta"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="http://www.cassettas-reboot.xyz/it/post-00039/"><meta property="og:title" content="Il lungo e temuto inverno e' arrivato | The Cassetta's Reboot"><meta property="og:description" content="Un po di notizie dai Cassetta"><meta property="og:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="http://www.cassettas-reboot.xyz/it/post-00039/"><meta property="twitter:title" content="Il lungo e temuto inverno e' arrivato | The Cassetta's Reboot"><meta property="twitter:description" content="Un po di notizie dai Cassetta"><meta property="twitter:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- PageFind --><link href="/pagefind/pagefind-ui.css" rel="stylesheet"><script src="/pagefind/pagefind-ui.js">
+	import { Image, Picture } from "astro:assets";
+	import { Code, Debug } from "astro:components";
+</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><script>
+	function init() {
+		preloadTheme();
+		onScroll();
+		animate();
+		updateThemeButtons();
+		addCopyCodeButtons();
+		setGiscusTheme();
+
+		const backToTop = document.getElementById("back-to-top");
+		backToTop?.addEventListener("click", (event) => scrollToTop(event));
+
+		const backToPrev = document.getElementById("back-to-prev");
+		backToPrev?.addEventListener("click", () => window.history.back());
+
+		const lightThemeButton = document.getElementById("light-theme-button");
+		lightThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "light");
+			toggleTheme(false);
+			updateThemeButtons();
+		});
+
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		darkThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "dark");
+			toggleTheme(true);
+			updateThemeButtons();
+		});
+
+		const systemThemeButton = document.getElementById("system-theme-button");
+		systemThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "system");
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+			updateThemeButtons();
+		});
+
+		window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+			if (localStorage.theme === "system") {
+				toggleTheme(event.matches);
+			}
+		});
+
+		document.addEventListener("scroll", onScroll);
+	}
+
+	function updateThemeButtons() {
+		const theme = localStorage.getItem("theme");
+		const lightThemeButton = document.getElementById("light-theme-button");
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		const systemThemeButton = document.getElementById("system-theme-button");
+
+		function removeActiveButtonTheme(button) {
+			button?.classList.remove("bg-black/5");
+			button?.classList.remove("dark:bg-white/5");
+		}
+
+		function addActiveButtonTheme(button) {
+			button?.classList.add("bg-black/5");
+			button?.classList.add("dark:bg-white/5");
+		}
+
+		removeActiveButtonTheme(lightThemeButton);
+		removeActiveButtonTheme(darkThemeButton);
+		removeActiveButtonTheme(systemThemeButton);
+
+		if (theme === "light") {
+			addActiveButtonTheme(lightThemeButton);
+		} else if (theme === "dark") {
+			addActiveButtonTheme(darkThemeButton);
+		} else {
+			addActiveButtonTheme(systemThemeButton);
+		}
+	}
+
+	function animate() {
+		const animateElements = document.querySelectorAll(".animate");
+
+		animateElements.forEach((element, index) => {
+			setTimeout(() => {
+				element.classList.add("show");
+			}, index * 100);
+		});
+	}
+
+	function onScroll() {
+		if (window.scrollY > 0) {
+			document.documentElement.classList.add("scrolled");
+		} else {
+			document.documentElement.classList.remove("scrolled");
+		}
+	}
+
+	function scrollToTop(event) {
+		event.preventDefault();
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	}
+
+	function toggleTheme(dark) {
+		const css = document.createElement("style");
+
+		css.appendChild(
+			document.createTextNode(
+				`* {
+             -webkit-transition: none !important;
+             -moz-transition: none !important;
+             -o-transition: none !important;
+             -ms-transition: none !important;
+             transition: none !important;
+          }
+        `,
+			),
+		);
+
+		document.head.appendChild(css);
+
+		if (dark) {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+
+		window.getComputedStyle(css).opacity;
+		document.head.removeChild(css);
+
+		setGiscusTheme();
+	}
+
+	function preloadTheme() {
+		const userTheme = localStorage.theme;
+
+		if (userTheme === "light" || userTheme === "dark") {
+			toggleTheme(userTheme === "dark");
+		} else {
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+		}
+	}
+
+	function addCopyCodeButtons() {
+		let copyButtonLabel = "📋";
+		let codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+		async function copyCode(codeBlock, copyButton) {
+			const codeText = codeBlock.innerText;
+			const buttonText = copyButton.innerText;
+			const textToCopy = codeText.replace(buttonText, "");
+
+			await navigator.clipboard.writeText(textToCopy);
+			copyButton.innerText = "✅";
+
+			setTimeout(() => {
+				copyButton.innerText = copyButtonLabel;
+			}, 2000);
+		}
+
+		for (let codeBlock of codeBlocks) {
+			const wrapper = document.createElement("div");
+			wrapper.style.position = "relative";
+
+			const copyButton = document.createElement("button");
+			copyButton.innerText = copyButtonLabel;
+			copyButton.classList = "copy-code";
+
+			codeBlock.setAttribute("tabindex", "0");
+			codeBlock.appendChild(copyButton);
+
+			codeBlock.parentNode.insertBefore(wrapper, codeBlock);
+			wrapper.appendChild(codeBlock);
+
+			copyButton?.addEventListener("click", async () => {
+				await copyCode(codeBlock, copyButton);
+			});
+		}
+	}
+
+	const setGiscusTheme = () => {
+		const giscus = document.querySelector(".giscus-frame");
+
+		const isDark = document.documentElement.classList.contains("dark");
+
+		if (giscus) {
+			const url = new URL(giscus.src);
+			url.searchParams.set("theme", isDark ? "dark" : "light");
+			giscus.src = url.toString();
+		}
+	};
+
+	document.addEventListener("DOMContentLoaded", () => init());
+	document.addEventListener("astro:after-swap", () => init());
+	preloadTheme();
+</script><link rel="stylesheet" href="/_astro/users.Cdr_gJz1.css"></head> <body> <header> <div class="mx-auto max-w-screen-sm px-3"> <div class="flex flex-wrap justify-between gap-y-2"> <a href="/it" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out">  <div class="text-2xl font-semibold"> The Cassetta&#39;s Reboot </div>  </a> <nav class="flex items-center gap-5 text-sm"> <a href="/it/blog" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out underline underline-offset-[3px]"> blog </a> <a href="/en/post-00039/" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out"> English </a> <button id="magnifying-glass" aria-label="Search" class="flex items-center rounded border border-black/15 bg-neutral-100 px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:bg-neutral-900 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 7C3.5 5.067 5.067 3.5 7 3.5C8.933 3.5 10.5 5.067 10.5 7C10.5 7.88461 10.1718 8.69256 9.63058 9.30876L9.30876 9.63058C8.69256 10.1718 7.88461 10.5 7 10.5C5.067 10.5 3.5 8.933 3.5 7ZM9.96544 11.0261C9.13578 11.6382 8.11014 12 7 12C4.23858 12 2 9.76142 2 7C2 4.23858 4.23858 2 7 2C9.76142 2 12 4.23858 12 7C12 8.11014 11.6382 9.13578 11.0261 9.96544L14.0303 12.9697L14.5607 13.5L13.5 14.5607L12.9697 14.0303L9.96544 11.0261Z" fill="currentColor"></path></svg>
+&nbsp;Search
+</button> </nav> </div> </div> </header> <main>  <div class="mx-auto max-w-screen-sm px-3"> <div class="animate"> <a href="/it/blog" class="not-prose group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-7 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm"> Back to blog </div> </a> </div> <div class="my-10 space-y-1"> <div class="animate flex items-center gap-1.5"> <div class="font-base text-sm"> <time datetime="2024-12-08T00:00:00.000Z"> December 08, 2024 </time> </div>
+&bull;
+<div class="font-base text-sm"> 9 min read </div> </div> <h1 class="animate text-3xl font-semibold text-black dark:text-white"> Il lungo e temuto inverno e&#39; arrivato </h1> </div> <article class="animate"> <p><img alt="Sinterclass e Black Pete" loading="lazy" decoding="async" fetchpriority="auto" width="859" height="1200" src="/_astro/pic-1.DFiVI6GZ_Z2ggwCW.webp" >
+<em>Sinterclass e Black Pete</em></p>
+<p>A quasi un mese dall’ultimo post torno a scrivere sul blog. Chiedo scusa a tutti quelli che sono in attesa di notizie, l’unico motivo della lunga assenza e’ la mia letargia e mancanza di ispirazione a scrivere.<br>
+Cerchero’ di far meglio.</p>
+<p>L’autunno Olandese e’ stato rapidamente sostituito dall’Inverno, almeno credo che questo sia l’inverno. Piove spesso e anche quando c’e’ un po’ di sole non scalda per niente. Le temperature non sono bassissime, sempre sopra lo zero, anche se di poco. Piu’ o meno il clima che c’era a Milano, quando ci abitavo, anche se la differenza credo sia nella durata dell’Inverno Olandese. A Milano, verso fine Febbraio, cominciava ad arrivare qualche bella giornata, in cui il calore del sole si faceva sentire. Ricordo come da bambino bastasse una domenica di sole, passata a giocare al parco giochi in maglietta a maniche corte, per dare il benvenuto alla primavera con la sua energia esplosiva di odori di prati tagliati e alberi che cominciano a fiorire.<br>
+In Olanda credo che quel momento arrivi un po’ piu’ avanti.<br>
+Veniamo alle News.<br>
+Il mio lavoro va alla grande. Settimana prossima finisco il primo mese.<br>
+Con i miei colleghi mi trovo molto bene. Jost, il capo meccanico, un ragazzo di 25 anni gia’ espertissimo di biciclette, mi sta insegnando un sacco di cose. Poi c’e’ Cris, un diciottenne anche lui molto piu’ esperto di me nel settore, e Micha, un ragazzo di 15 anni che qualche giorno fa mi ha fatto sentire veramente vecchio. Stava chiacchierando con gli altri, ovviamente in Olandese, e gli stava facendo vedere una foto sul telefono. Mi sono avvicinato per vedere di cosa si trattasse. In pratica suo padre si trovava negli stati uniti per lavoro e, pescando su una spiaggia in florida aveva catturato un piccolo squalo. Mentre mi accingevo a guardare la foto immaginavo un boomer con barba e capelli bianchi, in posa con lo squaletto. L’immagine ritraeva invece un giovanotto sorridente di 38 anni, dieci anni piu giovane di me. Il papa’ del mio collega!<br>
+Il proprietario, Koen, anche lui ha qualche anno in meno di me, ha quattro figli piccoli ed e’ molto dedicato a far crescere e migliorare la propria attivita’.
+Non mi sono ancora abituato alla strana forma della mia settimana lavorativa. Sono di riposo la Domenica, il Lunedì ed il Mercoledì. Il Martedì e il Giovedi lavoro dalle 9 del mattino alle 9 di sera. Il Venerdì e il Sabato dalle 9 alle 18.<br>
+Durante le lunghe giornate di lavoro, mentre aggiusto biciclette di ogni tipo, penso a come riuscire a raggranellare qualche euro in piu’ al mese. In questo primo anno di lavoro, siccome dovro’ pagare il corso, il mio stipendio resta abbastanza basso. Appena ne ricevo uno pieno vi faccio sapere la cifra. Comunque dovremmo essere intorno ai 2000€ netti al mese. Hilly dovrebbe guadagnare un po’ di piu’ ma, visto l’affitto stellare che ci tocca sborsare ogni mese, riusciamo a malapena a coprire le spese per vivere, che sono intorno ai 4500€ al mese.
+Per integrare le entrate la cosa più semplice e’ quella di iniziare un’attività parallela di riparazione delle bici nella mia micro-officina. Potrei stampare un volantino da distribuire nelle caselle della posta del mio vicinato e vedere cosa succede. Per farlo pero’ dovrei aprire un’attivita’ ufficiale, in modo da poter acquistare i pezzi di ricambio a costo piu’ basso dai vari fornitori. Parliamo della meta’ o anche di un terzo del costo che si paga in un negozio o su internet.<br>
+Aprire un’attività in Olanda dovrebbe essere abbastanza semplice e, a quanto ho capito, non dovrebbe presentare tutti i vincoli e i rischi che si hanno in Italia con l’apertura di una partita iva.<br>
+Anche Hilly sta prendendo contatti per avere un secondo lavoro, nel mondo della promozione del vino. Come ho già scritto lei ha partecipato ad alcuni eventi in cui ha fatto assaggiare dei vini italiani e le e’ piaciuto molto.<br>
+Hilly ha iniziato il lavoro per Johnson and Johnson una settimana fa. Il lavoro e’ molto tranquillo. Passa piu’ tempo a vestirsi, svestirsi, riempire fogli di excel e firmare moduli che a confezionare le protesi. Lavora insieme a colleghi di tutte le nazionalita’ possibili, alcuni nuovi come lei e altri gia’ li da diversi anni. Come avevo gia’ scritto il lavoro di Hilly si svolge su una settimana di sei giorni, due in cui lavora dalle 6.30 del mattino alle 14.30 e due dalle 14.30 alle 23. Poi due giorni di riposo. Quindi anche lei, stando spesso a casa durante la settimana, puo’ investire quel tempo nello sviluppo di una carriera alternativa.<br>
+Un cosa molto positiva e’ che il suo posto di lavoro e’ a dieci minuti di bici da casa. <br>
+Le ragazze hanno passato con voti altissimi gli esami di Novembre e da settimana prossima verranno spostate in classi differenti. Siamo andati a parlare con la coordinatrice di classe di entrambe e ci hanno assicurato che con questo anno finiranno la scuola internazionale e a Settembre inizieranno nella scuola olandese. Dalla settimana prossima dovranno quindi cambiare marcia visto che si troveranno in classi piu’ avanzate. Per tutta la seconda parte dell’anno faranno anche altre materie, oltre all’Ondese e alla matematica. Biologia, Geografia, Fisica e altro, ovviamente tutto in lingua Olandese.<br>
+La gang di ragazzi arabi e’ sempre piu’ presente a casa nostra. Sono bravi ragazzi e ci fa piacere averli da noi. Spesso cucinano loro anche per me e Hilly. Abbiamo messo un po’ di limiti alla loro presenza comunque, cosicché possiamo anche avere dei momenti di tranquillità in casa, solo noi quattro, come ai vecchi tempi.<br>
+Ieri sera abbiamo avuto Leith, il ragazzo di Gemma, a cena. Ci ha raccontato la sua storia di come all’età di 6 anni sia fuggito dalla Siria con la sua famiglia per andare in Turchia, dove sono stati trattati abbastanza male.Quando aveva tredici anni, tre anni fa, dalla turchia, insieme a suo fratello e ad un gruppetto di persone sono andati a piedi fino all’Austria. In Austria, per qualche motivo che non ho capito, si e’ dovuto separare da suo fratello ed e’ arrivato in Olanda da solo, grazie ad un passaggio automobilistico, dove gli e’ stato dato lo status di rifugiato politico, grazie al quale e’ poi riuscito a far arrivare i genitori e un altro fratello, che non era partito perche’ malato di diabete. Il fratello che e’ rimasto in Austria si trova ancora li e non puo’ venire in Olanda perche’ non avendo un visto Schengen potrebbe essere fermato alla frontiera che i Paesi Bassi hanno da poco ricostituito, proprio per fermare l’arrivo di migranti. Perché non sia venuto prima non l’ho capito. Leith non parla benissimo l’inglese, parla meglio l’Olandese, e spesso non capisco cosa dica. Comunque mi sembra un bravo ragazzo, molto motivato. Oltre alla scuola ha anche un paio di lavori e dice che appena compie diciotto anni vuole aprire il suo negozio di parrucchiere, uomo e donna, che vuole poi espandere in salone di bellezza. L’unica pecca è che si fuma due pacchetti di sigarette al giorno e purtroppo anche Gemma lo sta seguendo in questa brutta abitudine. La mia Gemmina!</p>
+<p>Lo spirito natalizio e’ molto forte in Olanda e in giro si vedono un sacco di bellissime decorazioni. Qui la celebrazione piu’ sentita e’ pero’ quella di “Sinterklaas”, che culmina il 5 di Dicembre, giorno in cui “Sinterclass”, una via di mezzo tra babbo natale e un cardinale, in arrivo dalla Spagna, porta doni e dolciumi ai bambini, grazie all’aiuto di “Black Pete”, un ragazzino con la faccia dipinta di nero, che assomiglia ad uno schiavetto africano ma che oggi, per essere “politically correct” viene invece spiegato come un piccolo aiutante annerito dalla fuliggine dei camini attraverso i quali entra nelle case.
+Il 5 di dicembre nella scuola di Sophia e Gemma e’ arrivato Sinterklaas e insieme a due “Black Pete”, che pero’ non si erano dipinti la faccia di nero (non sarebbero stati accolti molto bene nella loro scuola, conciati in quel modo), hanno portato dei cioccolati agli studenti.</p>
+<p>Lo scorso week-end sono venuti a trovarci due nostri amici di Milano, Brunella e Matteo, e con loro abbiamo fatto un bel giro in bici verso l’Aia, passando lungo la spiaggia, in una giornata di sole ma bella fredda, per poi andare nella zona industriale dell’Aia, ad un mercatino di abbigliamento vintage e subito dopo in una bella birreria/fabbrica di birra, mentre fuori pioveva e noi dovevamo tornare a casa in bici. Per fortuna dopo un paio di birre e qualche piatto di leccornie da pub ha smesso di piovere e ci siamo goduti i 45 minuti di ritorno in bici attraverso le buie e fredde campagne olandesi.<br>
+Qualche giorno prima ci aveva fatto visita anche Bea, la figlia dei nostri cari amici Australiani, Ken e Amy. Bea ha 18 anni ed ha fatto un viaggio di alcuni mesi attraverso diversi paesi europei. Alla fine del suo viaggio, siccome volava da Amsterdam, è stata a dormire una notte da noi e non potevamo non portarla a fare un giro in bicicletta nel centro di Leiden, che e’ sempre affascinante, soprattutto durante il periodo natalizio.</p>
+<p><img alt="Io e hilly con brunella e Matteo sulla spiaggia" loading="lazy" decoding="async" fetchpriority="auto" width="2048" height="1536" src="/_astro/pic-2.B83dGAxg_Z1uwXkK.webp" >
+<em>Con brunella e Matteo sulla spiaggia</em></p>
+<p><img alt="La spiaggia di Wassenar, verso l&amp;#x27;Aia" loading="lazy" decoding="async" fetchpriority="auto" width="1201" height="1600" src="/_astro/pic-3.BSP6Xy54_ZQeARn.webp" >
+<em>La spiaggia di Wassenar, verso l’Aia</em></p>
+<p><img alt="ancora noi quattro con le bici, di notte" loading="lazy" decoding="async" fetchpriority="auto" width="3280" height="2464" src="/_astro/pic-4.C4x7ZNai_R6A2L.webp" >
+<em>Venerdi sera verso Leiden</em></p>
+<p><img alt="Insieme a Bea di sera a Leiden" loading="lazy" decoding="async" fetchpriority="auto" width="2464" height="3280" src="/_astro/pic-5.B68QfAjQ_Z1W9S4A.webp" >
+<em>Insieme a Bea a Leiden</em></p> <div class="mt-24"> <div class="grid grid-cols-2 gap-1.5 sm:gap-3"> <a href="/it/post-00038" class="group relative flex flex-nowrap rounded-lg border border-black/15 px-4 py-3 pl-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">Elogio della bicicletta</div> </a> <a href="/it/post-00040" class="group relative flex flex-grow flex-row-reverse flex-nowrap rounded-lg border border-black/15 px-4 py-4 pr-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="-translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">Il nostro primo Natale da Olandesi</div> </a> </div> </div> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="1n8PEf" prefix="r1" component-url="/_astro/CommentsSection.B3TSinQT.js" component-export="default" renderer-url="/_astro/client.Fd5LK8aS.js" props="{&quot;postId&quot;:[0,&quot;post-00039&quot;],&quot;lang&quot;:[0,&quot;it&quot;]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="not-prose mt-16 space-y-6"><h2 class="text-xl font-semibold text-black dark:text-white">Commenti</h2><p class="text-sm text-black/60 dark:text-white/60">Caricamento commenti…</p></section><!--astro:end--></astro-island> </article> </div>  </main> <footer class="animate"> <div class="mx-auto max-w-screen-sm px-3"> <div class="relative"> <div class="absolute -top-12 right-0"> <button id="back-to-top" class="group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-8 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 rotate-90 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm">Back to top</div> </button> </div> </div> <div class="flex items-center justify-between"> <div>&copy; 2026 • The Cassetta&#39;s Reboot</div> <div class="flex flex-wrap items-center gap-1.5"> <button id="light-theme-button" aria-label="Light theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </button> <button id="dark-theme-button" aria-label="Dark theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="system-theme-button" aria-label="System theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect> <line x1="8" y1="21" x2="16" y2="21"></line> <line x1="12" y1="17" x2="12" y2="21"></line> </svg> </button> </div> </div> </div> </footer> <div id="backdrop" class="bg-[rgba(0, 0, 0, 0.5] invisible fixed left-0 top-0 z-50 flex h-screen w-full justify-center p-6 backdrop-blur-sm"> <div id="pagefind-container" class="m-0 flex h-fit max-h-[80%] w-full max-w-screen-sm flex-col overflow-auto rounded border border-black/15 bg-neutral-100 p-2 px-4 py-3 shadow-lg dark:border-white/20 dark:bg-neutral-900"> <div id="search" class="pagefind-ui pagefind-init" data-pagefind-ui data-bundle-path="/pagefind/" data-ui-options="{&#34;showImages&#34;:false,&#34;excerptLength&#34;:15,&#34;resetStyles&#34;:false}"></div> <script type="module" src="/_astro/Search.astro_astro_type_script_index_0_lang.DExfVQkA.js"></script> <div class="mr-2 pb-1 pt-4 text-right text-xs dark:prose-invert">
+Press <span class="prose text-xs dark:prose-invert"><kbd class="">Esc</kbd></span> or click anywhere to close
+</div> </div> </div> <script>
+  const magnifyingGlass = document.getElementById("magnifying-glass");
+  const backdrop = document.getElementById("backdrop");
+
+  function openPagefind() {
+    const searchDiv = document.getElementById("search");
+    const search = searchDiv.querySelector("input");
+    setTimeout(() => {
+      search.focus();
+    }, 0);
+    backdrop?.classList.remove("invisible");
+    backdrop?.classList.add("visible");
+  }
+
+  function closePagefind() {
+    const search = document.getElementById("search");
+    search.value = "";
+    backdrop?.classList.remove("visible");
+    backdrop?.classList.add("invisible");
+  }
+
+  // open pagefind
+  magnifyingGlass?.addEventListener("click", () => {
+    openPagefind();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/") {
+      e.preventDefault();
+      openPagefind();
+    } else if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      openPagefind();
+    }
+  });
+
+  // close pagefind
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" || e.keyCode === 27) {
+      closePagefind();
+    }
+  });
+
+  backdrop?.addEventListener("click", (event) => {
+    if (!event.target.closest("#pagefind-container")) {
+      closePagefind();
+    }
+  });
+
+  // prevent form submission
+  const form = document.getElementById("form");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
+</script>  </body></html>

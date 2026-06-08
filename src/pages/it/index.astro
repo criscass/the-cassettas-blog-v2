@@ -1,0 +1,70 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
+import { SITE, HOME } from "@consts";
+import ArrowCard from "@components/ArrowCard.astro";
+import Link from "@components/Link.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import { Image } from "astro:assets";
+import hero_img from "../../assets/images/hero.jpg";
+
+const blog = (await getCollection("blog"))
+	.filter((post) => !post.data.draft && post.data.language === "it")
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+	.slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
+---
+
+<Layout title={HOME.TITLE} description={HOME.DESCRIPTION}>
+	<Container>
+		<Image src={hero_img} alt="black and white of a smiley, happy cassetta's family" />
+		<div class="space-y-16">
+			<section>
+				<article class="space-y-4">
+					<span class="animate">
+						<p>
+							Il termine "rebooting" deriva dall'inglese e si traduce in italiano come "riavviare" o "riavvio". Il significato
+							varia a seconda del contesto. Metaforicamente, "rebooting" può essere usato per indicare un nuovo inizio o un
+							rinnovamento in vari aspetti della vita, come cambiare carriera, ripartire da zero in un progetto o adottare
+							nuove abitudini per migliorare il proprio benessere.
+						</p>
+						<p>
+							Dopo 15 anni di vita stabile e felice, vissuta in un paradiso tra le colline toscane, la famiglia Cassetta opera
+							un drastico “reboot”, trasferendosi in Olanda, cambiando carriera, scuole, lingua e stile di vita.
+						</p>
+					</span>
+				</article>
+			</section>
+
+			<section class="animate space-y-6">
+				<div class="flex flex-wrap items-center justify-between gap-y-2">
+					<h2 class="font-semibold text-black dark:text-white">Latest posts</h2>
+					<Link href="/it/blog"> See all posts </Link>
+				</div>
+				<ul class="not-prose flex flex-col gap-4">
+					{
+						blog.map((post) => (
+							<li>
+								<ArrowCard entry={post} lang="it" />
+							</li>
+						))
+					}
+				</ul>
+			</section>
+
+			<section class="animate space-y-4">
+				<h2 class="font-semibold text-black dark:text-white">Restiamo in contatto</h2>
+				<article>
+					<p>
+						Se vuoi ricevere una mail ogni volta che pubblichiamo un nuovo post spediscimi una richiesta a <span>
+							<Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.TITLE}`}>
+								{SITE.EMAIL}
+							</Link></span
+						>
+					</p>
+				</article>
+			</section>
+		</div>
+	</Container>
+</Layout>

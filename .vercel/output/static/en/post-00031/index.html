@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="en"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><meta name="generator" content="Astro v5.18.2"><!-- Font preloads --><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin><!-- Canonical URL --><link rel="canonical" href="http://www.cassettas-reboot.xyz/en/post-00031/"><!-- Primary Meta Tags --><title>An Herculean task  | The Cassetta&#39;s Reboot</title><meta name="title" content="An Herculean task  | The Cassetta's Reboot"><meta name="description" content="How beautiful everyday life is!"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="http://www.cassettas-reboot.xyz/en/post-00031/"><meta property="og:title" content="An Herculean task  | The Cassetta's Reboot"><meta property="og:description" content="How beautiful everyday life is!"><meta property="og:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="http://www.cassettas-reboot.xyz/en/post-00031/"><meta property="twitter:title" content="An Herculean task  | The Cassetta's Reboot"><meta property="twitter:description" content="How beautiful everyday life is!"><meta property="twitter:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- PageFind --><link href="/pagefind/pagefind-ui.css" rel="stylesheet"><script src="/pagefind/pagefind-ui.js">
+	import { Image, Picture } from "astro:assets";
+	import { Code, Debug } from "astro:components";
+</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><script>
+	function init() {
+		preloadTheme();
+		onScroll();
+		animate();
+		updateThemeButtons();
+		addCopyCodeButtons();
+		setGiscusTheme();
+
+		const backToTop = document.getElementById("back-to-top");
+		backToTop?.addEventListener("click", (event) => scrollToTop(event));
+
+		const backToPrev = document.getElementById("back-to-prev");
+		backToPrev?.addEventListener("click", () => window.history.back());
+
+		const lightThemeButton = document.getElementById("light-theme-button");
+		lightThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "light");
+			toggleTheme(false);
+			updateThemeButtons();
+		});
+
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		darkThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "dark");
+			toggleTheme(true);
+			updateThemeButtons();
+		});
+
+		const systemThemeButton = document.getElementById("system-theme-button");
+		systemThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "system");
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+			updateThemeButtons();
+		});
+
+		window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+			if (localStorage.theme === "system") {
+				toggleTheme(event.matches);
+			}
+		});
+
+		document.addEventListener("scroll", onScroll);
+	}
+
+	function updateThemeButtons() {
+		const theme = localStorage.getItem("theme");
+		const lightThemeButton = document.getElementById("light-theme-button");
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		const systemThemeButton = document.getElementById("system-theme-button");
+
+		function removeActiveButtonTheme(button) {
+			button?.classList.remove("bg-black/5");
+			button?.classList.remove("dark:bg-white/5");
+		}
+
+		function addActiveButtonTheme(button) {
+			button?.classList.add("bg-black/5");
+			button?.classList.add("dark:bg-white/5");
+		}
+
+		removeActiveButtonTheme(lightThemeButton);
+		removeActiveButtonTheme(darkThemeButton);
+		removeActiveButtonTheme(systemThemeButton);
+
+		if (theme === "light") {
+			addActiveButtonTheme(lightThemeButton);
+		} else if (theme === "dark") {
+			addActiveButtonTheme(darkThemeButton);
+		} else {
+			addActiveButtonTheme(systemThemeButton);
+		}
+	}
+
+	function animate() {
+		const animateElements = document.querySelectorAll(".animate");
+
+		animateElements.forEach((element, index) => {
+			setTimeout(() => {
+				element.classList.add("show");
+			}, index * 100);
+		});
+	}
+
+	function onScroll() {
+		if (window.scrollY > 0) {
+			document.documentElement.classList.add("scrolled");
+		} else {
+			document.documentElement.classList.remove("scrolled");
+		}
+	}
+
+	function scrollToTop(event) {
+		event.preventDefault();
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	}
+
+	function toggleTheme(dark) {
+		const css = document.createElement("style");
+
+		css.appendChild(
+			document.createTextNode(
+				`* {
+             -webkit-transition: none !important;
+             -moz-transition: none !important;
+             -o-transition: none !important;
+             -ms-transition: none !important;
+             transition: none !important;
+          }
+        `,
+			),
+		);
+
+		document.head.appendChild(css);
+
+		if (dark) {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+
+		window.getComputedStyle(css).opacity;
+		document.head.removeChild(css);
+
+		setGiscusTheme();
+	}
+
+	function preloadTheme() {
+		const userTheme = localStorage.theme;
+
+		if (userTheme === "light" || userTheme === "dark") {
+			toggleTheme(userTheme === "dark");
+		} else {
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+		}
+	}
+
+	function addCopyCodeButtons() {
+		let copyButtonLabel = "📋";
+		let codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+		async function copyCode(codeBlock, copyButton) {
+			const codeText = codeBlock.innerText;
+			const buttonText = copyButton.innerText;
+			const textToCopy = codeText.replace(buttonText, "");
+
+			await navigator.clipboard.writeText(textToCopy);
+			copyButton.innerText = "✅";
+
+			setTimeout(() => {
+				copyButton.innerText = copyButtonLabel;
+			}, 2000);
+		}
+
+		for (let codeBlock of codeBlocks) {
+			const wrapper = document.createElement("div");
+			wrapper.style.position = "relative";
+
+			const copyButton = document.createElement("button");
+			copyButton.innerText = copyButtonLabel;
+			copyButton.classList = "copy-code";
+
+			codeBlock.setAttribute("tabindex", "0");
+			codeBlock.appendChild(copyButton);
+
+			codeBlock.parentNode.insertBefore(wrapper, codeBlock);
+			wrapper.appendChild(codeBlock);
+
+			copyButton?.addEventListener("click", async () => {
+				await copyCode(codeBlock, copyButton);
+			});
+		}
+	}
+
+	const setGiscusTheme = () => {
+		const giscus = document.querySelector(".giscus-frame");
+
+		const isDark = document.documentElement.classList.contains("dark");
+
+		if (giscus) {
+			const url = new URL(giscus.src);
+			url.searchParams.set("theme", isDark ? "dark" : "light");
+			giscus.src = url.toString();
+		}
+	};
+
+	document.addEventListener("DOMContentLoaded", () => init());
+	document.addEventListener("astro:after-swap", () => init());
+	preloadTheme();
+</script><link rel="stylesheet" href="/_astro/users.Cdr_gJz1.css"></head> <body> <header> <div class="mx-auto max-w-screen-sm px-3"> <div class="flex flex-wrap justify-between gap-y-2"> <a href="/en" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out">  <div class="text-2xl font-semibold"> The Cassetta&#39;s Reboot </div>  </a> <nav class="flex items-center gap-5 text-sm"> <a href="/en/blog" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out underline underline-offset-[3px]"> blog </a> <a href="/it/post-00031/" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out"> Italiano </a> <button id="magnifying-glass" aria-label="Search" class="flex items-center rounded border border-black/15 bg-neutral-100 px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:bg-neutral-900 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 7C3.5 5.067 5.067 3.5 7 3.5C8.933 3.5 10.5 5.067 10.5 7C10.5 7.88461 10.1718 8.69256 9.63058 9.30876L9.30876 9.63058C8.69256 10.1718 7.88461 10.5 7 10.5C5.067 10.5 3.5 8.933 3.5 7ZM9.96544 11.0261C9.13578 11.6382 8.11014 12 7 12C4.23858 12 2 9.76142 2 7C2 4.23858 4.23858 2 7 2C9.76142 2 12 4.23858 12 7C12 8.11014 11.6382 9.13578 11.0261 9.96544L14.0303 12.9697L14.5607 13.5L13.5 14.5607L12.9697 14.0303L9.96544 11.0261Z" fill="currentColor"></path></svg>
+&nbsp;Search
+</button> </nav> </div> </div> </header> <main>  <div class="mx-auto max-w-screen-sm px-3"> <div class="animate"> <a href="/en/blog" class="not-prose group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-7 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm"> Back to blog </div> </a> </div> <div class="my-10 space-y-1"> <div class="animate flex items-center gap-1.5"> <div class="font-base text-sm"> <time datetime="2024-09-04T22:00:00.000Z"> September 05, 2024 </time> </div>
+&bull;
+<div class="font-base text-sm"> 7 min read </div> </div> <h1 class="animate text-3xl font-semibold text-black dark:text-white"> An Herculean task  </h1> </div> <article class="animate"> <p><img alt="Caricature of the family dealing with the washing machine" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="1200" src="/_astro/pic-00.DwdUg1HM_Z1rLvx8.webp" >
+<em>Grappling with the washing machine and the force of gravity</em></p>
+<p>Another week has started and we were all looking forward to getting to work. Gemma said the weekend was too long, she would have shortened it by a day. On Saturday Hilly and I worked all day on the house (baseboards not yet finished). On Sunday, the four of us went to the natural science museum in Leiden. It’s not the classic exhibition of stuffed animals, more or less interesting rocks and bones of extinct animals, instead, they had a more immersive approach mixing the same elements just mentioned with audiovisual installations, light shows and semi-dark rooms obtaining a more engaging effect.<br>
+Since we have the museum card and can go back anytime we only saw a small part of the museum and then went for a picnic at the botanical garden, still taking advantage of the museum card.</p>
+<p>I find it hard to put into words the joy we feel cycling around Leiden. You have to come and try it to understand it.</p>
+<p>This morning at the bike school we spent several hours discussing sprockets, chainrings, chains, rear and front derailleurs analyzing them in detail, in all their possible variations and combinations.<br>
+In the afternoon we paired up to take apart an electric bike motor and it was fun collaborating with my partner, neither of us had any idea how to do it and we had a lot of laughs.<br>
+A load of Dutch city bikes has also arrived, there are about thirty of them, quite wrecked. In the next few days we have to disassemble them one by one and refurbish them, then they will be sold.</p>
+<p>The girls had their first meal at school, they formed a table in the cafeteria along with a small group of South Americans, Syrians and Turks. They say that being Italian they are venerated by most of the students and they obviously like this situation.
+They have different schedules every day and when Gemma finishes before Sophia she waits for her in the cafeteria, partly because she wants to go home together and partly because there is a Colombian boy she likes in her class and he also stops to wait for his brother.</p>
+<p>A little while ago we carried out a feat that at first seemed impossible. I have already talked about how steep the stairs are in Holland.<br>
+Crazy stuff.<br>
+In Italy they would be illegal. Even in our house they are no less and I already know that one of these days I’m going to take a good fall. Anyway, the incredible feat was to bring the washing machine, which was in the kitchen, upstairs to put it in the bathroom.<br>
+We tied a rope around the very heavy appliance, Sophia and Gemma pulled from above and Hilly and I pushed from below. At one point we got stuck and thought we would never make it and would have to stay there until someone let go and Hilly and I would end up crushed at the foot of the stairs, near the front door.<br>
+Instead thanks to a sudden burst of energy we managed to get to the last step and now the infernal object, symbol of female emancipation is in its place in our bathroom.</p>
+<p>After the feat Sophia and I went for a run around the neighborhood. The Dutch have an urban development model that I really like. Our area is a maze of streets and clusters of houses that are always different and interesting. Every two or three blocks the style of the houses changes and there are many parks, playgrounds for children, canals, ponds, pastures of sheep and cows. Running along a canal you can look into the gardens of the various houses, all have steps that go down to the water where there is a boat, a canoe or a SUP attached.</p>
+<p>A couple of nights ago, with Hilly, we did the math on the fixed costs we will have to incur to live in Holland. The situation is not exactly rosy. I really like to read the details of the economic situation of families or individuals, I know that for many people these are private things that are not talked about, I like to do it.</p>
+<p>Between rent, utilities, health insurance and various amenities, the monthly fixed costs reach the figure of €3300. If we then add the grocery shopping, the very limited occasional shopping and some small entertainment, we get to €4400. Two basic salaries are therefore enough for mere survival without being able to afford holidays, extra purchases, unforeseen events or accumulation of savings. As soon as we have a job I will write exactly how much we earn. The positive thing is that here it is much easier, compared to Italy, to have salary increases or second paid activities.</p>
+<p>Compared to Italy the big differences are in the cost of houses and in the mandatory health insurance, which however does not cost much, in our case we spend €330, for the whole family, because we added orthodontics for Sophia and Gemma, but you can also stay under €300 per month. Children under the age of 18 do not pay for health insurance but benefit from that of the parent with the most advantageous insurance.</p>
+<p>Since the possession and use of cars is strongly discouraged (one of the reasons why we chose to come here) it means that the car tax and car insurance are very expensive, always compared to Italy. As for fuel, however, we are at the same level of costs with the difference that diesel costs much less than petrol.</p>
+<p>Next year will be a bit of a settling-in year, we will have to dip into our savings, which have almost halved in the last 3 months, to supplement our salaries and try to increase our income as soon as possible. Definitely no holidays until 2026.<br>
+This thing, however, does not weigh on us, at least for now, because we are all enthusiastic simply to be in this place and to live our new daily life.</p>
+<p><img alt="The beautiful interior of the natural science museum" loading="lazy" decoding="async" fetchpriority="auto" width="901" height="1200" src="/_astro/pic-1.BhUFlt80_Z1WTrH2.webp" >
+<em>The beautiful interior of the natural science museum</em></p>
+<p><img alt="The small window on the stairs at home" loading="lazy" decoding="async" fetchpriority="auto" width="900" height="1200" src="/_astro/pic-2.BI6bvGsX_27hHQO.webp" >
+<em>The small window on the stairs at home</em></p>
+<p><img alt="Sophia&amp;#x27;s bedroom" loading="lazy" decoding="async" fetchpriority="auto" width="900" height="1200" src="/_astro/pic-3.DC1GDkzV_ZyCsbk.webp" >
+<em>Sophia’s bedroom</em></p>
+<p><img alt="Sophia&amp;#x27;s desk and a green plastic chair" loading="lazy" decoding="async" fetchpriority="auto" width="900" height="1200" src="/_astro/pic-4.B2fYRNQF_ZCmDB6.webp" >
+<em>Sophia’s desk—we still don’t have chairs, so we’re using the plastic ones we found in the garden</em></p>
+<p><img alt="Gemma&amp;#x27;s bedroom" loading="lazy" decoding="async" fetchpriority="auto" width="900" height="1200" src="/_astro/pic-5.DzIOk8w__ZiS532.webp" >
+<em>Gemma, on the other hand, still doesn’t have a bed.</em></p>
+<p><img alt="Our living room" loading="lazy" decoding="async" fetchpriority="auto" width="900" height="1200" src="/_astro/pic-6.7E9Ewdxy_mjh1p.webp" >
+<em>Used sofa, a great deal</em></p>
+<p><img alt="The kitchen with the new cabinet." loading="lazy" decoding="async" fetchpriority="auto" width="900" height="1200" src="/_astro/pic-7._uz8ebJ6_Z4PvKw.webp" >
+<em>We found this piece of furniture in the center at a ‘Kringloop’; it looks great in the kitchen. We still need to find an oven..</em></p>
+<p><img alt="workstation with a bike taken apart into pieces" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-8.D6G5pz1w_Z2iYzH8.webp" >
+<em>My first complete renovation of a city bike. This photo is from yesterday; today, I’ve almost finished putting everything back together.</em></p> <div class="mt-24"> <div class="grid grid-cols-2 gap-1.5 sm:gap-3"> <a href="/en/post-00030" class="group relative flex flex-nowrap rounded-lg border border-black/15 px-4 py-3 pl-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">Everyone is going to school</div> </a> <a href="/en/post-00032" class="group relative flex flex-grow flex-row-reverse flex-nowrap rounded-lg border border-black/15 px-4 py-4 pr-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="-translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">So much freedom all at once</div> </a> </div> </div> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="Z1KiNQ8" prefix="r1" component-url="/_astro/CommentsSection.B3TSinQT.js" component-export="default" renderer-url="/_astro/client.Fd5LK8aS.js" props="{&quot;postId&quot;:[0,&quot;post-00031&quot;],&quot;lang&quot;:[0,&quot;en&quot;]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="not-prose mt-16 space-y-6"><h2 class="text-xl font-semibold text-black dark:text-white">Comments</h2><p class="text-sm text-black/60 dark:text-white/60">Loading comments…</p></section><!--astro:end--></astro-island> </article> </div>  </main> <footer class="animate"> <div class="mx-auto max-w-screen-sm px-3"> <div class="relative"> <div class="absolute -top-12 right-0"> <button id="back-to-top" class="group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-8 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 rotate-90 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm">Back to top</div> </button> </div> </div> <div class="flex items-center justify-between"> <div>&copy; 2026 • The Cassetta&#39;s Reboot</div> <div class="flex flex-wrap items-center gap-1.5"> <button id="light-theme-button" aria-label="Light theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </button> <button id="dark-theme-button" aria-label="Dark theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="system-theme-button" aria-label="System theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect> <line x1="8" y1="21" x2="16" y2="21"></line> <line x1="12" y1="17" x2="12" y2="21"></line> </svg> </button> </div> </div> </div> </footer> <div id="backdrop" class="bg-[rgba(0, 0, 0, 0.5] invisible fixed left-0 top-0 z-50 flex h-screen w-full justify-center p-6 backdrop-blur-sm"> <div id="pagefind-container" class="m-0 flex h-fit max-h-[80%] w-full max-w-screen-sm flex-col overflow-auto rounded border border-black/15 bg-neutral-100 p-2 px-4 py-3 shadow-lg dark:border-white/20 dark:bg-neutral-900"> <div id="search" class="pagefind-ui pagefind-init" data-pagefind-ui data-bundle-path="/pagefind/" data-ui-options="{&#34;showImages&#34;:false,&#34;excerptLength&#34;:15,&#34;resetStyles&#34;:false}"></div> <script type="module" src="/_astro/Search.astro_astro_type_script_index_0_lang.DExfVQkA.js"></script> <div class="mr-2 pb-1 pt-4 text-right text-xs dark:prose-invert">
+Press <span class="prose text-xs dark:prose-invert"><kbd class="">Esc</kbd></span> or click anywhere to close
+</div> </div> </div> <script>
+  const magnifyingGlass = document.getElementById("magnifying-glass");
+  const backdrop = document.getElementById("backdrop");
+
+  function openPagefind() {
+    const searchDiv = document.getElementById("search");
+    const search = searchDiv.querySelector("input");
+    setTimeout(() => {
+      search.focus();
+    }, 0);
+    backdrop?.classList.remove("invisible");
+    backdrop?.classList.add("visible");
+  }
+
+  function closePagefind() {
+    const search = document.getElementById("search");
+    search.value = "";
+    backdrop?.classList.remove("visible");
+    backdrop?.classList.add("invisible");
+  }
+
+  // open pagefind
+  magnifyingGlass?.addEventListener("click", () => {
+    openPagefind();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/") {
+      e.preventDefault();
+      openPagefind();
+    } else if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      openPagefind();
+    }
+  });
+
+  // close pagefind
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" || e.keyCode === 27) {
+      closePagefind();
+    }
+  });
+
+  backdrop?.addEventListener("click", (event) => {
+    if (!event.target.closest("#pagefind-container")) {
+      closePagefind();
+    }
+  });
+
+  // prevent form submission
+  const form = document.getElementById("form");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
+</script>  </body></html>

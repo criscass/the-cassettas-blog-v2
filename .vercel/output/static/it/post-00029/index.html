@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="en"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><meta name="generator" content="Astro v5.18.2"><!-- Font preloads --><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin><!-- Canonical URL --><link rel="canonical" href="http://www.cassettas-reboot.xyz/it/post-00029/"><!-- Primary Meta Tags --><title>Disturbo post traumatico da stress | The Cassetta&#39;s Reboot</title><meta name="title" content="Disturbo post traumatico da stress | The Cassetta's Reboot"><meta name="description" content="Il difficile ma necessario viaggio in Italia"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="http://www.cassettas-reboot.xyz/it/post-00029/"><meta property="og:title" content="Disturbo post traumatico da stress | The Cassetta's Reboot"><meta property="og:description" content="Il difficile ma necessario viaggio in Italia"><meta property="og:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="http://www.cassettas-reboot.xyz/it/post-00029/"><meta property="twitter:title" content="Disturbo post traumatico da stress | The Cassetta's Reboot"><meta property="twitter:description" content="Il difficile ma necessario viaggio in Italia"><meta property="twitter:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- PageFind --><link href="/pagefind/pagefind-ui.css" rel="stylesheet"><script src="/pagefind/pagefind-ui.js">
+	import { Image, Picture } from "astro:assets";
+	import { Code, Debug } from "astro:components";
+</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><script>
+	function init() {
+		preloadTheme();
+		onScroll();
+		animate();
+		updateThemeButtons();
+		addCopyCodeButtons();
+		setGiscusTheme();
+
+		const backToTop = document.getElementById("back-to-top");
+		backToTop?.addEventListener("click", (event) => scrollToTop(event));
+
+		const backToPrev = document.getElementById("back-to-prev");
+		backToPrev?.addEventListener("click", () => window.history.back());
+
+		const lightThemeButton = document.getElementById("light-theme-button");
+		lightThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "light");
+			toggleTheme(false);
+			updateThemeButtons();
+		});
+
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		darkThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "dark");
+			toggleTheme(true);
+			updateThemeButtons();
+		});
+
+		const systemThemeButton = document.getElementById("system-theme-button");
+		systemThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "system");
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+			updateThemeButtons();
+		});
+
+		window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+			if (localStorage.theme === "system") {
+				toggleTheme(event.matches);
+			}
+		});
+
+		document.addEventListener("scroll", onScroll);
+	}
+
+	function updateThemeButtons() {
+		const theme = localStorage.getItem("theme");
+		const lightThemeButton = document.getElementById("light-theme-button");
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		const systemThemeButton = document.getElementById("system-theme-button");
+
+		function removeActiveButtonTheme(button) {
+			button?.classList.remove("bg-black/5");
+			button?.classList.remove("dark:bg-white/5");
+		}
+
+		function addActiveButtonTheme(button) {
+			button?.classList.add("bg-black/5");
+			button?.classList.add("dark:bg-white/5");
+		}
+
+		removeActiveButtonTheme(lightThemeButton);
+		removeActiveButtonTheme(darkThemeButton);
+		removeActiveButtonTheme(systemThemeButton);
+
+		if (theme === "light") {
+			addActiveButtonTheme(lightThemeButton);
+		} else if (theme === "dark") {
+			addActiveButtonTheme(darkThemeButton);
+		} else {
+			addActiveButtonTheme(systemThemeButton);
+		}
+	}
+
+	function animate() {
+		const animateElements = document.querySelectorAll(".animate");
+
+		animateElements.forEach((element, index) => {
+			setTimeout(() => {
+				element.classList.add("show");
+			}, index * 100);
+		});
+	}
+
+	function onScroll() {
+		if (window.scrollY > 0) {
+			document.documentElement.classList.add("scrolled");
+		} else {
+			document.documentElement.classList.remove("scrolled");
+		}
+	}
+
+	function scrollToTop(event) {
+		event.preventDefault();
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	}
+
+	function toggleTheme(dark) {
+		const css = document.createElement("style");
+
+		css.appendChild(
+			document.createTextNode(
+				`* {
+             -webkit-transition: none !important;
+             -moz-transition: none !important;
+             -o-transition: none !important;
+             -ms-transition: none !important;
+             transition: none !important;
+          }
+        `,
+			),
+		);
+
+		document.head.appendChild(css);
+
+		if (dark) {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+
+		window.getComputedStyle(css).opacity;
+		document.head.removeChild(css);
+
+		setGiscusTheme();
+	}
+
+	function preloadTheme() {
+		const userTheme = localStorage.theme;
+
+		if (userTheme === "light" || userTheme === "dark") {
+			toggleTheme(userTheme === "dark");
+		} else {
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+		}
+	}
+
+	function addCopyCodeButtons() {
+		let copyButtonLabel = "📋";
+		let codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+		async function copyCode(codeBlock, copyButton) {
+			const codeText = codeBlock.innerText;
+			const buttonText = copyButton.innerText;
+			const textToCopy = codeText.replace(buttonText, "");
+
+			await navigator.clipboard.writeText(textToCopy);
+			copyButton.innerText = "✅";
+
+			setTimeout(() => {
+				copyButton.innerText = copyButtonLabel;
+			}, 2000);
+		}
+
+		for (let codeBlock of codeBlocks) {
+			const wrapper = document.createElement("div");
+			wrapper.style.position = "relative";
+
+			const copyButton = document.createElement("button");
+			copyButton.innerText = copyButtonLabel;
+			copyButton.classList = "copy-code";
+
+			codeBlock.setAttribute("tabindex", "0");
+			codeBlock.appendChild(copyButton);
+
+			codeBlock.parentNode.insertBefore(wrapper, codeBlock);
+			wrapper.appendChild(codeBlock);
+
+			copyButton?.addEventListener("click", async () => {
+				await copyCode(codeBlock, copyButton);
+			});
+		}
+	}
+
+	const setGiscusTheme = () => {
+		const giscus = document.querySelector(".giscus-frame");
+
+		const isDark = document.documentElement.classList.contains("dark");
+
+		if (giscus) {
+			const url = new URL(giscus.src);
+			url.searchParams.set("theme", isDark ? "dark" : "light");
+			giscus.src = url.toString();
+		}
+	};
+
+	document.addEventListener("DOMContentLoaded", () => init());
+	document.addEventListener("astro:after-swap", () => init());
+	preloadTheme();
+</script><link rel="stylesheet" href="/_astro/users.Cdr_gJz1.css"></head> <body> <header> <div class="mx-auto max-w-screen-sm px-3"> <div class="flex flex-wrap justify-between gap-y-2"> <a href="/it" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out">  <div class="text-2xl font-semibold"> The Cassetta&#39;s Reboot </div>  </a> <nav class="flex items-center gap-5 text-sm"> <a href="/it/blog" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out underline underline-offset-[3px]"> blog </a> <a href="/en/post-00029/" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out"> English </a> <button id="magnifying-glass" aria-label="Search" class="flex items-center rounded border border-black/15 bg-neutral-100 px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:bg-neutral-900 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 7C3.5 5.067 5.067 3.5 7 3.5C8.933 3.5 10.5 5.067 10.5 7C10.5 7.88461 10.1718 8.69256 9.63058 9.30876L9.30876 9.63058C8.69256 10.1718 7.88461 10.5 7 10.5C5.067 10.5 3.5 8.933 3.5 7ZM9.96544 11.0261C9.13578 11.6382 8.11014 12 7 12C4.23858 12 2 9.76142 2 7C2 4.23858 4.23858 2 7 2C9.76142 2 12 4.23858 12 7C12 8.11014 11.6382 9.13578 11.0261 9.96544L14.0303 12.9697L14.5607 13.5L13.5 14.5607L12.9697 14.0303L9.96544 11.0261Z" fill="currentColor"></path></svg>
+&nbsp;Search
+</button> </nav> </div> </div> </header> <main>  <div class="mx-auto max-w-screen-sm px-3"> <div class="animate"> <a href="/it/blog" class="not-prose group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-7 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm"> Back to blog </div> </a> </div> <div class="my-10 space-y-1"> <div class="animate flex items-center gap-1.5"> <div class="font-base text-sm"> <time datetime="2024-08-25T00:00:00.000Z"> August 25, 2024 </time> </div>
+&bull;
+<div class="font-base text-sm"> 11 min read </div> </div> <h1 class="animate text-3xl font-semibold text-black dark:text-white"> Disturbo post traumatico da stress </h1> </div> <article class="animate"> <p><img alt="Un gatto cinese portafortuna sul cruscotto di un auto" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="1200" src="/_astro/pic-1.BFJIvf-R_1jdKTt.webp" >
+<em>Questa immagine la capirete leggendo il post</em></p>
+<p>Il viaggio in Italia e’ stato durissimo.<br>
+Non avevo mai sofferto per mancanza di sonno così tanto in vita mia. Ora e Domenica mattina, mi sono appena alzato dopo quasi 24 ore a dormire, la nostra sala e’ ingombrata dagli scatoloni e dai mobili imballati, quindi, spoiler alert, ce l’abbiamo fatta, sani e salvi, pero’ che fatica!</p>
+<p>Eravamo rimasti a Hilly che, ripresasi dal misterioso malanno, guidava il furgone/camion verso l’Italia.
+In quelle prime ore ci siamo accorti che il furgone/camion era uno scassone, che comunque avevamo pagato 1000€ per 3 giorni, e che andava ad una media di 90 Km/h con punte di 100 Km/h in discesa.
+Il viaggio si preannunciava più lungo del previsto.<br>
+Alla partenza ci era stato detto di non far caso alla spia di malfunzionamento dei freni accesa, era un falso allarme e i freni avrebbero dovuto funzionare per i 3000 km di viaggio.<br>
+Dopo circa un centinaio di chilometri si accese anche la spia motore, indicando un possibile malfunzionamento.<br>
+Maledicemmo l’autonoleggio e decidemmo di non farci caso e proseguire.<br>
+Nel furgone/camion non c’era il bluetooth. Gemma aveva preparato delle playlist su Spotify che purtroppo non potevamo ascoltare. Poco prima di entrare in Svizzera accesi le luci, visto che stava diventando buio, e vidi comparire, tra le spie sul cruscotto, una nuova simpatica segnalazione che dopo una breve ricerca sul manuale del furgone/camion scoprimmo voleva dirci che c’era un malfunzionamento delle luci. Ci fermammo al prossimo autogrill per controllare che tutte le luci funzionassero e scoprimmo che il faro sinistro effettivamente non funzionava. Altre maledizioni e ingiurie verso l’autonoleggio.<br>
+Non c’era speranza che potessimo superare la dogana di ingresso in Svizzera in questa situazione e comunque era pericoloso guidare senza un faro.<br>
+Per fortuna riuscii a comprare la lampadina all’autogrill e a sostituirla con successo. On the road again!<br>
+All’una di notte eravamo all’ingresso del tunnel del San Gottardo, per fortuna, visto l’orario, c’era poca fila e riuscimmo a passare in meno di un ora.<br>
+Dopo poco decidemmo di fermarci per un pisolino, guidavamo ininterrottamente da piu’ di diciassette ore, io mi ero alzato alle 3.30 del mattino, il giorno precedente, e quindi ero sveglio da 24 ore e cominciavo ad avere delle simpatiche ma preoccupanti allucinazioni.<br>
+Passammo due ore alla stazione di servizio di Bellinzona Sud, cercando di dormire tutti e 3 compressi nel piccolo abitacolo. Io trovai la posizione giusta per non avere crampi alle gambe ma ogni volta che mi addormentavo rilassavo la muscolatura per venir svegliato immediatamente da dolorose contrazioni ai glutei che mi imponevano di ritornare alla scomoda posizione di partenza che pero’ evitava i crampi.
+Alle 5.30 del mattino, freschi come rose raccolte due settimane prima, ci rimettemmo in viaggio, almeno stava diventando giorno e diventava più facile guidare senza addormentarsi.<br>
+La prossima tappa era per consegnare il carico di scatoloni e oggetti raccolto in Olanda a casa del padre di Monique, da portare a Corsanico, un paesino di Montagna in provincia di Lucca, dove Monique abita da circa un anno. Arrivammo da lei alle 10.00, dopo esserci pericolosamente arrampicati su di una stradina della larghezza esatta del furgone/camion e aver potato gli ulivi della zona con la parte superiore del cassone del nostro veicolo.<br>
+Dopo aver scaricato le cose di Monique ci dirigemmo verso Montaione dove finalmente arrivammo, dopo 27 ore dalla partenza, a casa di Jill e Jason, i nostri cari amici americani che vivono a Montaione dal 2019. Gemma l’abbiamo lasciata a casa della sua amica Alice dandogli appuntamento per il giorno dopo alle 5.00am, per la partenza verso l’Olanda.<br>
+Jill e Jason ci hanno offerto la loro camera da letto per un altro micro sonnellino di 2 ore prima di andare a caricare le nostre cose a Castelfiorentino nel magazzino di Luigi e Rita.
+Jill ci ha anche offerto della schiacciata e del prosciutto crudo e anche degli incredibili pomodori che ci siamo divorati per la gran fame e per la mancanza di tali prelibatezze in Olanda.<br>
+Caricare il furgone/camion e’ stato piuttosto semplice, non c’e’ stato bisogno di fare uso dell’esperienza maturata in centinaia di ore di gioco a Tetris, negli anni 90 sul mio Game-Boy visto che il veicolo noleggiato e’ risultato sovradimensionato rispetto al volume delle nostre cose da trasportare. Alla fine l’abbiamo riempito al 70%, mettendo le cose pesanti sul fondo così da non ribaltarci alla prima curva presa un po’ troppo velocemente.<br>
+Dopo un fugace ma intenso aperitivo con alcuni amici di Montaione, che e’ stato bellissimo rivedere, e una cena a casa di Jason e Jill, abbiamo dormito per sei lunghissime ore, ristabilendo una piccola ma essenziale percentuale delle nostre energie mentali sentendoci pronti alla maratona di ritorno.<br>
+Gemma e’ stata puntualissima e si e’ fatta trovare nella piazzetta sotto casa alle 5 in punto insieme alle due sue amiche, Alice e Ginevra, con le quali ha passato la notte in bianco. Grandi abbracci e saluti e poi la partenza, dalla coop di Montaione verso Leiden, un ultimo grande sforzo.
+All’interno dello scassone bianco il morale era alto tanto quanto la temperatura, nonostante i finestrini aperti. Eravamo ancora all’oscuro della discesa agli inferi psicologica che ci aspettava nelle prossime ore.<br>
+La prima sosta e’ stata a Parma, dove siamo usciti dall’autostrada alla ricerca di un supermercato per fare scorta di viveri e per prendere anche un po’ di focaccia e prosciutto crudo da portare a Sophia, per far sentire anche a lei un po’ della delizia italiana che noi avevamo sentito a casa di Jill e Jason.<br>
+In svizzera c’era un sacco di traffico. Di tanto in tanto ci trovavamo fermi dietro a centinaia di automobili, l’unico veicolo con i finestrini aperti sotto un sole cocente. Un paio d’ore per fare il tunnel del San Gottardo e poi grandi code anche in autostrada. Cominciavamo a vacillare.<br>
+Il furgone/camion andava consegnato la mattina dopo entro le 9.00, di Sabato, seno’ poi si sarebbe passati al lunedì mattina con lo sborso di una grossa penale. Non c’era tempo per fermarsi.<br>
+Con l’arrivo del buio cominciarono le paranoie e le allucinazioni.<br>
+Io soffro molto la mancanza di sonno e non riesco a dormire su di un’auto in corsa da quando ero bambino e scampai ad un pericoloso incidente.<br>
+Ero in auto con i miei genitori e mia sorella, era estate e stavamo andando in vacanza, sbarcati in traghetto nel nord della Sardegna ci stavamo dirigendo a Pula, nell’estremo sud di quell’isola meravigliosa che ci vedeva ogni estate passare i nostri momenti piu’ felici.<br>
+Stavo sonnecchiando nel sedile posteriore della nostra Fiat 131 mirafiori quando uno pneumatico esplose lanciandoci in una serie di testa a coda ad alta velocita’ sulla superstrada sarda dove mancammo per un soffio un disastroso frontale con le automobili che correvano nella corsia opposta.<br>
+Fu il mio primo trauma a bordo di un auto.<br>
+Il secondo trauma avvenne diversi anni dopo quando avevo circa 20 anni. Stavo andando da Milano a Sofia, in Bulgaria, per un concerto, con degli amici. Ci stavamo alternando alla guida senza fare alcuna sosta perche’ se no’ saremmo arrivati tardi al concerto. Per diversi motivi eravamo dovuti passare attraverso la Romania, era notte ed eravamo sulle montagne della Transilvania quando stavo finalmente riuscendo ad addormentarmi, con grande difficoltà vista la mia ansia da passeggero. Ricordo di essere appena scivolato in un sogno in cui sentivo lo stridere delle gomme sull’asfalto e poi uno spaventoso crash. Mi svegliai di soprassalto per ritrovarmi nel silenzio dell’abitacolo del veicolo, un breve momento di tranquillita’ interrotta dopo un paio di secondi dallo stridere delle gomme e dall abbattersi di un oggetto sul cristallo anteriore dell’automobile. Per diverse ore pensai di aver vissuto una premonizione, sognando quello che sarebbe accaduto pochi secondi dopo. In realtà probabilmente il mio cervello ha ricreato l’avvenimento del sogno a posteriori, confondendo di alcuni secondi la linea temporale, cosa che puo’ accadere in alcune situazioni di grande stress psicologico.<br>
+L’incidente era stato causato da un passaggio a livello ferroviario. Non c’era alcuna luce o cartello che segnalava la sbarra d’acciaio abbassata e la ragazza al volante l’aveva vista solo all’ultimo momento siccome c’era una fitta nebbia. La sbarra sfondó completamente il parabrezza e dovemmo buttarlo completamente giu’ dal veicolo calciandolo dall’interno verso l’esterno per poter guidare congelandoci nella fredda notte invernale fino a Bucarest, la capitale della Romania, dove al mattino riuscimmo a trovare un meccanico che ci mise su un parabrezza nuovo. Riuscimmo ad arrivare al concerto in tempo ma il mio trauma veniva enormemente rafforzato.<br>
+A consolidare indelebilmente il mio terrore da passeggero fu un altra occasione i cui stavamo ancora andando in Sardegna, Hilly guidava la nostra Fiat punto sull’autostrada tra La Spezia e Livorno e io le sedevo nervosamente accanto assicurandomi che non si addormentasse visto che eravamo partiti da Milano nel cuore della notte per prendere il traghetto delle 6.00 del mattino da Livorno.<br>
+A 120km/h, mentre superava un automobile, Hilly riuscì ad addormentarsi e a grattare tutta la parte sinistra dell’auto sul guard rail. Ero spacciato. Da quel giorno di 20 anni fa il mio odio per la combinazione automobile-buio-autostrada sarebbe stato assoluto e ingestibile.<br>
+Torniamo a poche ore fa, quando eravamo alla guida nel nord della Svizzera, quasi in Germania, dopo più di 12 ore di viaggio ininterrotto e finalmente mi decido a passare il volante a Hilly rassegnandomi ad una morte violenta e dolorosa. Hilly al volante, Gemma nel sedile centrale e io in quello a sinistra. La mia testa si muove come quella di uno di quei gatti di plastica cinesi portafortuna, con lo stesso moto ondulatorio, non su e’ giu’ ma invece avanti, per guardare la strada, e a sinistra per guardare gli occhi di Hilly sperando che non si chiudano per un tempo superiore alla normale e involontaria umidificazione dei bulbi oculari. Nelle ore di guida notturna che ci separavano dalla nostra nuova abitazione sprofondai in un “bad trip” psichedelico causato dalla mancanza di sonno e dall’affiorare dei miei traumi passati. Vedevo oggetti inesistenti scagliarsi verso di noi e non riuscivo a fermare l’ondata di pensieri spaventosi che si concludevano tutti con la nostra morte brutale e Sophia lasciata sola in una casa con ancora il battiscopa da installare.<br>
+Ad un certo punto anche Hilly cominciò ad avere una leggera distorsione delle percezioni e continuava a toccarsi il naso sentendoselo grottescamente grosso e deformato.<br>
+Arrivammo a Leiden alle 4.30 del mattino, dopo più di 23 ore di viaggio. Scaricammo i materassi dal furgone/camion e ci mettemmo a dormire per 2 ore dopo le quali svuotammo completamente il veicolo per riportarlo all’autonoleggio allAja. Io non voglio più viaggiare in autostrada di notte almeno per i prossimi cinque anni!<br>
+Ora mi sento riposato, dopo il lungo sonno, e felice di aver messo un altro pezzo del puzzle al suo posto.
+Sto scrivendo seduto tra gli scatoloni che svuoteremo nei prossimi giorni, contento di essere circondato da oggetti familiari e strafelice che domani mattina iniziero’ il corso per meccanico di biciclette.</p>
+<p><img alt="Spie accese nel cruscotto dell&amp;#x27;auto" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-2.C2zkC6pL_Z1yTdei.webp" >
+<em>Le molte spie accese durante il viaggio</em></p>
+<p><img alt="Energy drinks nel frigorifero" loading="lazy" decoding="async" fetchpriority="auto" width="901" height="1200" src="/_astro/pic-3.BKcIaWby_WlPWf.webp" >
+<em>Il mio reparto preferito negli autogrill</em></p>
+<p><img alt="Gemma e le sue amiche sedute nella piazzetta di Montaione" loading="lazy" decoding="async" fetchpriority="auto" width="4624" height="3472" src="/_astro/pic-4.CKs8UcLx_Z1yCBHi.webp" >
+<em>Gemma e le sue amiche alle 5 del mattino, dopo l’ennesima notte insonne</em></p>
+<p><img alt="Gemma e cristian cenano sulla sponda del furgone di notte" loading="lazy" decoding="async" fetchpriority="auto" width="799" height="1200" src="/_astro/pic-5.C2rIDrMe_23NzWc.webp" >
+<em>Spuntino notturno sulla sponda del furgone/camion</em></p>
+<p><img alt="Scatoloni in sala nella nuova casa" loading="lazy" decoding="async" fetchpriority="auto" width="901" height="1200" src="/_astro/pic-6.DIYrnB4__Z2fEa0k.webp" >
+<em>Scatoloni in sala nella nuova casa</em></p>
+<p><img alt="Materasso matrimoniale tra gli scatoloni" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-7.DHnwME0e_ell4P.webp" >
+<em>Il nostro letto temporaneo</em></p> <div class="mt-24"> <div class="grid grid-cols-2 gap-1.5 sm:gap-3"> <a href="/it/post-00028" class="group relative flex flex-nowrap rounded-lg border border-black/15 px-4 py-3 pl-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">Non troviamo un pezzo del puzzle</div> </a> <a href="/it/post-00030" class="group relative flex flex-grow flex-row-reverse flex-nowrap rounded-lg border border-black/15 px-4 py-4 pr-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="-translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">Tutti a Scuola</div> </a> </div> </div> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="17RHab" prefix="r1" component-url="/_astro/CommentsSection.B3TSinQT.js" component-export="default" renderer-url="/_astro/client.Fd5LK8aS.js" props="{&quot;postId&quot;:[0,&quot;post-00029&quot;],&quot;lang&quot;:[0,&quot;it&quot;]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="not-prose mt-16 space-y-6"><h2 class="text-xl font-semibold text-black dark:text-white">Commenti</h2><p class="text-sm text-black/60 dark:text-white/60">Caricamento commenti…</p></section><!--astro:end--></astro-island> </article> </div>  </main> <footer class="animate"> <div class="mx-auto max-w-screen-sm px-3"> <div class="relative"> <div class="absolute -top-12 right-0"> <button id="back-to-top" class="group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-8 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 rotate-90 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm">Back to top</div> </button> </div> </div> <div class="flex items-center justify-between"> <div>&copy; 2026 • The Cassetta&#39;s Reboot</div> <div class="flex flex-wrap items-center gap-1.5"> <button id="light-theme-button" aria-label="Light theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </button> <button id="dark-theme-button" aria-label="Dark theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="system-theme-button" aria-label="System theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect> <line x1="8" y1="21" x2="16" y2="21"></line> <line x1="12" y1="17" x2="12" y2="21"></line> </svg> </button> </div> </div> </div> </footer> <div id="backdrop" class="bg-[rgba(0, 0, 0, 0.5] invisible fixed left-0 top-0 z-50 flex h-screen w-full justify-center p-6 backdrop-blur-sm"> <div id="pagefind-container" class="m-0 flex h-fit max-h-[80%] w-full max-w-screen-sm flex-col overflow-auto rounded border border-black/15 bg-neutral-100 p-2 px-4 py-3 shadow-lg dark:border-white/20 dark:bg-neutral-900"> <div id="search" class="pagefind-ui pagefind-init" data-pagefind-ui data-bundle-path="/pagefind/" data-ui-options="{&#34;showImages&#34;:false,&#34;excerptLength&#34;:15,&#34;resetStyles&#34;:false}"></div> <script type="module" src="/_astro/Search.astro_astro_type_script_index_0_lang.DExfVQkA.js"></script> <div class="mr-2 pb-1 pt-4 text-right text-xs dark:prose-invert">
+Press <span class="prose text-xs dark:prose-invert"><kbd class="">Esc</kbd></span> or click anywhere to close
+</div> </div> </div> <script>
+  const magnifyingGlass = document.getElementById("magnifying-glass");
+  const backdrop = document.getElementById("backdrop");
+
+  function openPagefind() {
+    const searchDiv = document.getElementById("search");
+    const search = searchDiv.querySelector("input");
+    setTimeout(() => {
+      search.focus();
+    }, 0);
+    backdrop?.classList.remove("invisible");
+    backdrop?.classList.add("visible");
+  }
+
+  function closePagefind() {
+    const search = document.getElementById("search");
+    search.value = "";
+    backdrop?.classList.remove("visible");
+    backdrop?.classList.add("invisible");
+  }
+
+  // open pagefind
+  magnifyingGlass?.addEventListener("click", () => {
+    openPagefind();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/") {
+      e.preventDefault();
+      openPagefind();
+    } else if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      openPagefind();
+    }
+  });
+
+  // close pagefind
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" || e.keyCode === 27) {
+      closePagefind();
+    }
+  });
+
+  backdrop?.addEventListener("click", (event) => {
+    if (!event.target.closest("#pagefind-container")) {
+      closePagefind();
+    }
+  });
+
+  // prevent form submission
+  const form = document.getElementById("form");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
+</script>  </body></html>

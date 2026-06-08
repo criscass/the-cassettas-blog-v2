@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="en"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><meta name="generator" content="Astro v5.18.2"><!-- Font preloads --><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin><!-- Canonical URL --><link rel="canonical" href="http://www.cassettas-reboot.xyz/it/post-00028/"><!-- Primary Meta Tags --><title>Non troviamo un pezzo del puzzle | The Cassetta&#39;s Reboot</title><meta name="title" content="Non troviamo un pezzo del puzzle | The Cassetta's Reboot"><meta name="description" content="Pavimento, vernice, vomito e ospedali"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="http://www.cassettas-reboot.xyz/it/post-00028/"><meta property="og:title" content="Non troviamo un pezzo del puzzle | The Cassetta's Reboot"><meta property="og:description" content="Pavimento, vernice, vomito e ospedali"><meta property="og:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="http://www.cassettas-reboot.xyz/it/post-00028/"><meta property="twitter:title" content="Non troviamo un pezzo del puzzle | The Cassetta's Reboot"><meta property="twitter:description" content="Pavimento, vernice, vomito e ospedali"><meta property="twitter:image" content="http://www.cassettas-reboot.xyz/blog-placeholder-1.jpg"><!-- PageFind --><link href="/pagefind/pagefind-ui.css" rel="stylesheet"><script src="/pagefind/pagefind-ui.js">
+	import { Image, Picture } from "astro:assets";
+	import { Code, Debug } from "astro:components";
+</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CDGfc0hd.js"></script><script>
+	function init() {
+		preloadTheme();
+		onScroll();
+		animate();
+		updateThemeButtons();
+		addCopyCodeButtons();
+		setGiscusTheme();
+
+		const backToTop = document.getElementById("back-to-top");
+		backToTop?.addEventListener("click", (event) => scrollToTop(event));
+
+		const backToPrev = document.getElementById("back-to-prev");
+		backToPrev?.addEventListener("click", () => window.history.back());
+
+		const lightThemeButton = document.getElementById("light-theme-button");
+		lightThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "light");
+			toggleTheme(false);
+			updateThemeButtons();
+		});
+
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		darkThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "dark");
+			toggleTheme(true);
+			updateThemeButtons();
+		});
+
+		const systemThemeButton = document.getElementById("system-theme-button");
+		systemThemeButton?.addEventListener("click", () => {
+			localStorage.setItem("theme", "system");
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+			updateThemeButtons();
+		});
+
+		window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+			if (localStorage.theme === "system") {
+				toggleTheme(event.matches);
+			}
+		});
+
+		document.addEventListener("scroll", onScroll);
+	}
+
+	function updateThemeButtons() {
+		const theme = localStorage.getItem("theme");
+		const lightThemeButton = document.getElementById("light-theme-button");
+		const darkThemeButton = document.getElementById("dark-theme-button");
+		const systemThemeButton = document.getElementById("system-theme-button");
+
+		function removeActiveButtonTheme(button) {
+			button?.classList.remove("bg-black/5");
+			button?.classList.remove("dark:bg-white/5");
+		}
+
+		function addActiveButtonTheme(button) {
+			button?.classList.add("bg-black/5");
+			button?.classList.add("dark:bg-white/5");
+		}
+
+		removeActiveButtonTheme(lightThemeButton);
+		removeActiveButtonTheme(darkThemeButton);
+		removeActiveButtonTheme(systemThemeButton);
+
+		if (theme === "light") {
+			addActiveButtonTheme(lightThemeButton);
+		} else if (theme === "dark") {
+			addActiveButtonTheme(darkThemeButton);
+		} else {
+			addActiveButtonTheme(systemThemeButton);
+		}
+	}
+
+	function animate() {
+		const animateElements = document.querySelectorAll(".animate");
+
+		animateElements.forEach((element, index) => {
+			setTimeout(() => {
+				element.classList.add("show");
+			}, index * 100);
+		});
+	}
+
+	function onScroll() {
+		if (window.scrollY > 0) {
+			document.documentElement.classList.add("scrolled");
+		} else {
+			document.documentElement.classList.remove("scrolled");
+		}
+	}
+
+	function scrollToTop(event) {
+		event.preventDefault();
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	}
+
+	function toggleTheme(dark) {
+		const css = document.createElement("style");
+
+		css.appendChild(
+			document.createTextNode(
+				`* {
+             -webkit-transition: none !important;
+             -moz-transition: none !important;
+             -o-transition: none !important;
+             -ms-transition: none !important;
+             transition: none !important;
+          }
+        `,
+			),
+		);
+
+		document.head.appendChild(css);
+
+		if (dark) {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+
+		window.getComputedStyle(css).opacity;
+		document.head.removeChild(css);
+
+		setGiscusTheme();
+	}
+
+	function preloadTheme() {
+		const userTheme = localStorage.theme;
+
+		if (userTheme === "light" || userTheme === "dark") {
+			toggleTheme(userTheme === "dark");
+		} else {
+			toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+		}
+	}
+
+	function addCopyCodeButtons() {
+		let copyButtonLabel = "📋";
+		let codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+		async function copyCode(codeBlock, copyButton) {
+			const codeText = codeBlock.innerText;
+			const buttonText = copyButton.innerText;
+			const textToCopy = codeText.replace(buttonText, "");
+
+			await navigator.clipboard.writeText(textToCopy);
+			copyButton.innerText = "✅";
+
+			setTimeout(() => {
+				copyButton.innerText = copyButtonLabel;
+			}, 2000);
+		}
+
+		for (let codeBlock of codeBlocks) {
+			const wrapper = document.createElement("div");
+			wrapper.style.position = "relative";
+
+			const copyButton = document.createElement("button");
+			copyButton.innerText = copyButtonLabel;
+			copyButton.classList = "copy-code";
+
+			codeBlock.setAttribute("tabindex", "0");
+			codeBlock.appendChild(copyButton);
+
+			codeBlock.parentNode.insertBefore(wrapper, codeBlock);
+			wrapper.appendChild(codeBlock);
+
+			copyButton?.addEventListener("click", async () => {
+				await copyCode(codeBlock, copyButton);
+			});
+		}
+	}
+
+	const setGiscusTheme = () => {
+		const giscus = document.querySelector(".giscus-frame");
+
+		const isDark = document.documentElement.classList.contains("dark");
+
+		if (giscus) {
+			const url = new URL(giscus.src);
+			url.searchParams.set("theme", isDark ? "dark" : "light");
+			giscus.src = url.toString();
+		}
+	};
+
+	document.addEventListener("DOMContentLoaded", () => init());
+	document.addEventListener("astro:after-swap", () => init());
+	preloadTheme();
+</script><link rel="stylesheet" href="/_astro/users.Cdr_gJz1.css"></head> <body> <header> <div class="mx-auto max-w-screen-sm px-3"> <div class="flex flex-wrap justify-between gap-y-2"> <a href="/it" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out">  <div class="text-2xl font-semibold"> The Cassetta&#39;s Reboot </div>  </a> <nav class="flex items-center gap-5 text-sm"> <a href="/it/blog" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out underline underline-offset-[3px]"> blog </a> <a href="/en/post-00028/" target="_self" class="inline-block decoration-black/30 dark:decoration-white/30 hover:decoration-black/50 focus-visible:decoration-black/50 dark:hover:decoration-white/50 dark:focus-visible:decoration-white/50 text-current hover:text-black focus-visible:text-black dark:hover:text-white dark:focus-visible:text-white transition-colors duration-300 ease-in-out"> English </a> <button id="magnifying-glass" aria-label="Search" class="flex items-center rounded border border-black/15 bg-neutral-100 px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:bg-neutral-900 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 7C3.5 5.067 5.067 3.5 7 3.5C8.933 3.5 10.5 5.067 10.5 7C10.5 7.88461 10.1718 8.69256 9.63058 9.30876L9.30876 9.63058C8.69256 10.1718 7.88461 10.5 7 10.5C5.067 10.5 3.5 8.933 3.5 7ZM9.96544 11.0261C9.13578 11.6382 8.11014 12 7 12C4.23858 12 2 9.76142 2 7C2 4.23858 4.23858 2 7 2C9.76142 2 12 4.23858 12 7C12 8.11014 11.6382 9.13578 11.0261 9.96544L14.0303 12.9697L14.5607 13.5L13.5 14.5607L12.9697 14.0303L9.96544 11.0261Z" fill="currentColor"></path></svg>
+&nbsp;Search
+</button> </nav> </div> </div> </header> <main>  <div class="mx-auto max-w-screen-sm px-3"> <div class="animate"> <a href="/it/blog" class="not-prose group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-7 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm"> Back to blog </div> </a> </div> <div class="my-10 space-y-1"> <div class="animate flex items-center gap-1.5"> <div class="font-base text-sm"> <time datetime="2024-08-21T00:00:00.000Z"> August 21, 2024 </time> </div>
+&bull;
+<div class="font-base text-sm"> 10 min read </div> </div> <h1 class="animate text-3xl font-semibold text-black dark:text-white"> Non troviamo un pezzo del puzzle </h1> </div> <article class="animate"> <p><img alt="Postazione di lavoro improvvisata nella nostra casa a Leiden" loading="lazy" decoding="async" fetchpriority="auto" width="4624" height="3472" src="/_astro/pic-1.C8_KAfxk_uXXxH.webp" >
+<em>Affrettiamoci a coprire questo pavimento</em></p>
+<p><em>Ho scritto questo post il giorno della partenza per l’Italia, pensavo di riuscire a metterlo online durante il viaggio ma non ce l’ho fatta. Ora siamo a casa a Leiden, dopo un’epopea di 72 ore che racconterò nel prossimo post.</em></p>
+<p><em>Ecco il post del 21 Agosto.</em></p>
+<p>Gli ultimi giorni sono stati intensi, concitati, ricchi di emozioni, produttivi, frenetici, appaganti ma anche snervanti e faticosi. Ricapitoliamo.<br>
+Il 14 pomeriggio abbiamo avuto l’incontro con il proprietario di casa e l’agenzia per la consegna delle chiavi. Tutto bene su quel fronte. Ci siamo messi subito al lavoro.<br>
+Abbiamo cominciato dipingendo tutte le pareti interne. Per non lasciare da soli i cani abbiamo fatto dei turni. Io andavo alla casa al mattino, con Sophia e Gemma, mentre Hilly restava all’Aja. Poi ad un certo punto portavo le ragazze indietro e prendevo Hilly, per tornare a dipingere le pareti con lei.<br>
+Sophia e Gemma si sono dimostrate delle brave imbianchine. Sophia l’aveva gia’ fatto in un paio di occasioni, ma Gemma era una novizia e mi ha veramente stupito per la rapidita’ e intuitivita’ con cui ha appreso l’arte del pennello e del rullo. Abbiamo tutti lavorato con impegno e costanza, Ferragosto incluso, fino ad avere dato una bella rinfrescata alla casa. Erano un po’ di anni che non veniva imbiancata.<br>
+Poi è giunto il momento di iniziare con l’installazione del parquet (laminato) nelle camere da letto e in tutto il piano inferiore.<br>
+L’idea era quella di continuare a fare i turni in cui si sarebbero alternate le ragazze e Hilly ad aiutarmi nella posa del pavimento, per riuscire a finire tutto entro il 20 Agosto, ieri, perche’ il 21 saremmo dovuti partire per andare a prendere le nostre cose in Toscana.</p>
+<p><img alt="Hilly dipinge la parete della sala" loading="lazy" decoding="async" fetchpriority="auto" width="901" height="1200" src="/_astro/pic-2.D4rsdWsn_Z1dWnjP.webp" >
+<em>Gemma mette il nastro prima di dipingere le pareti della sua cameretta</em></p>
+<p><img alt="Gemma usa il rullo per dipingere" loading="lazy" decoding="async" fetchpriority="auto" width="901" height="1200" src="/_astro/pic-3.6ZHNILpf_Zh77kN.webp" >
+<em>Alle prese con il rullo</em></p>
+<p><img alt="Sophia in ginocchio mette il pavimento" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-4.BG6ffdab_2anvGK.webp" >
+<em>La frustrante posa iniziale del pavimento</em></p>
+<p><img alt="Gemma dipinge il piano terra" loading="lazy" decoding="async" fetchpriority="auto" width="901" height="1200" src="/_astro/pic-5.BXgdKogO_1vbhc6.webp" >
+<em>Gemma dipinge il piano terra</em></p>
+<p>Nel primo pomeriggio di sabato 17 Hilly a cominciato a sentirsi male. Stavamo completando l’imbiancatura, c’era anche Gemma, mentre Sophia era alla casa con i cani, quando Hilly si e’ dovuta sdraiare sul pavimento, con un fortissimo mal di testa e mancanza di energie. Io e Gemma abbiamo finito di dipingere le pareti della sala e poi siamo tornati tutti e tre da Sophia. Hilly si e’ messa subito a letto e ha passato una nottata con febbre, vomito arancione e dolori in tutto il corpo. Il giorno dopo si sentiva ancora peggio ed e’ rimasta a letto senza riuscire a mangiare niente.<br>
+Io e Sophia abbiamo iniziato con il pavimento di sopra. Non avevo mai installato il parquet. Dopo essermi visto una decina di video su youtube ero convinto sarebbe stato piuttosto facile, e cosi’ in effetti alla fine e’ stato, ma non da subito, prima dovevamo capire alcune cose che non erano poi così scontate e quindi ci mettemmo diverse ore per fare un paio di metri quadri nella cameretta di Sophia, sentendoci scoraggiati e sopraffatti, per dover poi smontare il tutto e ricominciare in un modo diverso./
+Nel pomeriggio di Domenica siamo tornati a casa stanchi morti ma appagati e ci siamo concessi qualche ora di riposo. Hilly non migliorava e la sua fronte scottava molto. I sintomi erano inconsueti per la rapidita’ con cui si erano presentati e per un forte dolore e rigidita’ nella zona del collo. Mi decido a cercare aiuto.<br>
+Siccome non abbiamo ancora fatto la richiesta del medico non sapevo a chi rivolgermi e dopo un po’ di ricerche online e aver chiesto consiglio a Dehlia, la nostra amica Sud Africana che vive con la sua famiglia ad Amsterdam, vengo a sapere che bisogna contattare un numero di telefono per l’assistenza sanitaria straordinaria per tutti i casi che non richiedano l’intervento urgente di un’ambulanza o di un pronto soccorso. Passo piu’ di dieci minuti al telefono con una voce registrata ma non riesco a parlare con nessun operatore prima che la linea venga bruscamente interrotta. A questo punto carico Hilly in macchina, con un po’ di difficolta’ visto che riusciva a malapena a stare in piedi, e mi dirigo verso un ospedale dell’Aja, a venti minuti di auto, dove avevo letto c’era una specie di guardia medica notturna. Arrivati nel posto veniamo fatti entrare in una sala d’aspetto dove si trovavano una decina di persone, per lo piu’ genitori con bambini piccoli in attesa di essere visitati.
+Ci viene comunque detto che senza prenotazione, sempre allo stesso numero di telefono che avevo chiamato poco prima, non si poteva essere visti da un medico. Allora mi rimetto al telefono e Hilly si sdraia su di un divanetto.<br>
+La voce registrata ripete sempre la solita cantilena, in Olandese, di cui non capisco assolutamente nulla, ma dopo una ventina di minuti mi accorgo che la registrazione viene regolarmente interrotta da un’altra voce registrata che pronuncia una parola che mi accorgo essere un numero, via via decrescente.<br>
+Il numero rappresenta le persone in attesa di risposta. Eravamo partiti dal numero 13.<br>
+Dopo trentacinque minuti siamo al numero due e ho una forte ansia che cada la linea prima di poter parlare con un’operatore e dover cominciare ancora tutto da capo. Al trentottesimo minuto l’infernale cantilena robotica viene interrotta dalla voce di un essere umano in carne ed ossa, un entita’ senziente con cui sono in grado di interagire in modo biunivoco.<br>
+Il sistema sanitario Olandese viene spesso criticato per essere di difficile accesso nei casi in cui non e’ stata ancora fatta una diagnosi e bisogna superare uno screening iniziale a cui di solito segue, secondo i suoi detrattori, la prescrizione di tornare a riposo, perche’ tutto si risolvera’ da se’, e al massimo prendere del paracetamolo.<br>
+Dopo aver risposto ad una ventina di domande dell’operatrice, facendo da tramite tra lei e Hilly, che non riusciva neanche a parlare al telefono, mi viene detto che probabilmente si tratta di una forte “stomach flu” (gastroenterite), visto che ci sono diversi casi in giro e i sintomi sembrano quelli, e quindi Hilly non ha diritto ad essere visitata. L’assistente nella sala d’aspetto e’ stata molto compassionevole e ci ha “rincuorati” dicendoci che se la cosa fosse peggiorata, durante la notte, avremmo dovuto richiamare il numero di telefono o addirittura il 112.<br>
+Guidando verso casa nella notte non ero molto convinto del fatto che si trattasse di gastroenterite ed ero un po’ preoccupato.<br>
+Durante la notte Hilly ha avuto febbre alta e incubi continui ed il giorno dopo si sentiva ancora stanchissima (non mangiava da quasi 48 ore ) con un forte mal di testa ma con qualche accenno di miglioramento. Per la prima volta si affacciava la prospettiva che sarei dovuto venire in Italia da solo con Gemma, facendomi 3000 km in 2 giorni. Un incubo peggio di quelli di Hilly!</p>
+<p>Mentre io e Sophia andavamo avanti ad installare il pavimento Gemma si e’ dedicata alla verniciatura della sua finestra. Sophia e’ stata in grado di fare alcune aree di pavimento tutta sola, utilizzando anche la troncatrice per accorciare le tavole.<br>
+Lunedi sera avevamo finito l’80% del pavimento, mancava solo l’ingresso, e Hilly era ancora estremamente debole e scoraggiata ma almeno aveva smesso di vomitare e il mal di testa stava diminuendo. Il giorno dopo, Martedi’, sarebbe stato l’ultimo giorno utile per finire casa nostra e pulire la casa all’Aja perche’ poi, Mercoledi’ mattina, alle 6.30 sarebbe arrivata la famiglia di ritorno dal viaggio negli Stati Uniti e noi saremmo partiti per l’Italia.<br>
+Siccome le tre biciclette che abbiamo comprato si trovavano ancora all’Aja martedi’ mattina presto, io e le ragazze siamo andati in bici a Leiden. E’ stata una bellissima pedalata, tutta una pista ciclabile, tra le campagne, e in 45 minuti eravamo a casa nostra. Entro le 13 io e Sophia avevamo finito il pavimento e restammo ad ammirarlo per diversi minuti, cominciando a pianificare dove avremmo messo i mobili che dovevamo andare a prendere in Toscana. Hilly ha mangiato un po ‘di riso in bianco ed una mela, si e’ fatta forza ed e’ venuta a prenderci in macchina.<br>
+Forse ce l’avrebbe fatta a partire il giorno dopo.<br>
+Nel pomeriggio abbiamo pulito la casa e portato i cani a fare gli ultimi giri. Il gatto Moxie per salutarci ha vomitato su una sedia nel salotto. Che tenero!</p>
+<p>Questa mattina alle 5 eravamo tutti in piedi a dare gli ultimi colpi di aspirapolvere, pulire il bagno, mettere a lavare le lenzuola, buttare le nostre ultime cose in macchina e via, verso casa nostra. Hilly sembra rinata. Rinfrescata dal digiuno forzato e dal riposo. Uscita dal tunnel oscuro in cui era finita.<br>
+Abbiamo lasciato Sophia a Leiden, nella casa tutta da riordinare e pulire, dove dormirà sul materassino gonfiabile che ci hanno prestato, in attesa del nostro ritorno venerdì notte, per la prima volta da sola in vita sua. Che forza!<br>
+Noi abbiamo ritirato il furgone/camion, uno scassone da 300.000 km, senza aria condizionata e bluetooth e neanche una presa USB dove ricaricare il telefono per la navigazione. Pero’ siamo molto felici, Hilly e’ alla guida da 4 ore, Gemma non vede l’ora di rivedere i suoi amici ed e’ anche il suo compleanno e io sto scrivendo questo post mentre sfrecciamo sull’autostrada tedesca con un piccolo carico di mobili da consegnare a Corsanico, un paesino nella provincia di Lucca.<br>
+Questa volta abbiamo rischiato che un pezzo del puzzle venisse perso ma alla fine l’abbiamo trovato e nei prossimi giorni, se tutto va bene, riusciremo ad incastrarlo nel posto giusto.</p>
+<p><img alt="Hilly dipinge la parete della sala" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-6.VFNzDLZ9_ZvxIkb.webp" >
+<em>Hilly poco prima del tracollo</em></p>
+<p><img alt="Sophia dipinge il copricalorifero della sua camera" loading="lazy" decoding="async" fetchpriority="auto" width="1199" height="901" src="/_astro/pic-7.BwdSw3LV_ZIw0fm.webp" >
+<em>Sophia dipinge il copricalorifero della sua camera</em></p>
+<p><img alt="Gemma alle prese con la sua finestra" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-8.CvoRVXnX_ZKO7az.webp" >
+<em>Gemma alle prese con la sua finestra</em></p>
+<p><img alt="Sophia concentrata sul pavimento della sala" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-9.DefrQWit_GFsqk.webp" >
+<em>Sophia concentrata sul pavimento della sala</em></p>
+<p><img alt="Sophia taglia con la troncatrice" loading="lazy" decoding="async" fetchpriority="auto" width="900" height="1200" src="/_astro/pic-12.ChQZNYqm_1kc0PG.webp" >
+<em>Sophia, la maga della troncatrice</em></p>
+<p><img alt="La sala con il nuovo pavimento" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-10.BzUN7P-8_2ngmXE.webp" >
+<em>La sala con il nuovo pavimento</em></p>
+<p><img alt="La cucina" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="901" src="/_astro/pic-11.BufcVGSP_ZhWClw.webp" >
+<em>La nostra splendida cucina</em></p>
+<p><img alt="In bici verso Leiden" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="900" src="/_astro/pic-13.DO-o3Ym__Z24T42O.webp" >
+<em>In bici verso Leiden</em></p>
+<p><img alt="Noi 3 sul furgone" loading="lazy" decoding="async" fetchpriority="auto" width="1200" height="900" src="/_astro/pic-14.WrkDT20i_aCcbD.webp" >
+<em>Montaione arriviamo!</em></p>
+<p><img alt="Hilly all guida del camion" loading="lazy" decoding="async" fetchpriority="auto" width="901" height="1200" src="/_astro/pic-15.CkYPGaNg_1Gcj6.webp" >
+<em>Alla guida del furgone/camion</em></p> <div class="mt-24"> <div class="grid grid-cols-2 gap-1.5 sm:gap-3"> <a href="/it/post-00027" class="group relative flex flex-nowrap rounded-lg border border-black/15 px-4 py-3 pl-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">Che belle le automobili</div> </a> <a href="/it/post-00029" class="group relative flex flex-grow flex-row-reverse flex-nowrap rounded-lg border border-black/15 px-4 py-4 pr-10 no-underline transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="-translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="flex items-center text-sm">Disturbo post traumatico da stress</div> </a> </div> </div> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="1BoPBE" prefix="r1" component-url="/_astro/CommentsSection.B3TSinQT.js" component-export="default" renderer-url="/_astro/client.Fd5LK8aS.js" props="{&quot;postId&quot;:[0,&quot;post-00028&quot;],&quot;lang&quot;:[0,&quot;it&quot;]}" ssr client="visible" opts="{&quot;name&quot;:&quot;CommentsSection&quot;,&quot;value&quot;:true}" await-children><section class="not-prose mt-16 space-y-6"><h2 class="text-xl font-semibold text-black dark:text-white">Commenti</h2><p class="text-sm text-black/60 dark:text-white/60">Caricamento commenti…</p></section><!--astro:end--></astro-island> </article> </div>  </main> <footer class="animate"> <div class="mx-auto max-w-screen-sm px-3"> <div class="relative"> <div class="absolute -top-12 right-0"> <button id="back-to-top" class="group relative flex w-fit flex-nowrap rounded border border-black/15 py-1.5 pl-8 pr-3 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="absolute left-2 top-1/2 size-4 -translate-y-1/2 rotate-90 fill-none stroke-current stroke-2"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100 group-focus-visible:translate-x-0 group-focus-visible:scale-x-100"></line> <polyline points="12 5 5 12 12 19" class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-focus-visible:translate-x-0"></polyline> </svg> <div class="text-sm">Back to top</div> </button> </div> </div> <div class="flex items-center justify-between"> <div>&copy; 2026 • The Cassetta&#39;s Reboot</div> <div class="flex flex-wrap items-center gap-1.5"> <button id="light-theme-button" aria-label="Light theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="3"></line> <line x1="12" y1="21" x2="12" y2="23"></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line> <line x1="1" y1="12" x2="3" y2="12"></line> <line x1="21" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line> </svg> </button> <button id="dark-theme-button" aria-label="Dark theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button id="system-theme-button" aria-label="System theme" class="group flex size-9 items-center justify-center rounded border border-black/15 hover:bg-black/5 focus-visible:bg-black/5 dark:border-white/20 dark:hover:bg-white/5 dark:focus-visible:bg-white/5"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-colors duration-300 ease-in-out group-hover:animate-pulse group-hover:stroke-black group-focus-visible:animate-pulse group-focus-visible:stroke-black group-hover:dark:stroke-white dark:group-focus-visible:stroke-white"> <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect> <line x1="8" y1="21" x2="16" y2="21"></line> <line x1="12" y1="17" x2="12" y2="21"></line> </svg> </button> </div> </div> </div> </footer> <div id="backdrop" class="bg-[rgba(0, 0, 0, 0.5] invisible fixed left-0 top-0 z-50 flex h-screen w-full justify-center p-6 backdrop-blur-sm"> <div id="pagefind-container" class="m-0 flex h-fit max-h-[80%] w-full max-w-screen-sm flex-col overflow-auto rounded border border-black/15 bg-neutral-100 p-2 px-4 py-3 shadow-lg dark:border-white/20 dark:bg-neutral-900"> <div id="search" class="pagefind-ui pagefind-init" data-pagefind-ui data-bundle-path="/pagefind/" data-ui-options="{&#34;showImages&#34;:false,&#34;excerptLength&#34;:15,&#34;resetStyles&#34;:false}"></div> <script type="module" src="/_astro/Search.astro_astro_type_script_index_0_lang.DExfVQkA.js"></script> <div class="mr-2 pb-1 pt-4 text-right text-xs dark:prose-invert">
+Press <span class="prose text-xs dark:prose-invert"><kbd class="">Esc</kbd></span> or click anywhere to close
+</div> </div> </div> <script>
+  const magnifyingGlass = document.getElementById("magnifying-glass");
+  const backdrop = document.getElementById("backdrop");
+
+  function openPagefind() {
+    const searchDiv = document.getElementById("search");
+    const search = searchDiv.querySelector("input");
+    setTimeout(() => {
+      search.focus();
+    }, 0);
+    backdrop?.classList.remove("invisible");
+    backdrop?.classList.add("visible");
+  }
+
+  function closePagefind() {
+    const search = document.getElementById("search");
+    search.value = "";
+    backdrop?.classList.remove("visible");
+    backdrop?.classList.add("invisible");
+  }
+
+  // open pagefind
+  magnifyingGlass?.addEventListener("click", () => {
+    openPagefind();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/") {
+      e.preventDefault();
+      openPagefind();
+    } else if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      openPagefind();
+    }
+  });
+
+  // close pagefind
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" || e.keyCode === 27) {
+      closePagefind();
+    }
+  });
+
+  backdrop?.addEventListener("click", (event) => {
+    if (!event.target.closest("#pagefind-container")) {
+      closePagefind();
+    }
+  });
+
+  // prevent form submission
+  const form = document.getElementById("form");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+  });
+</script>  </body></html>

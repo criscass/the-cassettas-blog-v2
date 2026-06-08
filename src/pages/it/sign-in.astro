@@ -1,0 +1,21 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
+import Link from "@components/Link.astro";
+import SignInForm from "@components/auth/SignInForm.tsx";
+import { AUTH_STRINGS } from "@components/auth/authStrings";
+
+const t = AUTH_STRINGS.it;
+---
+
+<Layout title={t.signInTitle} description={t.signInTitle}>
+	<Container>
+		<div class="animate mx-auto flex max-w-sm flex-col gap-6">
+			<h1 class="text-2xl font-semibold text-black dark:text-white">{t.signInTitle}</h1>
+			<SignInForm lang="it" client:load />
+			<p class="text-sm text-black/70 dark:text-white/70">
+				{t.noAccount} <Link href="/it/sign-up">{t.signUpLink}</Link>
+			</p>
+		</div>
+	</Container>
+</Layout>
