@@ -17,6 +17,7 @@ export const AUTH_STRINGS = {
     haveAccount: "Hai già un account?",
     signUpLink: "Registrati",
     signInLink: "Accedi",
+    signOutButton: "Esci",
     pendingHeading: "Account creato",
     pendingBody:
       "Il tuo account è in attesa di approvazione da parte di un amministratore. Riceverai accesso una volta approvato.",
@@ -37,6 +38,7 @@ export const AUTH_STRINGS = {
     haveAccount: "Already have an account?",
     signUpLink: "Sign up",
     signInLink: "Sign in",
+    signOutButton: "Sign out",
     pendingHeading: "Account created",
     pendingBody:
       "Your account is awaiting admin approval. You'll be able to sign in once it's approved.",

@@ -1,6 +1,7 @@
 ---
 import Container from "@components/Container.astro";
 import Link from "@components/Link.astro";
+import AuthStatus from "@components/auth/AuthStatus.tsx";
 import { SITE } from "@consts";
 
 import { getRelativeLocaleUrl, getRelativeLocaleUrlList } from "astro:i18n";
@@ -47,6 +48,8 @@ const newPath = pathname
 					>
 					&nbsp;Search
 				</button>
+
+				<AuthStatus lang={currentLocale === "en" ? "en" : "it"} client:load />
 			</nav>
 		</div>
 	</Container>
