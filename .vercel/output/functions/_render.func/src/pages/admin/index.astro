@@ -1,6 +1,0 @@
----
-// Admin landing — just routes to the only admin page so far. Admin-gated by
-// src/middleware.ts. SSR so the redirect isn't baked in at build time.
-export const prerender = false;
-return Astro.redirect("/admin/users");
----
