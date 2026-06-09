@@ -41,7 +41,7 @@ export default function SignInForm({ lang }: Props) {
       {error && (
         <p
           role="alert"
-          className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-700 dark:text-red-300"
+          className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-700 dark:text-rose-300"
         >
           {error}
         </p>
@@ -56,7 +56,7 @@ export default function SignInForm({ lang }: Props) {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-lg border border-black/15 bg-transparent px-3 py-2 dark:border-white/20"
+          className="rounded-lg border border-border bg-transparent px-3 py-2 focus:border-accent/50 focus:outline-none"
         />
       </label>
 
@@ -69,28 +69,28 @@ export default function SignInForm({ lang }: Props) {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-lg border border-black/15 bg-transparent px-3 py-2 dark:border-white/20"
+          className="rounded-lg border border-border bg-transparent px-3 py-2 focus:border-accent/50 focus:outline-none"
         />
       </label>
 
       <button
         type="submit"
         disabled={loading}
-        className="rounded-lg bg-black px-4 py-2 font-medium text-white disabled:opacity-60 dark:bg-white dark:text-black"
+        className="rounded-lg bg-accent px-4 py-2 font-medium text-ink transition-opacity disabled:opacity-60"
       >
         {loading ? t.submitting : t.signInButton}
       </button>
 
-      <div className="flex items-center gap-3 text-xs text-black/50 dark:text-white/50">
-        <span className="h-px flex-1 bg-black/10 dark:bg-white/10" />
+      <div className="flex items-center gap-3 text-xs opacity-50">
+        <span className="h-px flex-1 bg-border" />
         {t.or}
-        <span className="h-px flex-1 bg-black/10 dark:bg-white/10" />
+        <span className="h-px flex-1 bg-border" />
       </div>
 
       <button
         type="button"
         onClick={handleGoogle}
-        className="rounded-lg border border-black/15 px-4 py-2 font-medium dark:border-white/20"
+        className="rounded-lg border border-border px-4 py-2 font-medium transition-colors hover:border-accent/30 hover:bg-accent/5"
       >
         {t.googleButton}
       </button>

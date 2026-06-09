@@ -16,7 +16,7 @@ const { lang } = Astro.props;
 
 <a
 	href={`/${lang}/${cleanSlug(entry.id)}`}
-	class="not-prose group relative flex flex-nowrap rounded-lg border border-black/15 px-4 py-3 pr-10 transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"
+	class="not-prose group relative flex flex-nowrap rounded-xl border border-border px-4 py-3 pr-10 transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 focus-visible:border-accent/30 focus-visible:bg-accent/5"
 >
 	<div class="flex flex-1 flex-col truncate">
 		<div class="font-semibold">
@@ -29,7 +29,7 @@ const { lang } = Astro.props;
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 24 24"
-		class="absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2"
+		class="absolute right-2 top-1/2 size-5 -translate-y-1/2 fill-none stroke-current stroke-2 transition-colors duration-300 ease-in-out group-hover:stroke-accent group-focus-visible:stroke-accent"
 	>
 		<line
 			x1="5"

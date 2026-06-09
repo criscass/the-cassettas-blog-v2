@@ -4,10 +4,6 @@ import Link from "@components/Link.astro";
 import AuthStatus from "@components/auth/AuthStatus.tsx";
 import { SITE } from "@consts";
 
-import { getRelativeLocaleUrl, getRelativeLocaleUrlList } from "astro:i18n";
-
-const englishURL = getRelativeLocaleUrl("en", "");
-const italianURL = getRelativeLocaleUrl("it", "");
 const currentLocale = Astro.currentLocale ?? "it";
 const otherLocale = currentLocale === "it" ? "en" : "it";
 const { pathname } = Astro.url;
@@ -37,7 +33,7 @@ const newPath = pathname
 				<button
 					id="magnifying-glass"
 					aria-label="Search"
-					class="flex items-center rounded border border-black/15 bg-neutral-100 px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:bg-neutral-900 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"
+					class="flex items-center rounded-lg border border-border bg-surface px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 hover:text-accent focus-visible:border-accent/30 focus-visible:bg-accent/5 focus-visible:text-accent"
 				>
 					<svg height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;"
 						><path

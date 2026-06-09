@@ -4,6 +4,8 @@
 /* v3's `darkMode: "class"` equivalent — v4 defaults to prefers-color-scheme */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ─── Design tokens ─────────────────────────────────────────────────────── */
+
 @theme {
   --font-sans:
     "Geist", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
@@ -12,7 +14,24 @@
   --font-mono:
     "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
+
+  /* Light-mode defaults — overridden in .dark below */
+  --color-ink:     #f7f4ee; /* page background         */
+  --color-surface: #efe9dd; /* cards, header, footer   */
+  --color-border:  rgb(0 0 0 / 0.10); /* dividers, outlines */
+  --color-muted:   #2b2620; /* body copy               */
+  --color-accent:  #9c7530; /* links, hovers, gold     */
 }
+
+.dark {
+  --color-ink:     #0c0b0a;
+  --color-surface: #17150f;
+  --color-border:  rgb(255 255 255 / 0.10);
+  --color-muted:   #f3efe7;
+  --color-accent:  #d8b167;
+}
+
+/* ─── Base ──────────────────────────────────────────────────────────────── */
 
 html {
   overflow-y: auto;
@@ -32,13 +51,13 @@ body {
 body {
   @apply font-sans antialiased;
   @apply flex flex-col;
-  @apply bg-neutral-100 dark:bg-neutral-900;
-  @apply text-black/75 dark:text-white/75;
+  @apply bg-ink;
+  color: var(--color-muted);
 }
 
 header {
   @apply fixed left-0 right-0 top-0 z-50 py-6;
-  @apply bg-neutral-100/75 dark:bg-neutral-900/75;
+  @apply bg-surface/80;
   @apply saturate-200 backdrop-blur-sm;
 }
 
@@ -51,22 +70,24 @@ footer {
 }
 
 article {
-  @apply prose prose-neutral max-w-full dark:prose-invert prose-img:mx-auto prose-img:my-auto;
-  @apply text-xl prose-headings:font-semibold;
-  @apply prose-headings:text-black prose-headings:dark:text-white;
+  @apply prose prose-neutral max-w-full dark:prose-invert;
+  @apply prose-img:mx-auto prose-img:my-auto prose-img:rounded-xl;
+  @apply text-xl leading-[1.75];
+  @apply prose-headings:font-semibold prose-headings:tracking-tight;
 }
 
 @layer utilities {
   article a {
-    @apply font-sans text-current underline underline-offset-[3px];
-    @apply decoration-black/30 dark:decoration-white/30;
+    @apply font-sans text-accent underline underline-offset-[3px];
+    @apply decoration-accent/50;
     @apply transition-colors duration-300 ease-in-out;
   }
   article a:hover {
-    @apply text-black dark:text-white;
-    @apply decoration-black/50 dark:decoration-white/50;
+    @apply decoration-accent;
   }
 }
+
+/* ─── Animation ─────────────────────────────────────────────────────────── */
 
 .animate {
   @apply -translate-y-3 opacity-0;
@@ -85,46 +106,48 @@ html.scrolled #back-to-top {
   @apply pointer-events-auto opacity-100;
 }
 
-/* shiki config */
+/* ─── Shiki syntax highlighting — warm palette ──────────────────────────── */
+
 pre {
-  @apply border border-black/15 py-5 dark:border-white/20;
+  @apply border border-border py-5;
 }
 
 :root {
-  --astro-code-color-text: #09090b;
-  --astro-code-color-background: #fafafa;
-  --astro-code-token-comment: #a19595;
-  --astro-code-token-keyword: #f47067;
-  --astro-code-token-string: #00a99a;
-  --astro-code-token-function: #429996;
-  --astro-code-token-constant: #2b70c5;
-  --astro-code-token-parameter: #4e8fdf;
-  --astro-code-token-string-expression: #ae42a0;
-  --astro-code-token-punctuation: #8996a3;
-  --astro-code-token-link: #8d85ff;
+  --astro-code-color-text:              #2b2620;
+  --astro-code-color-background:        #eae4d8;
+  --astro-code-token-comment:           #9a8a78;
+  --astro-code-token-keyword:           #9c3a20;
+  --astro-code-token-string:            #3a7a38;
+  --astro-code-token-function:          #9c7530;
+  --astro-code-token-constant:          #5a3aa8;
+  --astro-code-token-parameter:         #2a5a8a;
+  --astro-code-token-string-expression: #8a3c6e;
+  --astro-code-token-punctuation:       #6a5c50;
+  --astro-code-token-link:              #9c7530;
 }
 
 .dark {
-  --astro-code-color-text: #fafafa;
-  --astro-code-color-background: #09090b;
-  --astro-code-token-comment: #a19595;
-  --astro-code-token-keyword: #f47067;
-  --astro-code-token-string: #00a99a;
-  --astro-code-token-function: #6eafad;
-  --astro-code-token-constant: #b3cceb;
-  --astro-code-token-parameter: #4e8fdf;
-  --astro-code-token-string-expression: #bf7db6;
-  --astro-code-token-punctuation: #8996a3;
-  --astro-code-token-link: #8d85ff;
+  --astro-code-color-text:              #f3efe7;
+  --astro-code-color-background:        #1a1710;
+  --astro-code-token-comment:           #776b5a;
+  --astro-code-token-keyword:           #e09b6a;
+  --astro-code-token-string:            #8fc08a;
+  --astro-code-token-function:          #d8b167;
+  --astro-code-token-constant:          #b8a0e8;
+  --astro-code-token-parameter:         #7faed4;
+  --astro-code-token-string-expression: #c49bbf;
+  --astro-code-token-punctuation:       #8a8178;
+  --astro-code-token-link:              #d8b167;
 }
 
-/* copy code button on codeblocks */
+/* ─── Copy-code button ──────────────────────────────────────────────────── */
+
 .copy-code {
-  @apply absolute right-3 top-3 grid size-9 place-content-center rounded border border-black/15 bg-neutral-100 text-center duration-300 ease-in-out dark:border-white/20 dark:bg-neutral-900;
+  @apply absolute right-3 top-3 grid size-9 place-content-center rounded-lg border border-border bg-surface text-center duration-300 ease-in-out;
 }
 
 .copy-code:hover {
-  @apply bg-[#E9E9E9] transition-colors dark:bg-[#232323];
+  @apply bg-accent/10 border-accent/30 text-accent transition-colors;
 }
 
 .copy-code:active {
