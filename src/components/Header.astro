@@ -45,7 +45,7 @@ const newPath = pathname
 					&nbsp;Search
 				</button>
 
-				<AuthStatus lang={currentLocale === "en" ? "en" : "it"} client:load />
+				<AuthStatus lang={currentLocale === "en" ? "en" : "it"} client:only="react" />
 			</nav>
 		</div>
 	</Container>

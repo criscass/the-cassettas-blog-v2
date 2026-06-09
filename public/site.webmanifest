@@ -1,0 +1,21 @@
+{
+  "name": "The Cassetta's Reboot",
+  "short_name": "Cassetta's Reboot",
+  "description": "A new life for the Cassetta's family",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f4ee",
+  "theme_color": "#9c7530",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

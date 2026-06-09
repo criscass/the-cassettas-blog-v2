@@ -29,29 +29,37 @@ import Search from "astro-pagefind/components/Search";
 </div>
 
 <script is:inline>
-  const magnifyingGlass = document.getElementById("magnifying-glass");
-  const backdrop = document.getElementById("backdrop");
-
+  // The search button, backdrop and pagefind input are re-rendered on every
+  // Astro View Transition navigation, so we must not cache element references
+  // here (this inline script runs only once). Instead we delegate off `document`
+  // — which survives swaps — and re-query elements each time. Previously the
+  // listener was bound to the first-loaded button, so search only worked until
+  // the first client-side navigation.
   function openPagefind() {
-    const searchDiv = document.getElementById("search");
-    const search = searchDiv.querySelector("input");
-    setTimeout(() => {
-      search.focus();
-    }, 0);
+    const search = document.getElementById("search")?.querySelector("input");
+    const backdrop = document.getElementById("backdrop");
+    setTimeout(() => search?.focus(), 0);
     backdrop?.classList.remove("invisible");
     backdrop?.classList.add("visible");
   }
 
   function closePagefind() {
-    const search = document.getElementById("search");
-    search.value = "";
+    const search = document.getElementById("search")?.querySelector("input");
+    if (search) search.value = "";
+    const backdrop = document.getElementById("backdrop");
     backdrop?.classList.remove("visible");
     backdrop?.classList.add("invisible");
   }
 
-  // open pagefind
-  magnifyingGlass?.addEventListener("click", () => {
-    openPagefind();
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("#magnifying-glass")) {
+      openPagefind();
+    } else if (
+      event.target.closest("#backdrop") &&
+      !event.target.closest("#pagefind-container")
+    ) {
+      closePagefind();
+    }
   });
 
   document.addEventListener("keydown", (e) => {
@@ -61,26 +69,9 @@ import Search from "astro-pagefind/components/Search";
     } else if ((e.metaKey || e.ctrlKey) && e.key === "k") {
       e.preventDefault();
       openPagefind();
-    }
-  });
-
-  // close pagefind
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
+    } else if (e.key === "Escape") {
       closePagefind();
     }
-  });
-
-  backdrop?.addEventListener("click", (event) => {
-    if (!event.target.closest("#pagefind-container")) {
-      closePagefind();
-    }
-  });
-
-  // prevent form submission
-  const form = document.getElementById("form");
-  form?.addEventListener("submit", (event) => {
-    event.preventDefault();
   });
 </script>
 

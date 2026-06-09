@@ -4,6 +4,27 @@
 /* v3's `darkMode: "class"` equivalent — v4 defaults to prefers-color-scheme */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ─── Web fonts ─────────────────────────────────────────────────────────── */
+/* Without these, the `<link rel="preload">` in Head.astro downloads the woff2
+   but nothing binds it to the "Geist" family name, so the browser falls back to
+   system-ui unless Geist happens to be installed locally. These @font-face rules
+   register the bundled variable fonts so Geist renders for every visitor. */
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/geist-mono.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ─── Design tokens ─────────────────────────────────────────────────────── */
 
 @theme {
