@@ -1,3 +1,11 @@
 ---
-return Astro.redirect('/it/');
+// SSR so we can read the visitor's Accept-Language header at request time and
+// send them to their language. Astro.preferredLocale picks the best match among
+// i18n.locales (['it','en']); it's undefined when none match, so fall back to
+// the default locale ('it'). i18n.routing.redirectToDefaultLocale is disabled
+// in astro.config.mjs so this route — not Astro's built-in i18n — owns `/`.
+export const prerender = false;
+
+const target = Astro.preferredLocale ?? 'it';
+return Astro.redirect(`/${target}/`, 302);
 ---

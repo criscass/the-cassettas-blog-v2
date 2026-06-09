@@ -19,7 +19,10 @@ export default defineConfig({
     defaultLocale: 'it',
     locales: ['it', 'en'],
     routing: {
-      prefixDefaultLocale: true
+      prefixDefaultLocale: true,
+      // Don't let i18n auto-redirect `/` to `/it/`. Our SSR `src/pages/index.astro`
+      // owns `/` so it can pick the locale from the visitor's Accept-Language.
+      redirectToDefaultLocale: false
     }
   },
   site: 'http://www.cassettas-reboot.xyz/',
