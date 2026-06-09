@@ -8,6 +8,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import pagefind from 'astro-pagefind';
 import vercel from '@astrojs/vercel';
+import keystatic from '@keystatic/astro';
 
 import remarkImageCaptions from './src/lib/remark-image-captions.js';
 
@@ -30,7 +31,7 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [react(), mdx(), sitemap(), pagefind()],
+  integrations: [react(), mdx(), sitemap(), pagefind(), keystatic()],
   adapter: vercel(),
   markdown: {
     remarkPlugins: [remarkImageCaptions],

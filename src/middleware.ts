@@ -1,16 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { auth } from "@lib/auth";
-
-// Page routes that require an authenticated admin. Matched as path prefixes.
-// The `/api/admin/**` endpoints guard themselves (returning JSON 401/403 via
-// isAdmin) rather than redirecting, so they're intentionally not listed here.
-const ADMIN_PREFIXES = ["/admin", "/keystatic"];
-
-function isAdminRoute(pathname: string): boolean {
-  return ADMIN_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  );
-}
+import { isAdminRoute } from "@lib/routes";
 
 // Build a locale-aware sign-in URL so the redirect keeps the user's language.
 function signInUrl(pathname: string): string {

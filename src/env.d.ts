@@ -22,6 +22,11 @@ interface ImportMetaEnv {
   readonly BETTER_AUTH_URL: string;
   readonly GOOGLE_CLIENT_ID?: string;
   readonly GOOGLE_CLIENT_SECRET?: string;
+  // Keystatic GitHub OAuth app — required in production for CMS git commits
+  readonly KEYSTATIC_GITHUB_CLIENT_ID?: string;
+  readonly KEYSTATIC_GITHUB_CLIENT_SECRET?: string;
+  // Optional: used by Keystatic to sign its own session cookies
+  readonly KEYSTATIC_SECRET?: string;
 }
 
 interface ImportMeta {

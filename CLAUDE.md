@@ -23,17 +23,27 @@ On top of the existing 104 markdown posts (52 IT + 52 EN), v2 adds:
 | 2 — Auth (Drizzle schema, Better Auth, approval gate, middleware, sign-in/up) | ✅ done |
 | 3 — Comments (table, `/api/comments`, `CommentsSection.tsx` island) | ✅ done |
 | 4 — Admin user approval (`/admin/users`, PATCH endpoint) | ✅ done |
-| 5 — Keystatic post creation | ⬜ not started |
+| 5 — Keystatic post creation | ✅ done |
 | 6 — Deploy | ✅ done |
 
-Phases 1,2,3,4 and 6 are code-complete.
+All phases are code-complete.
 
 ⚠️ **Gotchas that aren't obvious from the code:**
 - **No admin bootstrap UI** (by design — the first admin can't approve itself).
   After `db:push` + sign-up, manually set that row's `role = 'admin'` and
   `status = 'approved'` in the DB to exercise the admin panel.
+- **Keystatic production setup**: `keystatic.config.ts` uses `github` storage in
+  production. Before using the CMS in production you must:
+  1. Create a GitHub OAuth App (Settings → Developer settings → OAuth Apps),
+     callback URL `https://your-site/api/keystatic/github/created`.
+  2. Add `KEYSTATIC_GITHUB_CLIENT_ID` and `KEYSTATIC_GITHUB_CLIENT_SECRET` to
+     the Vercel env vars.
+  3. In local dev the config uses `local` storage — no GitHub credentials needed.
+- **Keystatic image uploads** store files in `public/uploads/` (committed to the
+  repo in GitHub mode, written locally in local mode). They are served at
+  `/uploads/<filename>` and bypass Astro's image optimization pipeline.
 
-Sanity checks: `npm test` (50 passing), `npm run build` (114 pages), `astro check` (0 errors).
+Sanity checks: `npm test` (54 passing), `npm run build` (114 pages), `astro check` (0 errors).
 
 ## Project layout
 
