@@ -51,7 +51,7 @@ export default function AuthStatus({ lang }: Props) {
     return (
       <a
         href={`/${lang}/sign-in`}
-        className="rounded-lg border border-border bg-surface px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 hover:text-accent focus-visible:border-accent/30 focus-visible:bg-accent/5 focus-visible:text-accent"
+        className="inline-flex h-9 items-center rounded-lg border border-border bg-surface px-3 text-sm transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 hover:text-accent focus-visible:border-accent/30 focus-visible:bg-accent/5 focus-visible:text-accent"
       >
         {t.signInLink}
       </a>
@@ -66,7 +66,7 @@ export default function AuthStatus({ lang }: Props) {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={session.user.name}
-        className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface text-xs font-medium transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 hover:text-accent focus-visible:border-accent/30 focus-visible:bg-accent/5 focus-visible:text-accent"
+        className="flex size-9 items-center justify-center rounded-full border border-border bg-surface text-sm font-medium transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 hover:text-accent focus-visible:border-accent/30 focus-visible:bg-accent/5 focus-visible:text-accent"
       >
         {getInitials(session.user.name)}
       </button>
@@ -74,7 +74,7 @@ export default function AuthStatus({ lang }: Props) {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 mt-2 flex w-44 flex-col gap-2 rounded-lg border border-border bg-surface p-3 text-xs shadow-lg"
+          className="absolute right-0 mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-surface p-3 text-sm shadow-lg"
         >
           <span className="truncate opacity-70">{session.user.name}</span>
           <button

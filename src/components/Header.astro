@@ -13,56 +13,91 @@ const newPath = pathname
 	.split("/")
 	.map((segment) => (segment === currentLocale ? otherLocale : segment))
 	.join("/") || `/${otherLocale}`;
+
+// Two-tone wordmark: last word of the site title gets the accent treatment
+const titleWords = SITE.TITLE.split(" ");
+const titleAccent = titleWords.pop();
+const titleRest = titleWords.join(" ");
 ---
 
 <header>
 	<Container>
-		<div class="flex flex-wrap justify-between gap-y-2">
+		<div class="flex flex-wrap items-center justify-between gap-y-3">
 			<Link href={`/${currentLocale}`} underline={false}>
-				<div class="text-2xl font-semibold">
-					{SITE.TITLE}
+				<div class="site-title flex items-center gap-2 font-semibold tracking-tight">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.5"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="size-[1.2em] shrink-0 text-accent"
+						aria-hidden="true"
+					>
+						<rect x="2" y="4" width="20" height="16" rx="2"></rect>
+						<circle cx="8" cy="10" r="2"></circle>
+						<path d="M8 12h8"></path>
+						<circle cx="16" cy="10" r="2"></circle>
+						<path d="m6 20 .7-2.9A1.4 1.4 0 0 1 8.1 16h7.8a1.4 1.4 0 0 1 1.4 1l.7 3"></path>
+					</svg>
+					<span>
+						{titleRest}
+						<span class="font-mono text-accent">{titleAccent}</span>
+					</span>
 				</div>
 			</Link>
-			<nav class="flex items-center gap-3 text-sm">
-				<Link href={`/${currentLocale}/blog`}>blog</Link>
 
-				<div class="flex items-center gap-1 text-xs">
-					{
-						currentLocale === "it" ? (
-							<span class="font-medium text-accent">IT</span>
-						) : (
-							<Link href={newPath} underline={false}>
-								<span class="opacity-70 transition-colors hover:text-accent">IT</span>
-							</Link>
-						)
-					}
-					<span class="opacity-30" aria-hidden="true">|</span>
-					{
-						currentLocale === "en" ? (
-							<span class="font-medium text-accent">EN</span>
-						) : (
-							<Link href={newPath} underline={false}>
-								<span class="opacity-70 transition-colors hover:text-accent">EN</span>
-							</Link>
-						)
-					}
-				</div>
+			<nav class="flex w-full items-center justify-between gap-3 sm:w-auto sm:gap-4">
+				<Link href={`/${currentLocale}/blog`} underline={false}>
+					<span class="text-base font-medium sm:text-sm">Blog</span>
+				</Link>
 
-				<button
-					id="magnifying-glass"
-					aria-label="Search"
-					class="flex items-center justify-center rounded-lg border border-border bg-surface p-2 text-xs transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 hover:text-accent focus-visible:border-accent/30 focus-visible:bg-accent/5 focus-visible:text-accent"
-				>
-					<svg height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;"
-						><path
-							fill-rule="evenodd"
-							clip-rule="evenodd"
-							d="M3.5 7C3.5 5.067 5.067 3.5 7 3.5C8.933 3.5 10.5 5.067 10.5 7C10.5 7.88461 10.1718 8.69256 9.63058 9.30876L9.30876 9.63058C8.69256 10.1718 7.88461 10.5 7 10.5C5.067 10.5 3.5 8.933 3.5 7ZM9.96544 11.0261C9.13578 11.6382 8.11014 12 7 12C4.23858 12 2 9.76142 2 7C2 4.23858 4.23858 2 7 2C9.76142 2 12 4.23858 12 7C12 8.11014 11.6382 9.13578 11.0261 9.96544L14.0303 12.9697L14.5607 13.5L13.5 14.5607L12.9697 14.0303L9.96544 11.0261Z"
-							fill="currentColor"></path></svg
+				<div class="flex items-center gap-2">
+					<div
+						class="flex items-stretch overflow-hidden rounded-lg border border-border text-sm font-medium"
+						aria-label="Language"
 					>
-				</button>
+						{
+							currentLocale === "it" ? (
+								<span class="flex items-center bg-accent/10 px-2.5 text-accent" aria-current="true">IT</span>
+							) : (
+								<a
+									href={newPath}
+									class="flex items-center px-2.5 py-1.5 opacity-70 transition-colors duration-300 ease-in-out hover:bg-accent/5 hover:text-accent hover:opacity-100 focus-visible:bg-accent/5 focus-visible:text-accent"
+								>IT</a>
+							)
+						}
+						<span class="w-px bg-border" aria-hidden="true"></span>
+						{
+							currentLocale === "en" ? (
+								<span class="flex items-center bg-accent/10 px-2.5 text-accent" aria-current="true">EN</span>
+							) : (
+								<a
+									href={newPath}
+									class="flex items-center px-2.5 py-1.5 opacity-70 transition-colors duration-300 ease-in-out hover:bg-accent/5 hover:text-accent hover:opacity-100 focus-visible:bg-accent/5 focus-visible:text-accent"
+								>EN</a>
+							)
+						}
+					</div>
 
-				<AuthStatus lang={currentLocale === "en" ? "en" : "it"} client:only="react" />
+					<button
+						id="magnifying-glass"
+						aria-label="Search"
+						class="flex size-9 items-center justify-center rounded-lg border border-border bg-surface transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 hover:text-accent focus-visible:border-accent/30 focus-visible:bg-accent/5 focus-visible:text-accent"
+					>
+						<svg height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16" style="color: currentcolor;"
+							><path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M3.5 7C3.5 5.067 5.067 3.5 7 3.5C8.933 3.5 10.5 5.067 10.5 7C10.5 7.88461 10.1718 8.69256 9.63058 9.30876L9.30876 9.63058C8.69256 10.1718 7.88461 10.5 7 10.5C5.067 10.5 3.5 8.933 3.5 7ZM9.96544 11.0261C9.13578 11.6382 8.11014 12 7 12C4.23858 12 2 9.76142 2 7C2 4.23858 4.23858 2 7 2C9.76142 2 12 4.23858 12 7C12 8.11014 11.6382 9.13578 11.0261 9.96544L14.0303 12.9697L14.5607 13.5L13.5 14.5607L12.9697 14.0303L9.96544 11.0261Z"
+								fill="currentColor"></path></svg
+						>
+					</button>
+
+					<AuthStatus lang={currentLocale === "en" ? "en" : "it"} client:only="react" />
+				</div>
 			</nav>
 		</div>
 	</Container>

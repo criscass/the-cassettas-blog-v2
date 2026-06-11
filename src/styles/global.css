@@ -77,9 +77,26 @@ body {
 }
 
 header {
-  @apply fixed left-0 right-0 top-0 z-50 py-6;
+  @apply fixed left-0 right-0 top-0 z-50 py-4 sm:py-5;
   @apply bg-surface/80;
   @apply saturate-200 backdrop-blur-sm;
+  @apply border-b border-transparent;
+  @apply transition-[padding,border-color,box-shadow] duration-300 ease-in-out;
+}
+
+/* Condense the header once the page scrolls (`.scrolled` is toggled on <html>
+   by the global onScroll handler in Head.astro) */
+.scrolled header {
+  @apply border-border py-2 shadow-sm;
+}
+
+.site-title {
+  @apply text-xl sm:text-2xl;
+  transition: font-size 300ms ease-in-out;
+}
+
+.scrolled .site-title {
+  @apply text-lg sm:text-xl;
 }
 
 main {
