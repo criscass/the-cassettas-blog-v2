@@ -4,31 +4,19 @@ Guidance for Claude Code when working in **the-cassettas-blog-v2**.
 
 ## What this is
 
-A v2 rebuild of an existing static Astro blog (The Cassettas Blog) into a
-**hybrid SSR** site. The full design doc lives one level up at
-[../BLOG_V2_PLAN.md](../BLOG_V2_PLAN.md) — the source of truth for rationale and
-detail. This file is the working summary.
+The Cassettas Blog: a bilingual (IT/EN) Astro blog deployed on **Vercel** as a
+hybrid site — content is prerendered, dynamic features run as SSR routes.
+Besides the 104 markdown posts (52 IT + 52 EN) it has:
 
-On top of the existing 104 markdown posts (52 IT + 52 EN), v2 adds:
 - Per-post **comments** with auth (React island)
 - **Auth + access control** (admin / approved commenter / anonymous reader)
-- **Admin panel**: user-approval queue + Keystatic CMS for writing posts
-- Deployment on **Vercel**
+- **Admin panel** (`/admin`): user-approval queue + Keystatic CMS for writing posts
+- **Admin email notifications** via Resend (new pending sign-ups, new comments)
 
-## Current state
+Sanity checks: `npm test` (60 passing), `npm run build` (114 pages), `astro check` (0 errors).
 
-| Phase | Status |
-|---|---|
-| 1 — Foundation (scaffold, Tailwind, React, Vercel adapter, port v1 + content) | ✅ done |
-| 2 — Auth (Drizzle schema, Better Auth, approval gate, middleware, sign-in/up) | ✅ done |
-| 3 — Comments (table, `/api/comments`, `CommentsSection.tsx` island) | ✅ done |
-| 4 — Admin user approval (`/admin/users`, PATCH endpoint) | ✅ done |
-| 5 — Keystatic post creation | ✅ done |
-| 6 — Deploy | ✅ done |
+## Gotchas that aren't obvious from the code
 
-All phases are code-complete.
-
-⚠️ **Gotchas that aren't obvious from the code:**
 - **No admin bootstrap UI** (by design — the first admin can't approve itself).
   After `db:push` + sign-up, manually set that row's `role = 'admin'` and
   `status = 'approved'` in the DB to exercise the admin panel.
@@ -52,19 +40,6 @@ All phases are code-complete.
   repo in GitHub mode, written locally in local mode). They are served at
   `/uploads/<filename>` and bypass Astro's image optimization pipeline.
 
-Sanity checks: `npm test` (54 passing), `npm run build` (114 pages), `astro check` (0 errors).
-
-## Project layout
-
-Sibling of the still-live original blog:
-
-```
-The-Cassettas-blog/
-├── the-cassettas-blog/        ← current blog (KEEP LIVE — don't touch unless asked)
-├── the-cassettas-blog-v2/     ← this project
-└── BLOG_V2_PLAN.md            ← full plan
-```
-
 ## Tech stack
 
 | Layer | Choice |
@@ -78,11 +53,13 @@ The-Cassettas-blog/
 | ORM | Drizzle (`drizzle-orm` + `drizzle-kit`) |
 | CMS | Keystatic (`@keystatic/core` + `@keystatic/astro`) |
 | Image upload | Vercel Blob (`@vercel/blob`) |
+| Email | Resend HTTP API via plain `fetch` (`src/lib/notifications.ts`, no SDK) |
 | Class utils | `clsx` + `tailwind-merge` |
 
 **Pinned versions** (latest majors require Astro 6; we're on Astro 5.18):
-`@astrojs/vercel@9.0.5`, `@astrojs/mdx@^4.3.6`, `astro-pagefind@^1.8.6` (v2
-rewrote the `Search` component on a different API — pinning keeps `PageFind.astro` unchanged).
+`@astrojs/vercel@9.0.5`, `@astrojs/mdx@^4.3.6`, `astro-pagefind@^1.8.6`
+(astro-pagefind v2 rewrote the `Search` component on a different API — pinning
+keeps `PageFind.astro` unchanged).
 
 ## Commands
 
@@ -102,7 +79,7 @@ npm run db:push    # apply Drizzle schema to Neon
 - `/api/auth/**` (Better Auth catch-all)
 - `/api/comments` (GET read / POST write, auth required)
 - `/api/admin/users/[id]` (PATCH, admin-only) + `/admin/**` pages
-- `/keystatic/**` (admin-gated CMS UI) — Phase 5
+- `/keystatic/**` (admin-gated CMS UI)
 
 Everything under `/it/` and `/en/` is prerendered, including the sign-in/sign-up
 pages (auth runs client-side via the API route).
@@ -120,6 +97,15 @@ pages (auth runs client-side via the API route).
   redirect/403); `/api/admin/**` self-guards with JSON 401/403. Sessions via
   Better Auth HTTP-only cookies.
 
+## Email notifications
+
+`src/lib/notifications.ts` emails the admin on two events: a new sign-up
+landing in the approval queue (hooked in `src/lib/auth.ts`) and a new comment
+(`/api/comments` POST). Email builders are pure, unit-tested functions;
+`sendAdminNotification` is the only side-effecting piece — it **no-ops when
+`RESEND_API_KEY` or `NOTIFY_EMAIL_TO` is unset and never throws**, so a
+notification failure can never break sign-up or comment posting.
+
 ## Database (Neon / Postgres, via Drizzle)
 
 - Better Auth owns `user` (custom `role` + `status` additionalFields, `status`
@@ -128,7 +114,7 @@ pages (auth runs client-side via the API route).
   (`it`/`en`), `user_id`, `content`, `created_at`. **No status column** — every
   comment from an approved user shows immediately.
 
-## Content conventions (unchanged from v1)
+## Content conventions
 
 - Posts: `src/content/blog/[lang]/post-XXXXX/index.md` (`it` and `en`).
 - Frontmatter: `title`, `description`, `date`, optional `draft` (excluded from
@@ -137,12 +123,12 @@ pages (auth runs client-side via the API route).
   the custom remark plugin `src/lib/remark-image-captions.js`.
 - `cleanSlug()` in `src/lib/utils.ts` strips language prefix + extension from IDs.
 - Path aliases: `@*` → `./src/*` (e.g. `@components/Foo`, `@lib/utils`).
-- Image naming in v1 is mixed (`post-1`…`post-41`, then `post-00042`+) — preserve.
+- Older posts use mixed image naming (`post-1`…`post-41`, then `post-00042`+) —
+  preserve existing names; use the zero-padded form for new posts.
 
-## Design direction
+## Design system
 
-The §3 redesign is **applied**. The site uses an elegant, dark-first warm palette
-on a single amber/gold accent.
+Elegant, dark-first warm palette on a single amber/gold accent.
 
 ### Tokens (defined in `global.css` `@theme`, overridden in `.dark`)
 
@@ -154,27 +140,28 @@ on a single amber/gold accent.
 | `muted` | `#2b2620` | `#f3efe7` | CSS var only — set on `body` as body-copy color |
 | `accent` | `#9c7530` | `#d8b167` | `text-accent`, `border-accent`, `bg-accent/10`, `decoration-accent` |
 
-> Note: the plan named the body-copy token `text`; it was implemented as `muted`
-> to avoid the awkward `text-text` Tailwind class.
+> `muted` is the body-copy color despite the name — it was chosen to avoid the
+> awkward `text-text` Tailwind class a `text` token would produce.
 
-### What was changed
+### Component conventions
 
-- `global.css` — tokens + `bg-ink` body, `bg-surface/80` header, warm Shiki
-  syntax palette, `copy-code` button restyled with accent hover
+Keep new UI consistent with these patterns:
+
+- Cards & interactive containers (`ArrowCard`, `PostNavigation`, `BackToTop`,
+  `BackToPrevious`, `TableOfContents`) — `rounded-xl border-border`,
+  `hover:bg-accent/5 hover:border-accent/30`, accent arrow strokes
 - `Callout.astro` — unified `bg-surface/60` + `border-l-4` colored by type
-  (gold / sky / amber / rose), replacing four clashing vivid backgrounds
-- `ArrowCard`, `PostNavigation`, `BackToTop`, `BackToPrevious` — `rounded-xl`,
-  `border-border`, `hover:bg-accent/5 hover:border-accent/30`, accent arrow stroke
-- `Header`, `Footer` — all buttons use `border-border` + accent hover
-- `TableOfContents` — `rounded-xl border-border`, accent hover on summary
+  (gold / sky / amber / rose)
+- `Header` / `Footer` buttons — `border-border` + accent hover
 - `Link.astro` — `decoration-accent/40` underline, `hover:text-accent`
-- `PageFind.astro` — `bg-surface border-border` container, pagefind UI vars
-  updated to warm palette
-- Auth forms (`AuthStatus`, `SignInForm`, `SignUpForm`) — `border-border` inputs,
-  `bg-accent text-ink` primary buttons
-- `AdminUsers`, `CommentsSection` — `border-border bg-surface/40` cards,
-  `bg-accent text-ink` submit buttons
-- `prose img` — `rounded-xl` via `prose-img:rounded-xl`
+- Forms (`SignInForm`, `SignUpForm`, `AuthStatus`, `AdminUsers`,
+  `CommentsSection`) — `border-border` inputs, `border-border bg-surface/40`
+  cards, `bg-accent text-ink` primary/submit buttons
+- `PageFind.astro` — `bg-surface border-border` container; pagefind UI vars
+  follow the warm palette
+- Prose images — `rounded-xl` via `prose-img:rounded-xl`
+- Code blocks — warm Shiki palette in `global.css`, `copy-code` button with
+  accent hover
 
 ## Environment variables
 

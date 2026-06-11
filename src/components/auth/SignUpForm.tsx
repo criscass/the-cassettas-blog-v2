@@ -1,5 +1,10 @@
 import { useState, type FormEvent } from "react";
 import { signIn, signUp } from "@lib/auth-client";
+import {
+  INTRODUCTION_MIN_LENGTH,
+  isValidIntroduction,
+  normalizeIntroduction,
+} from "@lib/introduction";
 import { AUTH_STRINGS, type AuthLang } from "./authStrings";
 
 type Props = {
@@ -11,6 +16,7 @@ export default function SignUpForm({ lang }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [introduction, setIntroduction] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -18,8 +24,17 @@ export default function SignUpForm({ lang }: Props) {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+    if (!isValidIntroduction(introduction)) {
+      setError(t.introError);
+      return;
+    }
     setLoading(true);
-    const { error } = await signUp.email({ name, email, password });
+    const { error } = await signUp.email({
+      name,
+      email,
+      password,
+      introduction: normalizeIntroduction(introduction),
+    });
     setLoading(false);
     if (error) {
       setError(error.message ?? t.genericError);
@@ -98,6 +113,21 @@ export default function SignUpForm({ lang }: Props) {
           autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="rounded-lg border border-border bg-transparent px-3 py-2 focus:border-accent/50 focus:outline-none"
+        />
+      </label>
+
+      <label className="flex flex-col gap-1 text-sm">
+        <span className="font-medium">{t.introLabel}</span>
+        <span className="text-xs opacity-70">{t.introHelp}</span>
+        <textarea
+          name="introduction"
+          required
+          minLength={INTRODUCTION_MIN_LENGTH}
+          rows={3}
+          placeholder={t.introPlaceholder}
+          value={introduction}
+          onChange={(e) => setIntroduction(e.target.value)}
           className="rounded-lg border border-border bg-transparent px-3 py-2 focus:border-accent/50 focus:outline-none"
         />
       </label>

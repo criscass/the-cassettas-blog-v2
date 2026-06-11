@@ -10,6 +10,7 @@ export type AdminUser = {
   email: string;
   role: string | null;
   status: UserStatus;
+  introduction: string | null;
   createdAt: string;
 };
 
@@ -99,6 +100,11 @@ export default function AdminUsers({ initialUsers }: Props) {
                 <p className="truncate text-sm opacity-60">
                   {u.email}
                 </p>
+                {u.introduction && (
+                  <p className="mt-2 border-l-2 border-accent/40 pl-3 text-sm italic opacity-80">
+                    {u.introduction}
+                  </p>
+                )}
               </div>
 
               <div className="flex gap-2">

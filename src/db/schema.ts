@@ -22,6 +22,9 @@ export const user = pgTable("user", {
   // Custom additionalFields (see src/lib/auth.ts):
   role: text("role"),
   status: text("status").$type<UserStatus>().default("pending").notNull(),
+  // Anti-spam gate: email sign-ups must say how they know the admin. Nullable
+  // because Google sign-ups don't go through the form.
+  introduction: text("introduction"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),

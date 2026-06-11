@@ -52,6 +52,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
       email: user.email,
       role: user.role,
       status: user.status,
+      introduction: user.introduction,
     });
 
   if (!updated) {

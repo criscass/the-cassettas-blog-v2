@@ -1,10 +1,14 @@
 import { betterAuth } from "better-auth";
-import { APIError } from "better-auth/api";
+import { APIError, createAuthMiddleware } from "better-auth/api";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { eq } from "drizzle-orm";
 import { db } from "@db/index";
 import { user as userTable } from "@db/schema";
 import { approvalErrorMessage, requiresApproval } from "@lib/auth-approval";
+import {
+  isValidIntroduction,
+  normalizeIntroduction,
+} from "@lib/introduction";
 import { newPendingUserEmail, sendAdminNotification } from "@lib/notifications";
 
 const env = (key: string): string | undefined =>
@@ -57,7 +61,32 @@ export const auth = betterAuth({
         defaultValue: "pending",
         input: false, // never settable by the client
       },
+      // Anti-spam: email sign-ups must explain how they know the admin.
+      // `required: false` because Google sign-ups never send it — the email
+      // sign-up path enforces it in the before-hook below.
+      introduction: {
+        type: "string",
+        required: false,
+      },
     },
+  },
+
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== "/sign-up/email") return;
+      const introduction = normalizeIntroduction(ctx.body?.introduction);
+      if (!isValidIntroduction(introduction)) {
+        throw new APIError("BAD_REQUEST", {
+          message:
+            "Please write a few words about who you are and how we know each other.",
+          code: "INTRODUCTION_REQUIRED",
+        });
+      }
+      // Store the trimmed value.
+      return {
+        context: { ...ctx, body: { ...ctx.body, introduction } },
+      };
+    }),
   },
 
   databaseHooks: {
@@ -69,7 +98,10 @@ export const auth = betterAuth({
         // failure can't break sign-up.
         after: async (newUser) => {
           await sendAdminNotification(
-            newPendingUserEmail(newUser, env("BETTER_AUTH_URL")),
+            newPendingUserEmail(
+              newUser as { name: string; email: string; introduction?: string | null },
+              env("BETTER_AUTH_URL"),
+            ),
           );
         },
       },

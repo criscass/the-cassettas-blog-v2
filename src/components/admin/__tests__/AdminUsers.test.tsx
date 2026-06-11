@@ -14,6 +14,7 @@ const pendingUser: AdminUser = {
   email: "ann@example.com",
   role: null,
   status: "pending",
+  introduction: "I'm Ann, Luca's cousin — we met at the wedding!",
   createdAt: "2026-06-01T00:00:00.000Z",
 };
 
@@ -45,6 +46,22 @@ describe("AdminUsers", () => {
     expect(screen.getByText("Ann")).toBeInTheDocument();
     expect(screen.getByText("ann@example.com")).toBeInTheDocument();
     expect(screen.getByText("Pending")).toBeInTheDocument();
+  });
+
+  it("shows the sign-up introduction when present", () => {
+    mockFetchOk({});
+    render(<AdminUsers initialUsers={[pendingUser]} />);
+    expect(
+      screen.getByText("I'm Ann, Luca's cousin — we met at the wedding!"),
+    ).toBeInTheDocument();
+  });
+
+  it("renders without an introduction (Google sign-up)", () => {
+    mockFetchOk({});
+    render(
+      <AdminUsers initialUsers={[{ ...pendingUser, introduction: null }]} />,
+    );
+    expect(screen.getByText("Ann")).toBeInTheDocument();
   });
 
   it("PATCHes and reflects the approved status on Approve", async () => {

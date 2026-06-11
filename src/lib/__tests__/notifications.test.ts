@@ -30,6 +30,24 @@ describe("newPendingUserEmail", () => {
     });
     expect(email.text).not.toContain("/admin/users");
   });
+
+  it("includes the sign-up introduction when present", () => {
+    const email = newPendingUserEmail({
+      name: "Maria Rossi",
+      email: "maria@example.com",
+      introduction: "Sono la cugina di Luca!",
+    });
+    expect(email.text).toContain("Sono la cugina di Luca!");
+  });
+
+  it("omits the introduction section for Google sign-ups", () => {
+    const email = newPendingUserEmail({
+      name: "Maria Rossi",
+      email: "maria@example.com",
+      introduction: null,
+    });
+    expect(email.text).not.toContain("introduction");
+  });
 });
 
 describe("newCommentEmail", () => {

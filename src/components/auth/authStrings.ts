@@ -9,6 +9,12 @@ export const AUTH_STRINGS = {
     name: "Nome",
     email: "Email",
     password: "Password",
+    introLabel: "Come ci conosciamo?",
+    introHelp:
+      "Per tenere lontano lo spam, questo blog è riservato ad amici e conoscenti. Scrivi due righe su chi sei e come ci conosciamo (o chi abbiamo in comune) — ci aiuta ad approvare il tuo account.",
+    introPlaceholder: "Es. «Sono Maria, la cugina di Luca — ci siamo visti al matrimonio!»",
+    introError:
+      "Scrivi qualche parola in più su chi sei e come ci conosciamo.",
     signInButton: "Accedi",
     signUpButton: "Crea account",
     googleButton: "Continua con Google",
@@ -33,6 +39,12 @@ export const AUTH_STRINGS = {
     name: "Name",
     email: "Email",
     password: "Password",
+    introLabel: "How do we know each other?",
+    introHelp:
+      "To keep spam out, this blog is for friends and acquaintances only. Write a couple of lines about who you are and how we know each other (or who we know in common) — it helps us approve your account.",
+    introPlaceholder: "E.g. “I'm Maria, Luca's cousin — we met at the wedding!”",
+    introError:
+      "Please write a few more words about who you are and how we know each other.",
     signInButton: "Sign in",
     signUpButton: "Create account",
     googleButton: "Continue with Google",

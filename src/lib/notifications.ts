@@ -21,13 +21,17 @@ export const COMMENT_EXCERPT_MAX_LENGTH = 300;
 
 /** Email sent when a fresh sign-up lands in the approval queue. */
 export function newPendingUserEmail(
-  newUser: { name: string; email: string },
+  newUser: { name: string; email: string; introduction?: string | null },
   baseUrl?: string,
 ): NotificationEmail {
   const approveLink = baseUrl ? `\n\nApprove or reject: ${baseUrl}/admin/users` : "";
+  // Email sign-ups always carry an introduction; Google sign-ups don't.
+  const introduction = newUser.introduction
+    ? `\n\nTheir introduction:\n${newUser.introduction}`
+    : "";
   return {
     subject: `New user awaiting approval: ${newUser.name}`,
-    text: `${newUser.name} (${newUser.email}) signed up and is waiting for approval.${approveLink}`,
+    text: `${newUser.name} (${newUser.email}) signed up and is waiting for approval.${introduction}${approveLink}`,
   };
 }
 
