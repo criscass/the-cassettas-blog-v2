@@ -34,10 +34,15 @@ All phases are code-complete.
   `status = 'approved'` in the DB to exercise the admin panel.
 - **Keystatic production setup**: `keystatic.config.ts` uses `github` storage in
   production. Before using the CMS in production you must:
-  1. Create a GitHub OAuth App (Settings → Developer settings → OAuth Apps),
-     callback URL `https://your-site/api/keystatic/github/created`.
-  2. Add `KEYSTATIC_GITHUB_CLIENT_ID` and `KEYSTATIC_GITHUB_CLIENT_SECRET` to
-     the Vercel env vars.
+  1. Create a **GitHub App** (not a classic OAuth App), callback URL
+     `https://your-site/api/keystatic/github/oauth/callback`, with read & write
+     permission on repository **Contents**, and install it on the repo.
+     Easiest: temporarily set `kind: 'github'` locally and visit
+     `/keystatic/setup` — Keystatic creates the app and writes its env vars to `.env`.
+  2. Add `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET` and
+     `KEYSTATIC_SECRET` (random, ≥32 chars — `/api/keystatic/github/login` 500s
+     without it) to the Vercel env vars, then **redeploy** (env changes don't
+     apply to existing deployments).
   3. In local dev the config uses `local` storage — no GitHub credentials needed.
 - **Keystatic image uploads** store files in `public/uploads/` (committed to the
   repo in GitHub mode, written locally in local mode). They are served at
@@ -178,6 +183,8 @@ GOOGLE_CLIENT_SECRET=
 BLOB_READ_WRITE_TOKEN=
 KEYSTATIC_GITHUB_CLIENT_ID=
 KEYSTATIC_GITHUB_CLIENT_SECRET=
+KEYSTATIC_SECRET=                   # random 32+ char string
+PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=   # optional, links UI to app install page
 ```
 
 Never commit secrets; set production values in the Vercel dashboard.
