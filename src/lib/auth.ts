@@ -76,6 +76,9 @@ export const auth = betterAuth({
           if (requiresApproval(status)) {
             throw new APIError("FORBIDDEN", {
               message: approvalErrorMessage(status),
+              // `code` must be present so Better Auth's OAuth callback catch block
+              // calls redirectOnError instead of re-throwing raw JSON.
+              code: "FORBIDDEN",
             });
           }
 

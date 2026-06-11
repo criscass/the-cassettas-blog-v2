@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { signIn } from "@lib/auth-client";
 import { AUTH_STRINGS, type AuthLang } from "./authStrings";
 
@@ -12,6 +12,13 @@ export default function SignInForm({ lang }: Props) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Show errors sent back via ?error_description= after a failed OAuth redirect.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const desc = params.get("error_description") || params.get("error");
+    if (desc) setError(decodeURIComponent(desc));
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,7 +40,11 @@ export default function SignInForm({ lang }: Props) {
 
   async function handleGoogle() {
     setError(null);
-    await signIn.social({ provider: "google", callbackURL: `/${lang}` });
+    await signIn.social({
+      provider: "google",
+      callbackURL: `/${lang}`,
+      errorCallbackURL: `/${lang}/sign-in`,
+    });
   }
 
   return (
