@@ -44,6 +44,10 @@ All phases are code-complete.
      without it) to the Vercel env vars, then **redeploy** (env changes don't
      apply to existing deployments).
   3. In local dev the config uses `local` storage — no GitHub credentials needed.
+  4. `security.allowedDomains` in `astro.config.mjs` must list every domain the
+     site is served from. Since Astro 5.14, unlisted hosts make SSR requests see
+     a `localhost` origin, so Keystatic sends `redirect_uri=https://localhost/…`
+     to GitHub, which rejects it ("redirect_uri is not associated").
 - **Keystatic image uploads** store files in `public/uploads/` (committed to the
   repo in GitHub mode, written locally in local mode). They are served at
   `/uploads/<filename>` and bypass Astro's image optimization pipeline.

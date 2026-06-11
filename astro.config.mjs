@@ -27,6 +27,18 @@ export default defineConfig({
     }
   },
   site: 'http://www.cassettas-reboot.xyz/',
+  security: {
+    // Since Astro 5.14, SSR requests fall back to a "localhost" origin unless
+    // the incoming Host header matches this allowlist. Keystatic derives the
+    // GitHub OAuth redirect_uri from the request origin, so without this the
+    // login flow sends redirect_uri=https://localhost/... and GitHub rejects it.
+    allowedDomains: [
+      { hostname: 'the-cassettas-blog-v2.vercel.app', protocol: 'https' },
+      { hostname: '**.vercel.app', protocol: 'https' }, // preview deployments
+      { hostname: 'www.cassettas-reboot.xyz' },
+      { hostname: 'localhost' }, // astro preview
+    ],
+  },
   vite: {
     plugins: [tailwindcss()]
   },
