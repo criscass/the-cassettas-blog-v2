@@ -7,6 +7,8 @@ import {
   isSupportedLanguage,
   validateCommentInput,
 } from "@lib/comments";
+import { isAdmin } from "@lib/admin";
+import { newCommentEmail, sendAdminNotification } from "@lib/notifications";
 
 // SSR — reads/writes the database per request.
 export const prerender = false;
@@ -80,6 +82,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
       content: comment.content,
       createdAt: comment.createdAt,
     });
+
+  // Tell the admin — unless the admin is the one commenting. Never throws.
+  if (!isAdmin(currentUser)) {
+    await sendAdminNotification(
+      newCommentEmail(
+        {
+          authorName: currentUser.name,
+          postId: result.value.postId,
+          language: result.value.language,
+          content: result.value.content,
+        },
+        new URL(request.url).origin,
+      ),
+    );
+  }
 
   return json(
     { comment: { ...created, authorName: currentUser.name } },

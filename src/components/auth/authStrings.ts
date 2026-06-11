@@ -18,6 +18,9 @@ export const AUTH_STRINGS = {
     signUpLink: "Registrati",
     signInLink: "Accedi",
     signOutButton: "Esci",
+    adminSectionLabel: "Admin",
+    adminUsersLink: "Approva utenti",
+    adminCmsLink: "Scrivi post (CMS)",
     pendingHeading: "Account creato",
     pendingBody:
       "Il tuo account è in attesa di approvazione da parte di un amministratore. Riceverai accesso una volta approvato.",
@@ -39,6 +42,9 @@ export const AUTH_STRINGS = {
     signUpLink: "Sign up",
     signInLink: "Sign in",
     signOutButton: "Sign out",
+    adminSectionLabel: "Admin",
+    adminUsersLink: "Approve users",
+    adminCmsLink: "Write posts (CMS)",
     pendingHeading: "Account created",
     pendingBody:
       "Your account is awaiting admin approval. You'll be able to sign in once it's approved.",

@@ -58,6 +58,14 @@ export default function AuthStatus({ lang }: Props) {
     );
   }
 
+  // `role` reaches the client through inferAdditionalFields (see auth-client.ts);
+  // this only controls menu visibility — /admin and /keystatic stay guarded
+  // server-side by src/middleware.ts.
+  const isAdmin = session.user.role === "admin";
+
+  const menuItemClass =
+    "rounded-lg border border-border bg-surface px-2 py-1 text-left transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 hover:text-accent focus-visible:border-accent/30 focus-visible:bg-accent/5 focus-visible:text-accent";
+
   return (
     <div className="relative" ref={wrapperRef}>
       <button
@@ -77,11 +85,27 @@ export default function AuthStatus({ lang }: Props) {
           className="absolute right-0 mt-2 flex w-48 flex-col gap-2 rounded-lg border border-border bg-surface p-3 text-sm shadow-lg"
         >
           <span className="truncate opacity-70">{session.user.name}</span>
+
+          {isAdmin && (
+            <>
+              <span className="text-xs font-medium uppercase tracking-wide text-accent">
+                {t.adminSectionLabel}
+              </span>
+              <a role="menuitem" href="/admin/users" className={menuItemClass}>
+                {t.adminUsersLink}
+              </a>
+              <a role="menuitem" href="/keystatic" className={menuItemClass}>
+                {t.adminCmsLink}
+              </a>
+              <span className="h-px bg-border" aria-hidden="true" />
+            </>
+          )}
+
           <button
             type="button"
             role="menuitem"
             onClick={handleSignOut}
-            className="rounded-lg border border-border bg-surface px-2 py-1 text-left transition-colors duration-300 ease-in-out hover:border-accent/30 hover:bg-accent/5 hover:text-accent focus-visible:border-accent/30 focus-visible:bg-accent/5 focus-visible:text-accent"
+            className={menuItemClass}
           >
             {t.signOutButton}
           </button>

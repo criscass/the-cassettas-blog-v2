@@ -189,6 +189,9 @@ KEYSTATIC_GITHUB_CLIENT_ID=
 KEYSTATIC_GITHUB_CLIENT_SECRET=
 KEYSTATIC_SECRET=                   # random 32+ char string
 PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=   # optional, links UI to app install page
+RESEND_API_KEY=                     # admin email notifications (Resend); blank = skipped
+NOTIFY_EMAIL_TO=                    # admin inbox for the notifications
+NOTIFY_EMAIL_FROM=                  # optional, defaults to onboarding@resend.dev
 ```
 
 Never commit secrets; set production values in the Vercel dashboard.

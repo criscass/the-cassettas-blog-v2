@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@db/index";
 import { user as userTable } from "@db/schema";
 import { approvalErrorMessage, requiresApproval } from "@lib/auth-approval";
+import { newPendingUserEmail, sendAdminNotification } from "@lib/notifications";
 
 const env = (key: string): string | undefined =>
   import.meta.env?.[key] ?? process.env[key];
@@ -60,6 +61,19 @@ export const auth = betterAuth({
   },
 
   databaseHooks: {
+    user: {
+      create: {
+        // Every sign-up (email/password AND Google) creates the user row here,
+        // so this single hook covers both: tell the admin someone is waiting
+        // in the approval queue. sendAdminNotification never throws, so a mail
+        // failure can't break sign-up.
+        after: async (newUser) => {
+          await sendAdminNotification(
+            newPendingUserEmail(newUser, env("BETTER_AUTH_URL")),
+          );
+        },
+      },
+    },
     session: {
       create: {
         // Single uniform gate for BOTH email/password and Google OAuth: every
