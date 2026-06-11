@@ -1,15 +1,23 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { signIn } from "@lib/auth-client";
+import { isValidEmail } from "@lib/form-validation";
 import { AUTH_STRINGS, type AuthLang } from "./authStrings";
+import { FieldError, fieldInputClasses } from "./FieldError";
 
 type Props = {
   lang: AuthLang;
+};
+
+type FieldErrors = {
+  email?: string;
+  password?: string;
 };
 
 export default function SignInForm({ lang }: Props) {
   const t = AUTH_STRINGS[lang];
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,9 +28,20 @@ export default function SignInForm({ lang }: Props) {
     if (desc) setError(decodeURIComponent(desc));
   }, []);
 
+  function validate(): FieldErrors {
+    const errors: FieldErrors = {};
+    if (email.trim() === "") errors.email = t.errRequired;
+    else if (!isValidEmail(email)) errors.email = t.errEmail;
+    if (password === "") errors.password = t.errRequired;
+    return errors;
+  }
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+    const errors = validate();
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
     setLoading(true);
     const { error } = await signIn.email({
       email,
@@ -48,7 +67,7 @@ export default function SignInForm({ lang }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
       {error && (
         <p
           role="alert"
@@ -66,9 +85,15 @@ export default function SignInForm({ lang }: Props) {
           required
           autoComplete="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="rounded-lg border border-border bg-transparent px-3 py-2 focus:border-accent/50 focus:outline-none"
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setFieldErrors((prev) => ({ ...prev, email: undefined }));
+          }}
+          aria-invalid={Boolean(fieldErrors.email)}
+          aria-describedby={fieldErrors.email ? "signin-email-error" : undefined}
+          className={fieldInputClasses(Boolean(fieldErrors.email))}
         />
+        <FieldError id="signin-email-error" message={fieldErrors.email} />
       </label>
 
       <label className="flex flex-col gap-1 text-sm">
@@ -79,9 +104,17 @@ export default function SignInForm({ lang }: Props) {
           required
           autoComplete="current-password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="rounded-lg border border-border bg-transparent px-3 py-2 focus:border-accent/50 focus:outline-none"
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setFieldErrors((prev) => ({ ...prev, password: undefined }));
+          }}
+          aria-invalid={Boolean(fieldErrors.password)}
+          aria-describedby={
+            fieldErrors.password ? "signin-password-error" : undefined
+          }
+          className={fieldInputClasses(Boolean(fieldErrors.password))}
         />
+        <FieldError id="signin-password-error" message={fieldErrors.password} />
       </label>
 
       <button

@@ -32,6 +32,9 @@ export const AUTH_STRINGS = {
       "Il tuo account è in attesa di approvazione da parte di un amministratore. Riceverai accesso una volta approvato.",
     genericError: "Qualcosa è andato storto. Riprova.",
     submitting: "Attendere…",
+    errRequired: "Questo campo è obbligatorio.",
+    errEmail: "Inserisci un indirizzo email valido.",
+    errPasswordMin: "La password deve avere almeno 8 caratteri.",
   },
   en: {
     signInTitle: "Sign in",
@@ -62,5 +65,8 @@ export const AUTH_STRINGS = {
       "Your account is awaiting admin approval. You'll be able to sign in once it's approved.",
     genericError: "Something went wrong. Please try again.",
     submitting: "Please wait…",
+    errRequired: "This field is required.",
+    errEmail: "Please enter a valid email address.",
+    errPasswordMin: "Password must be at least 8 characters.",
   },
 } as const;

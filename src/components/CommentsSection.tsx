@@ -155,7 +155,7 @@ export default function CommentsSection({ postId, lang }: Props) {
       )}
 
       {sessionPending ? null : approved ? (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3">
           {postError && (
             <p role="alert" className="text-sm text-rose-700 dark:text-rose-300">
               {postError}
