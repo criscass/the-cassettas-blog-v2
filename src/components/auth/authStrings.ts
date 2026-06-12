@@ -17,8 +17,9 @@ export const AUTH_STRINGS = {
       "Scrivi qualche parola in più su chi sei e come ci conosciamo.",
     introGoogleRequired:
       "Anche per registrarti con Google devi prima raccontarci come ci conosciamo, nel campo qui sopra.",
-    errIntroductionRequired:
-      "Per registrarti con Google usa la pagina di registrazione e raccontaci come ci conosciamo.",
+    googleModeHelp:
+      "Ti stai registrando con Google: l'email e la password non servono. Dicci solo come ti chiami e come ci conosciamo.",
+    useEmailInstead: "Preferisci registrarti con email e password?",
     signInButton: "Accedi",
     signUpButton: "Crea account",
     googleButton: "Continua con Google",
@@ -63,8 +64,9 @@ export const AUTH_STRINGS = {
       "Please write a few more words about who you are and how we know each other.",
     introGoogleRequired:
       "Signing up with Google also requires telling us how we know each other — fill in the field above first.",
-    errIntroductionRequired:
-      "To sign up with Google, please use the sign-up page and tell us how we know each other.",
+    googleModeHelp:
+      "You're signing up with Google: no email or password needed. Just tell us your name and how we know each other.",
+    useEmailInstead: "Prefer signing up with email and password?",
     signInButton: "Sign in",
     signUpButton: "Create account",
     googleButton: "Continue with Google",

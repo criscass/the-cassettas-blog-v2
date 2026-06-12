@@ -93,12 +93,14 @@ pages (auth runs client-side via the API route).
 - **Anonymous**: read posts and comments only.
 - **Introduction gate** (anti-spam): every sign-up must say how they know the
   admin. Email sign-ups send it in the request body (validated in the
-  before-hook); Google sign-ups stash it in the short-lived
-  `google_signup_introduction` cookie before the OAuth redirect, and the
-  `user.create.before` database hook attaches it — or refuses creation, which
-  surfaces as `?error=INTRODUCTION_REQUIRED` on the form (mapped to a friendly
-  message in both `SignUpForm` and `SignInForm`). Shared helpers live in
-  `src/lib/introduction.ts`.
+  before-hook). Google sign-ups go through SignUpForm's **Google mode**
+  (`?google=1`, or clicking the Google button): a reduced form with just name +
+  introduction whose submit stashes both in short-lived cookies
+  (`google_signup_introduction`, `google_signup_name`) and launches OAuth; the
+  `user.create.before` database hook reads them back onto the new row — or
+  refuses creation, surfacing `?error=INTRODUCTION_REQUIRED`. A brand-new
+  Google user hitting the sign-in page's Google button is auto-redirected to
+  `/{lang}/sign-up?google=1`. Shared helpers live in `src/lib/introduction.ts`.
 - A `databaseHooks.session.create.before` hook throws `APIError('FORBIDDEN')`
   when `status !== 'approved'` — one gate covering both email/password and Google.
   The check is extracted as a pure, unit-tested function in `src/lib/auth-approval.ts`.

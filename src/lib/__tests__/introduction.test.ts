@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
 import {
+  GOOGLE_NAME_MAX_LENGTH,
   INTRODUCTION_MAX_LENGTH,
   INTRODUCTION_MIN_LENGTH,
   introductionFromCookie,
   isValidIntroduction,
+  nameFromCookie,
   normalizeIntroduction,
 } from "@lib/introduction";
 
@@ -57,5 +59,29 @@ describe("introductionFromCookie", () => {
 
   it("returns an empty string for a malformed %-sequence", () => {
     expect(introductionFromCookie("ciao%E0%A4%A")).toBe("");
+  });
+});
+
+describe("nameFromCookie", () => {
+  it("decodes the URI-encoded value and trims it", () => {
+    expect(nameFromCookie(encodeURIComponent("  Maria Rossi  "))).toBe(
+      "Maria Rossi",
+    );
+  });
+
+  it("returns an empty string for a missing cookie", () => {
+    expect(nameFromCookie(null)).toBe("");
+    expect(nameFromCookie(undefined)).toBe("");
+    expect(nameFromCookie("")).toBe("");
+  });
+
+  it("caps overlong names", () => {
+    expect(nameFromCookie("x".repeat(GOOGLE_NAME_MAX_LENGTH + 50))).toBe(
+      "x".repeat(GOOGLE_NAME_MAX_LENGTH),
+    );
+  });
+
+  it("returns an empty string for a malformed %-sequence", () => {
+    expect(nameFromCookie("Maria%E0%A4%A")).toBe("");
   });
 });

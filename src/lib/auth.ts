@@ -6,9 +6,11 @@ import { db } from "@db/index";
 import { user as userTable } from "@db/schema";
 import { approvalErrorMessage, requiresApproval } from "@lib/auth-approval";
 import {
+  GOOGLE_NAME_COOKIE,
   INTRODUCTION_COOKIE,
   introductionFromCookie,
   isValidIntroduction,
+  nameFromCookie,
   normalizeIntroduction,
 } from "@lib/introduction";
 import {
@@ -144,7 +146,11 @@ export const auth = betterAuth({
           const introduction = introductionFromCookie(
             ctx?.getCookie(INTRODUCTION_COOKIE),
           );
+          // The Google-mode sign-up form also lets the user pick their display
+          // name; it overrides the Google profile name when present.
+          const name = nameFromCookie(ctx?.getCookie(GOOGLE_NAME_COOKIE));
           ctx?.setCookie(INTRODUCTION_COOKIE, "", { path: "/", maxAge: 0 });
+          ctx?.setCookie(GOOGLE_NAME_COOKIE, "", { path: "/", maxAge: 0 });
 
           if (!isValidIntroduction(introduction)) {
             throw new APIError("BAD_REQUEST", {
@@ -152,7 +158,9 @@ export const auth = betterAuth({
               code: "INTRODUCTION_REQUIRED",
             });
           }
-          return { data: { ...newUser, introduction } };
+          return {
+            data: { ...newUser, introduction, ...(name ? { name } : {}) },
+          };
         },
         // Every sign-up (email/password AND Google) creates the user row here,
         // so this single hook covers both: tell the admin someone is waiting

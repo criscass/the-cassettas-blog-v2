@@ -37,7 +37,8 @@ export default function SignInForm({ lang }: Props) {
     } else if (code === "INTRODUCTION_REQUIRED") {
       // A brand-new Google user tried the sign-in page's Google button: the
       // user-create hook refused them because there's no introduction cookie.
-      setError(t.errIntroductionRequired);
+      // Send them straight to the Google-mode sign-up form (name + intro only).
+      window.location.replace(`/${lang}/sign-up?google=1`);
     } else if (code) {
       const desc = params.get("error_description") || code;
       setError(decodeURIComponent(desc));

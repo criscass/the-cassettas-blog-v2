@@ -9,13 +9,18 @@ export const INTRODUCTION_MIN_LENGTH = 10;
 export const INTRODUCTION_MAX_LENGTH = 1000;
 
 /**
- * Google sign-ups can't send the introduction in a request body — the user row
- * is created server-side during the OAuth callback. SignUpForm stashes the
- * (URI-encoded) value in this short-lived cookie before redirecting to Google;
- * the user-create database hook reads it back and stores it on the row.
+ * Google sign-ups can't send form fields in a request body — the user row is
+ * created server-side during the OAuth callback. SignUpForm's Google mode
+ * stashes the (URI-encoded) values in these short-lived cookies before
+ * redirecting to Google; the user-create database hook reads them back and
+ * stores them on the row. The name cookie lets the user choose their display
+ * name instead of inheriting the Google profile name.
  */
 export const INTRODUCTION_COOKIE = "google_signup_introduction";
+export const GOOGLE_NAME_COOKIE = "google_signup_name";
 export const INTRODUCTION_COOKIE_MAX_AGE = 10 * 60; // seconds
+
+export const GOOGLE_NAME_MAX_LENGTH = 100;
 
 /** Trimmed value that gets validated and stored. */
 export function normalizeIntroduction(value: unknown): string {
@@ -39,6 +44,19 @@ export function introductionFromCookie(
     return normalizeIntroduction(decodeURIComponent(raw));
   } catch {
     // Malformed %-sequence (cookie tampered/truncated) — treat as absent.
+    return "";
+  }
+}
+
+/**
+ * Decode the URI-encoded GOOGLE_NAME_COOKIE value. Empty string means
+ * "absent" — the hook then keeps the Google profile name instead.
+ */
+export function nameFromCookie(raw: string | null | undefined): string {
+  if (!raw) return "";
+  try {
+    return decodeURIComponent(raw).trim().slice(0, GOOGLE_NAME_MAX_LENGTH);
+  } catch {
     return "";
   }
 }
