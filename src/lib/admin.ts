@@ -23,6 +23,14 @@ export function isAdminUpdatableStatus(
   return value === "approved" || value === "rejected";
 }
 
+// Admin accounts can never be deleted through the approval queue — there is no
+// admin-management UI, so losing the last admin would lock the panel for good.
+export function canDeleteUser(
+  target: { role?: string | null } | null | undefined,
+): boolean {
+  return target != null && !isAdmin(target);
+}
+
 export type StatusUpdateResult =
   | { ok: true; status: AdminUpdatableStatus }
   | { ok: false; error: string };

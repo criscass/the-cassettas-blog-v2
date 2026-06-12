@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { eq } from "drizzle-orm";
 import { db } from "@db/index";
 import { user } from "@db/schema";
-import { isAdmin, parseStatusUpdate } from "@lib/admin";
+import { canDeleteUser, isAdmin, parseStatusUpdate } from "@lib/admin";
 
 // SSR — admin-only mutation against the user table.
 export const prerender = false;
@@ -60,4 +60,37 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
   }
 
   return json({ user: updated });
+};
+
+// DELETE /api/admin/users/:id
+// Removes the user row; sessions, accounts and comments go with it via the
+// schema's onDelete cascades. Admin accounts can't be deleted (see canDeleteUser).
+export const DELETE: APIRoute = async ({ params, locals }) => {
+  if (!locals.user) {
+    return json({ error: "You must be signed in" }, 401);
+  }
+  if (!isAdmin(locals.user)) {
+    return json({ error: "Admin access required" }, 403);
+  }
+
+  const id = params.id;
+  if (!id) {
+    return json({ error: "Missing user id" }, 400);
+  }
+
+  const [target] = await db
+    .select({ id: user.id, role: user.role })
+    .from(user)
+    .where(eq(user.id, id));
+
+  if (!target) {
+    return json({ error: "User not found" }, 404);
+  }
+  if (!canDeleteUser(target)) {
+    return json({ error: "Admin accounts can't be deleted" }, 403);
+  }
+
+  await db.delete(user).where(eq(user.id, id));
+
+  return json({ ok: true });
 };

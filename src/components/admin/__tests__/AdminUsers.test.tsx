@@ -18,6 +18,23 @@ const pendingUser: AdminUser = {
   createdAt: "2026-06-01T00:00:00.000Z",
 };
 
+const approvedUser: AdminUser = {
+  ...pendingUser,
+  id: "u2",
+  name: "Bea",
+  email: "bea@example.com",
+  status: "approved",
+};
+
+const adminUser: AdminUser = {
+  ...pendingUser,
+  id: "u3",
+  name: "Cri",
+  email: "cri@example.com",
+  role: "admin",
+  status: "approved",
+};
+
 function mockFetchOk(body: unknown) {
   const fn = vi.fn(() =>
     Promise.resolve({ ok: true, json: () => Promise.resolve(body) } as Response),
@@ -82,9 +99,70 @@ describe("AdminUsers", () => {
         body: JSON.stringify({ status: "approved" }),
       }),
     );
-    // Approve is now disabled, Reject still available.
-    expect(screen.getByRole("button", { name: /approve/i })).toBeDisabled();
-    expect(screen.getByRole("button", { name: /reject/i })).toBeEnabled();
+    // Approve/Reject are replaced by the delete button once approved.
+    expect(
+      screen.queryByRole("button", { name: /approve/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /reject/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /delete ann/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows no action buttons for an admin", () => {
+    mockFetchOk({});
+    render(<AdminUsers initialUsers={[adminUser]} />);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  it("shows only the delete button for an approved user", () => {
+    mockFetchOk({});
+    render(<AdminUsers initialUsers={[approvedUser]} />);
+    const buttons = screen.getAllByRole("button");
+    expect(buttons).toHaveLength(1);
+    expect(buttons[0]).toHaveAccessibleName(/delete bea/i);
+  });
+
+  it("does not DELETE when the confirmation is dismissed", () => {
+    const fetchMock = mockFetchOk({ ok: true });
+    vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(<AdminUsers initialUsers={[approvedUser]} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /delete bea/i }));
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(screen.getByText("Bea")).toBeInTheDocument();
+  });
+
+  it("DELETEs and removes the user after confirmation", async () => {
+    const fetchMock = mockFetchOk({ ok: true });
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    render(<AdminUsers initialUsers={[approvedUser]} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /delete bea/i }));
+
+    await waitFor(() =>
+      expect(screen.queryByText("Bea")).not.toBeInTheDocument(),
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/admin/users/u2",
+      expect.objectContaining({ method: "DELETE" }),
+    );
+  });
+
+  it("keeps the user and shows an error when the DELETE fails", async () => {
+    mockFetchFail();
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    render(<AdminUsers initialUsers={[approvedUser]} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /delete bea/i }));
+
+    await waitFor(() =>
+      expect(screen.getByRole("alert")).toHaveTextContent(/couldn't delete/i),
+    );
+    expect(screen.getByText("Bea")).toBeInTheDocument();
   });
 
   it("rolls back and shows an error when the PATCH fails", async () => {

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  canDeleteUser,
   isAdmin,
   isAdminUpdatableStatus,
   parseStatusUpdate,
@@ -16,6 +17,20 @@ describe("isAdmin", () => {
     expect(isAdmin({})).toBe(false);
     expect(isAdmin(null)).toBe(false);
     expect(isAdmin(undefined)).toBe(false);
+  });
+});
+
+describe("canDeleteUser", () => {
+  it("allows deleting regular users", () => {
+    expect(canDeleteUser({ role: "user" })).toBe(true);
+    expect(canDeleteUser({ role: null })).toBe(true);
+    expect(canDeleteUser({})).toBe(true);
+  });
+
+  it("never allows deleting an admin or a missing user", () => {
+    expect(canDeleteUser({ role: "admin" })).toBe(false);
+    expect(canDeleteUser(null)).toBe(false);
+    expect(canDeleteUser(undefined)).toBe(false);
   });
 });
 
