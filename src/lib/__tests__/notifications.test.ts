@@ -3,6 +3,7 @@ import {
   COMMENT_EXCERPT_MAX_LENGTH,
   newCommentEmail,
   newPendingUserEmail,
+  verificationEmail,
 } from "@lib/notifications";
 
 describe("newPendingUserEmail", () => {
@@ -77,5 +78,29 @@ describe("newCommentEmail", () => {
     });
     expect(email.text).toContain(`${"x".repeat(COMMENT_EXCERPT_MAX_LENGTH)}…`);
     expect(email.text).not.toContain("x".repeat(COMMENT_EXCERPT_MAX_LENGTH + 1));
+  });
+});
+
+describe("verificationEmail", () => {
+  const url = "https://example.com/api/auth/verify-email?token=abc";
+
+  it("addresses the user and includes the verification link", () => {
+    const email = verificationEmail({ name: "Maria Rossi" }, url);
+    expect(email.text).toContain("Maria Rossi");
+    expect(email.text).toContain(url);
+  });
+
+  it("is bilingual: Italian and English in one message", () => {
+    const email = verificationEmail({ name: "Maria Rossi" }, url);
+    expect(email.text.toLowerCase()).toContain("conferma il tuo indirizzo");
+    expect(email.text.toLowerCase()).toContain("confirm your email address");
+    expect(email.subject.toLowerCase()).toContain("verifica");
+    expect(email.subject.toLowerCase()).toContain("verify");
+  });
+
+  it("mentions that admin approval is still required", () => {
+    const email = verificationEmail({ name: "Maria Rossi" }, url);
+    expect(email.text).toContain("approvazione");
+    expect(email.text).toContain("admin approval");
   });
 });

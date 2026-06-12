@@ -9,7 +9,12 @@ import {
   isValidIntroduction,
   normalizeIntroduction,
 } from "@lib/introduction";
-import { newPendingUserEmail, sendAdminNotification } from "@lib/notifications";
+import {
+  newPendingUserEmail,
+  sendAdminNotification,
+  sendEmail,
+  verificationEmail,
+} from "@lib/notifications";
 
 const env = (key: string): string | undefined =>
   import.meta.env?.[key] ?? process.env[key];
@@ -33,6 +38,36 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
+    // Unverified emails can't sign in; the attempt re-sends the verification
+    // link (sendOnSignIn below), so a lost email is always recoverable.
+    requireEmailVerification: true,
+  },
+
+  emailVerification: {
+    sendOnSignUp: true,
+    sendOnSignIn: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const sent = await sendEmail(user.email, verificationEmail(user, url));
+      if (!sent) {
+        // Resend unconfigured (local dev) or send failure: surface the link in
+        // the server log so the flow stays completable.
+        console.warn(
+          `[auth] verification email NOT sent to ${user.email}; link: ${url}`,
+        );
+      }
+    },
+  },
+
+  // Let a Google sign-in attach to an existing email/password user with the
+  // same address instead of failing with `account_not_linked`. Linking still
+  // requires the local email to be verified (Better Auth default), which the
+  // verification flow above provides — so a squatter who signed up with
+  // someone else's address (and thus can't verify it) can't be linked to.
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google"],
+    },
   },
 
   // Only register Google when both credentials are present, so a missing

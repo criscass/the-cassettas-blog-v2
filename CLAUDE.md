@@ -12,8 +12,9 @@ Besides the 104 markdown posts (52 IT + 52 EN) it has:
 - **Auth + access control** (admin / approved commenter / anonymous reader)
 - **Admin panel** (`/admin`): user-approval queue + Keystatic CMS for writing posts
 - **Admin email notifications** via Resend (new pending sign-ups, new comments)
+- **Email verification** via Resend (email/password sign-ups must verify before sign-in)
 
-Sanity checks: `npm test` (60 passing), `npm run build` (114 pages), `astro check` (0 errors).
+Sanity checks: `npm test` (81 passing), `npm run build` (114 pages), `astro check` (0 errors).
 
 ## Gotchas that aren't obvious from the code
 
@@ -93,18 +94,39 @@ pages (auth runs client-side via the API route).
 - A `databaseHooks.session.create.before` hook throws `APIError('FORBIDDEN')`
   when `status !== 'approved'` — one gate covering both email/password and Google.
   The check is extracted as a pure, unit-tested function in `src/lib/auth-approval.ts`.
+- **Email verification** (independent of admin approval — both gates must pass):
+  email/password sign-ups can't sign in until they click the emailed link
+  (`requireEmailVerification`); a blocked sign-in attempt re-sends the link
+  (`sendOnSignIn`), which doubles as the "resend" path. Google accounts arrive
+  verified. The verify link lands on `/{lang}/sign-in?verified=1` (success) or
+  appends `?error=TOKEN_EXPIRED|INVALID_TOKEN` (mapped to friendly strings in
+  `SignInForm`).
+- **Account linking**: a Google sign-in attaches to an existing email/password
+  user with the same address (`account.accountLinking` + `trustedProviders:
+  ["google"]` in `src/lib/auth.ts`) — but only after the local email is
+  verified (Better Auth's `requireLocalEmailVerified` default). Without
+  linking enabled, Google login fails with `account_not_linked` for anyone
+  who registered through the email form.
 - `src/middleware.ts` enforces route guards on `/admin` + `/keystatic` (pages
   redirect/403); `/api/admin/**` self-guards with JSON 401/403. Sessions via
   Better Auth HTTP-only cookies.
 
-## Email notifications
+## Email (notifications + verification)
 
-`src/lib/notifications.ts` emails the admin on two events: a new sign-up
-landing in the approval queue (hooked in `src/lib/auth.ts`) and a new comment
-(`/api/comments` POST). Email builders are pure, unit-tested functions;
-`sendAdminNotification` is the only side-effecting piece — it **no-ops when
-`RESEND_API_KEY` or `NOTIFY_EMAIL_TO` is unset and never throws**, so a
-notification failure can never break sign-up or comment posting.
+`src/lib/notifications.ts` sends all mail through the Resend HTTP API:
+admin notifications on two events (a new sign-up landing in the approval
+queue, hooked in `src/lib/auth.ts`, and a new comment via `/api/comments`
+POST) plus the user-facing **verification email** on email/password sign-up.
+Email builders are pure, unit-tested functions; `sendEmail` is the only
+side-effecting piece — it **no-ops when `RESEND_API_KEY` is unset and never
+throws**, so a mail failure can never break sign-up or comment posting.
+When a verification email can't be sent, the link is logged server-side
+(`[auth] verification email NOT sent…`) so the flow stays completable.
+
+**Deliverability gotcha**: the default `onboarding@resend.dev` sender only
+delivers to the Resend account owner — fine for admin notifications, useless
+for verification emails to real users. Production needs `NOTIFY_EMAIL_FROM`
+set to an address on a domain verified in Resend.
 
 ## Database (Neon / Postgres, via Drizzle)
 
@@ -176,9 +198,9 @@ KEYSTATIC_GITHUB_CLIENT_ID=
 KEYSTATIC_GITHUB_CLIENT_SECRET=
 KEYSTATIC_SECRET=                   # random 32+ char string
 PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=   # optional, links UI to app install page
-RESEND_API_KEY=                     # admin email notifications (Resend); blank = skipped
+RESEND_API_KEY=                     # all outgoing email (Resend); blank = skipped, verify links logged instead
 NOTIFY_EMAIL_TO=                    # admin inbox for the notifications
-NOTIFY_EMAIL_FROM=                  # optional, defaults to onboarding@resend.dev
+NOTIFY_EMAIL_FROM=                  # sender; must be a verified-domain address for user-facing verification emails
 ```
 
 Never commit secrets; set production values in the Vercel dashboard.

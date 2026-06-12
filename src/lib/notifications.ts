@@ -1,12 +1,16 @@
 /**
- * Admin email notifications, sent through the Resend HTTP API
- * (https://resend.com) with a plain fetch — no SDK dependency.
+ * Transactional email, sent through the Resend HTTP API
+ * (https://resend.com) with a plain fetch — no SDK dependency. Covers admin
+ * notifications and the user-facing email-verification message.
  *
  * The email builders are pure functions (unit-tested without network or env),
- * mirroring src/lib/comments.ts / src/lib/admin.ts. `sendAdminNotification`
- * is the only side-effecting piece: it no-ops when RESEND_API_KEY or
- * NOTIFY_EMAIL_TO is unset and never throws, so a notification failure can
- * never break sign-up or comment posting.
+ * mirroring src/lib/comments.ts / src/lib/admin.ts. `sendEmail` is the only
+ * side-effecting piece: it no-ops when RESEND_API_KEY is unset and never
+ * throws, so an email failure can never break sign-up or comment posting.
+ *
+ * NOTE: the default `onboarding@resend.dev` sender only delivers to the
+ * Resend account owner. User-facing mail (the verification email) needs
+ * NOTIFY_EMAIL_FROM set to a verified-domain address.
  */
 
 const env = (key: string): string | undefined =>
@@ -59,20 +63,49 @@ export function newCommentEmail(
 }
 
 /**
- * Deliver a notification to the admin inbox. Returns true only when Resend
- * accepted the email; false when notifications are unconfigured or the send
- * failed (logged, never thrown).
+ * Email sent to a fresh email/password sign-up so they can verify their
+ * address. Bilingual (IT first, EN below) because the user's language isn't
+ * stored — the link itself returns them to the language they signed up from.
  */
-export async function sendAdminNotification(
+export function verificationEmail(
+  user: { name: string },
+  url: string,
+): NotificationEmail {
+  return {
+    subject: "Verifica la tua email / Verify your email — The Cassettas Blog",
+    text: `Ciao ${user.name},
+
+conferma il tuo indirizzo email aprendo questo link:
+${url}
+
+Dopo la verifica, il tuo account resta in attesa di approvazione da parte di un amministratore.
+
+---
+
+Hi ${user.name},
+
+please confirm your email address by opening this link:
+${url}
+
+After verifying, your account still awaits admin approval.
+
+— The Cassettas Blog`,
+  };
+}
+
+/**
+ * Deliver an email via Resend. Returns true only when Resend accepted it;
+ * false when Resend is unconfigured or the send failed (logged, never thrown).
+ */
+export async function sendEmail(
+  to: string,
   email: NotificationEmail,
 ): Promise<boolean> {
   const apiKey = env("RESEND_API_KEY");
-  const to = env("NOTIFY_EMAIL_TO");
   if (!apiKey || !to) return false;
 
-  // Resend's shared test sender; deliverable only to the Resend account owner,
-  // which is exactly this use case. Set NOTIFY_EMAIL_FROM to a verified-domain
-  // address to move past it.
+  // Resend's shared test sender; deliverable only to the Resend account owner.
+  // Set NOTIFY_EMAIL_FROM to a verified-domain address for user-facing mail.
   const from =
     env("NOTIFY_EMAIL_FROM") ?? "The Cassettas Blog <onboarding@resend.dev>";
 
@@ -96,4 +129,13 @@ export async function sendAdminNotification(
     console.error("[notifications] failed to send email:", error);
     return false;
   }
+}
+
+/** Deliver a notification to the admin inbox (NOTIFY_EMAIL_TO). */
+export async function sendAdminNotification(
+  email: NotificationEmail,
+): Promise<boolean> {
+  const to = env("NOTIFY_EMAIL_TO");
+  if (!to) return false;
+  return sendEmail(to, email);
 }

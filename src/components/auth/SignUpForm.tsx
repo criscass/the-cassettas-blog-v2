@@ -61,6 +61,8 @@ export default function SignUpForm({ lang }: Props) {
       email,
       password,
       introduction: normalizeIntroduction(introduction),
+      // Where the emailed verification link lands the user after verifying.
+      callbackURL: `/${lang}/sign-in?verified=1`,
     });
     setLoading(false);
     if (error) {
@@ -68,7 +70,7 @@ export default function SignUpForm({ lang }: Props) {
       return;
     }
     // autoSignIn is off and the account is `pending`, so there's no session.
-    // Show the awaiting-approval notice instead of redirecting.
+    // Show the check-your-inbox / awaiting-approval notice instead.
     setDone(true);
   }
 

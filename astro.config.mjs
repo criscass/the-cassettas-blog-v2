@@ -26,7 +26,7 @@ export default defineConfig({
       redirectToDefaultLocale: false
     }
   },
-  site: 'http://www.cassettas-reboot.xyz/',
+  site: 'https://www.cassettas-reboot.xyz/',
   security: {
     // Since Astro 5.14, SSR requests fall back to a "localhost" origin unless
     // the incoming Host header matches this allowlist. Keystatic derives the
@@ -36,6 +36,7 @@ export default defineConfig({
       { hostname: 'the-cassettas-blog-v2.vercel.app', protocol: 'https' },
       { hostname: '**.vercel.app', protocol: 'https' }, // preview deployments
       { hostname: 'www.cassettas-reboot.xyz' },
+      { hostname: 'cassettas-reboot.xyz' }, // apex; Vercel 308s it to www
       { hostname: 'localhost' }, // astro preview
     ],
   },

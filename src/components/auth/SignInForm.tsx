@@ -19,13 +19,22 @@ export default function SignInForm({ lang }: Props) {
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Show errors sent back via ?error_description= after a failed OAuth redirect.
+  // Surface feedback from redirects: failed OAuth (?error_description=),
+  // the email-verification link (?error=TOKEN_EXPIRED etc. on failure,
+  // ?verified=1 on success — Better Auth appends `error` to our callbackURL).
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const desc = params.get("error_description") || params.get("error");
+    const code = params.get("error");
+    if (code === "TOKEN_EXPIRED" || code === "INVALID_TOKEN" || code === "USER_NOT_FOUND") {
+      setError(t.errVerifyLink);
+      return;
+    }
+    const desc = params.get("error_description") || code;
     if (desc) setError(decodeURIComponent(desc));
+    else if (params.get("verified")) setNotice(t.verifiedNotice);
   }, []);
 
   function validate(): FieldErrors {
@@ -50,8 +59,11 @@ export default function SignInForm({ lang }: Props) {
     });
     setLoading(false);
     if (error) {
-      // Surface the approval-gate message (FORBIDDEN) or any other auth error.
-      setError(error.message ?? t.genericError);
+      // Unverified email: the failed attempt already re-sent the link
+      // (emailVerification.sendOnSignIn), so point the user at their inbox.
+      if (error.code === "EMAIL_NOT_VERIFIED") setError(t.errEmailNotVerified);
+      // Otherwise the approval-gate message (FORBIDDEN) or any other error.
+      else setError(error.message ?? t.genericError);
       return;
     }
     window.location.href = `/${lang}`;
@@ -74,6 +86,15 @@ export default function SignInForm({ lang }: Props) {
           className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-700 dark:text-rose-300"
         >
           {error}
+        </p>
+      )}
+
+      {!error && notice && (
+        <p
+          role="status"
+          className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm"
+        >
+          {notice}
         </p>
       )}
 

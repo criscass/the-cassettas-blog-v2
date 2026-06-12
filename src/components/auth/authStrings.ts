@@ -29,7 +29,13 @@ export const AUTH_STRINGS = {
     adminCmsLink: "Scrivi post (CMS)",
     pendingHeading: "Account creato",
     pendingBody:
-      "Il tuo account è in attesa di approvazione da parte di un amministratore. Riceverai accesso una volta approvato.",
+      "Ti abbiamo inviato un'email con un link per verificare il tuo indirizzo. Dopo la verifica, il tuo account resta in attesa di approvazione da parte di un amministratore.",
+    verifiedNotice:
+      "Email verificata! Potrai accedere non appena il tuo account sarà approvato da un amministratore.",
+    errEmailNotVerified:
+      "Devi prima verificare la tua email. Ti abbiamo appena inviato un nuovo link — controlla la posta.",
+    errVerifyLink:
+      "Il link di verifica non è valido o è scaduto. Prova ad accedere per riceverne uno nuovo.",
     genericError: "Qualcosa è andato storto. Riprova.",
     submitting: "Attendere…",
     errRequired: "Questo campo è obbligatorio.",
@@ -62,7 +68,13 @@ export const AUTH_STRINGS = {
     adminCmsLink: "Write posts (CMS)",
     pendingHeading: "Account created",
     pendingBody:
-      "Your account is awaiting admin approval. You'll be able to sign in once it's approved.",
+      "We've emailed you a link to verify your address. After verifying, your account still awaits admin approval.",
+    verifiedNotice:
+      "Email verified! You'll be able to sign in as soon as an admin approves your account.",
+    errEmailNotVerified:
+      "Please verify your email first. We've just sent you a fresh link — check your inbox.",
+    errVerifyLink:
+      "That verification link is invalid or has expired. Try signing in to receive a new one.",
     genericError: "Something went wrong. Please try again.",
     submitting: "Please wait…",
     errRequired: "This field is required.",
