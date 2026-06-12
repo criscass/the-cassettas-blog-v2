@@ -8,6 +8,11 @@ export const SITE: Site = {
   NUM_PROJECTS_ON_HOMEPAGE: 0,
 };
 
+export const WHATSAPP_GROUPS = {
+  it: "https://chat.whatsapp.com/Farqd7WmxZwDCzLLWzDD3P?mode=gi_t",
+  en: "https://chat.whatsapp.com/LG6c8NLCr9yBFs14w3iFsz?mode=gi_t",
+};
+
 export const HOME: Metadata = {
   TITLE: "Home",
   DESCRIPTION: "The Cassetta's are going through a big change",
