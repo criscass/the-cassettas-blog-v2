@@ -155,11 +155,15 @@ export const auth = betterAuth({
           const status = rows[0]?.status;
 
           if (requiresApproval(status)) {
+            // Use distinct codes so the sign-in form can show a localised
+            // message without parsing English server text. Better Auth's OAuth
+            // callback catch block requires `code` to be present so it calls
+            // redirectOnError (appending ?error=<code>) instead of re-throwing.
+            const code =
+              status === "rejected" ? "ACCOUNT_REJECTED" : "ACCOUNT_PENDING";
             throw new APIError("FORBIDDEN", {
               message: approvalErrorMessage(status),
-              // `code` must be present so Better Auth's OAuth callback catch block
-              // calls redirectOnError instead of re-throwing raw JSON.
-              code: "FORBIDDEN",
+              code,
             });
           }
 

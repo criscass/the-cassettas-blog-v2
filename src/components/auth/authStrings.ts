@@ -32,6 +32,9 @@ export const AUTH_STRINGS = {
       "Ti abbiamo inviato un'email con un link per verificare il tuo indirizzo. Dopo la verifica, il tuo account resta in attesa di approvazione da parte di un amministratore.",
     verifiedNotice:
       "Email verificata! Potrai accedere non appena il tuo account sarà approvato da un amministratore.",
+    errAccountPending:
+      "Il tuo account è in attesa di approvazione da parte di un amministratore.",
+    errAccountRejected: "Il tuo account non è stato approvato.",
     errEmailNotVerified:
       "Devi prima verificare la tua email. Ti abbiamo appena inviato un nuovo link — controlla la posta.",
     errVerifyLink:
@@ -71,6 +74,9 @@ export const AUTH_STRINGS = {
       "We've emailed you a link to verify your address. After verifying, your account still awaits admin approval.",
     verifiedNotice:
       "Email verified! You'll be able to sign in as soon as an admin approves your account.",
+    errAccountPending:
+      "Your account is awaiting admin approval.",
+    errAccountRejected: "Your account was not approved.",
     errEmailNotVerified:
       "Please verify your email first. We've just sent you a fresh link — check your inbox.",
     errVerifyLink:

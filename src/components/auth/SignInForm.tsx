@@ -30,11 +30,16 @@ export default function SignInForm({ lang }: Props) {
     const code = params.get("error");
     if (code === "TOKEN_EXPIRED" || code === "INVALID_TOKEN" || code === "USER_NOT_FOUND") {
       setError(t.errVerifyLink);
-      return;
+    } else if (code === "ACCOUNT_PENDING") {
+      setError(t.errAccountPending);
+    } else if (code === "ACCOUNT_REJECTED") {
+      setError(t.errAccountRejected);
+    } else if (code) {
+      const desc = params.get("error_description") || code;
+      setError(decodeURIComponent(desc));
+    } else if (params.get("verified")) {
+      setNotice(t.verifiedNotice);
     }
-    const desc = params.get("error_description") || code;
-    if (desc) setError(decodeURIComponent(desc));
-    else if (params.get("verified")) setNotice(t.verifiedNotice);
   }, []);
 
   function validate(): FieldErrors {
@@ -62,7 +67,8 @@ export default function SignInForm({ lang }: Props) {
       // Unverified email: the failed attempt already re-sent the link
       // (emailVerification.sendOnSignIn), so point the user at their inbox.
       if (error.code === "EMAIL_NOT_VERIFIED") setError(t.errEmailNotVerified);
-      // Otherwise the approval-gate message (FORBIDDEN) or any other error.
+      else if (error.code === "ACCOUNT_PENDING") setError(t.errAccountPending);
+      else if (error.code === "ACCOUNT_REJECTED") setError(t.errAccountRejected);
       else setError(error.message ?? t.genericError);
       return;
     }
