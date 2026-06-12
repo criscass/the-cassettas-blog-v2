@@ -72,7 +72,7 @@ export default function CommentsSection({ postId, lang }: Props) {
     let active = true;
     setLoading(true);
     setLoadError(false);
-    const params = new URLSearchParams({ postId, language: lang });
+    const params = new URLSearchParams({ postId });
     fetch(`/api/comments?${params}`)
       .then((res) => {
         if (!res.ok) throw new Error("load failed");
@@ -90,7 +90,7 @@ export default function CommentsSection({ postId, lang }: Props) {
     return () => {
       active = false;
     };
-  }, [postId, lang]);
+  }, [postId]);
 
   const user = session?.user ?? null;
   const approved = canUserComment(user);

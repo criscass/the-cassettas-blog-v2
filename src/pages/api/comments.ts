@@ -1,12 +1,8 @@
 import type { APIRoute } from "astro";
-import { and, asc, eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { db } from "@db/index";
 import { comment, user } from "@db/schema";
-import {
-  canUserComment,
-  isSupportedLanguage,
-  validateCommentInput,
-} from "@lib/comments";
+import { canUserComment, validateCommentInput } from "@lib/comments";
 import { isAdmin } from "@lib/admin";
 import { newCommentEmail, sendAdminNotification } from "@lib/notifications";
 
@@ -20,16 +16,14 @@ function json(data: unknown, status = 200): Response {
   });
 }
 
-// GET /api/comments?postId=post-00042&language=it
+// GET /api/comments?postId=post-00042
 // Returns the post's comments (oldest first) with the author's display name.
+// Posts share their id across languages, so comments are shown on both the
+// IT and EN version regardless of which one they were written on.
 export const GET: APIRoute = async ({ url }) => {
   const postId = url.searchParams.get("postId");
-  const language = url.searchParams.get("language");
 
   if (!postId) return json({ error: "Missing postId" }, 400);
-  if (!isSupportedLanguage(language)) {
-    return json({ error: "Invalid language" }, 400);
-  }
 
   const rows = await db
     .select({
@@ -40,7 +34,7 @@ export const GET: APIRoute = async ({ url }) => {
     })
     .from(comment)
     .innerJoin(user, eq(comment.userId, user.id))
-    .where(and(eq(comment.postId, postId), eq(comment.language, language)))
+    .where(eq(comment.postId, postId))
     .orderBy(asc(comment.createdAt));
 
   return json({ comments: rows });

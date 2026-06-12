@@ -14,7 +14,7 @@ Besides the 104 markdown posts (52 IT + 52 EN) it has:
 - **Admin email notifications** via Resend (new pending sign-ups, new comments)
 - **Email verification** via Resend (email/password sign-ups must verify before sign-in)
 
-Sanity checks: `npm test` (81 passing), `npm run build` (114 pages), `astro check` (0 errors).
+Sanity checks: `npm test` (88 passing), `npm run build` (114 pages), `astro check` (0 errors).
 
 ## Gotchas that aren't obvious from the code
 
@@ -79,7 +79,7 @@ npm run db:push    # apply Drizzle schema to Neon
 `export const prerender = false`. SSR routes:
 - `/api/auth/**` (Better Auth catch-all)
 - `/api/comments` (GET read / POST write, auth required)
-- `/api/admin/users/[id]` (PATCH, admin-only) + `/admin/**` pages
+- `/api/admin/users/[id]` (PATCH/DELETE, admin-only) + `/admin/**` pages
 - `/keystatic/**` (admin-gated CMS UI)
 
 Everything under `/it/` and `/en/` is prerendered, including the sign-in/sign-up
@@ -107,6 +107,11 @@ pages (auth runs client-side via the API route).
   verified (Better Auth's `requireLocalEmailVerified` default). Without
   linking enabled, Google login fails with `account_not_linked` for anyone
   who registered through the email form.
+- **Deleting a user is not a ban**: the admin panel's delete fully removes the
+  account (sessions, accounts and comments go with it via `onDelete: 'cascade'`),
+  so the same email can sign up again and land back in the pending queue. If a
+  "blocked" state is ever needed, implement it as a status change, not a delete.
+  Admin accounts can't be deleted (`canDeleteUser` in `src/lib/admin.ts`).
 - `src/middleware.ts` enforces route guards on `/admin` + `/keystatic` (pages
   redirect/403); `/api/admin/**` self-guards with JSON 401/403. Sessions via
   Better Auth HTTP-only cookies.
@@ -134,7 +139,10 @@ set to an address on a domain verified in Resend.
   default `pending`, `input: false`), `session`, `account`, `verification`.
 - Custom `comment` table: `id`, `post_id` (e.g. `"post-00042"`), `language`
   (`it`/`en`), `user_id`, `content`, `created_at`. **No status column** — every
-  comment from an approved user shows immediately.
+  comment from an approved user shows immediately. Comments are shared across
+  languages: GET filters by `post_id` only, so a comment appears on both the IT
+  and EN version of a post; `language` just records where it was written
+  (used in the admin notification).
 
 ## Content conventions
 
