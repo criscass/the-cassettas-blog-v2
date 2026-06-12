@@ -34,6 +34,10 @@ export default function SignInForm({ lang }: Props) {
       setError(t.errAccountPending);
     } else if (code === "ACCOUNT_REJECTED") {
       setError(t.errAccountRejected);
+    } else if (code === "INTRODUCTION_REQUIRED") {
+      // A brand-new Google user tried the sign-in page's Google button: the
+      // user-create hook refused them because there's no introduction cookie.
+      setError(t.errIntroductionRequired);
     } else if (code) {
       const desc = params.get("error_description") || code;
       setError(decodeURIComponent(desc));

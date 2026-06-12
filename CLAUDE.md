@@ -91,6 +91,14 @@ pages (auth runs client-side via the API route).
 - **User**: signs up as `status: 'pending'`, **cannot sign in until an admin
   approves**. Once approved, comments post immediately (no per-comment moderation).
 - **Anonymous**: read posts and comments only.
+- **Introduction gate** (anti-spam): every sign-up must say how they know the
+  admin. Email sign-ups send it in the request body (validated in the
+  before-hook); Google sign-ups stash it in the short-lived
+  `google_signup_introduction` cookie before the OAuth redirect, and the
+  `user.create.before` database hook attaches it — or refuses creation, which
+  surfaces as `?error=INTRODUCTION_REQUIRED` on the form (mapped to a friendly
+  message in both `SignUpForm` and `SignInForm`). Shared helpers live in
+  `src/lib/introduction.ts`.
 - A `databaseHooks.session.create.before` hook throws `APIError('FORBIDDEN')`
   when `status !== 'approved'` — one gate covering both email/password and Google.
   The check is extracted as a pure, unit-tested function in `src/lib/auth-approval.ts`.
@@ -121,7 +129,10 @@ pages (auth runs client-side via the API route).
 `src/lib/notifications.ts` sends all mail through the Resend HTTP API:
 admin notifications on two events (a new sign-up landing in the approval
 queue, hooked in `src/lib/auth.ts`, and a new comment via `/api/comments`
-POST) plus the user-facing **verification email** on email/password sign-up.
+POST) plus two user-facing emails: the **verification email** on
+email/password sign-up, and the **account-approved email** sent by the admin
+PATCH route (`/api/admin/users/[id]`) when a user's status transitions to
+`approved` — any sign-up method, and only on the actual transition.
 Email builders are pure, unit-tested functions; `sendEmail` is the only
 side-effecting piece — it **no-ops when `RESEND_API_KEY` is unset and never
 throws**, so a mail failure can never break sign-up or comment posting.

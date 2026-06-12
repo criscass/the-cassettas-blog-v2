@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   INTRODUCTION_MAX_LENGTH,
   INTRODUCTION_MIN_LENGTH,
+  introductionFromCookie,
   isValidIntroduction,
   normalizeIntroduction,
 } from "@lib/introduction";
@@ -39,5 +40,22 @@ describe("isValidIntroduction", () => {
       false,
     );
     expect(isValidIntroduction("x".repeat(INTRODUCTION_MAX_LENGTH))).toBe(true);
+  });
+});
+
+describe("introductionFromCookie", () => {
+  it("decodes the URI-encoded value and trims it", () => {
+    const raw = encodeURIComponent("  Sono la cugina di Luca!  ");
+    expect(introductionFromCookie(raw)).toBe("Sono la cugina di Luca!");
+  });
+
+  it("returns an empty string for a missing cookie", () => {
+    expect(introductionFromCookie(null)).toBe("");
+    expect(introductionFromCookie(undefined)).toBe("");
+    expect(introductionFromCookie("")).toBe("");
+  });
+
+  it("returns an empty string for a malformed %-sequence", () => {
+    expect(introductionFromCookie("ciao%E0%A4%A")).toBe("");
   });
 });

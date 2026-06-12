@@ -3,9 +3,13 @@ import { eq } from "drizzle-orm";
 import { db } from "@db/index";
 import { user } from "@db/schema";
 import { canDeleteUser, isAdmin, parseStatusUpdate } from "@lib/admin";
+import { accountApprovedEmail, sendEmail } from "@lib/notifications";
 
 // SSR — admin-only mutation against the user table.
 export const prerender = false;
+
+const env = (key: string): string | undefined =>
+  import.meta.env?.[key] ?? process.env[key];
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -42,6 +46,17 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
     return json({ error: parsed.error }, 400);
   }
 
+  // Read the current status first so the approval email below only goes out
+  // on the actual pending/rejected → approved transition, not on re-clicks.
+  const [previous] = await db
+    .select({ status: user.status })
+    .from(user)
+    .where(eq(user.id, id));
+
+  if (!previous) {
+    return json({ error: "User not found" }, 404);
+  }
+
   const [updated] = await db
     .update(user)
     .set({ status: parsed.status, updatedAt: new Date() })
@@ -57,6 +72,15 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
 
   if (!updated) {
     return json({ error: "User not found" }, 404);
+  }
+
+  // Tell the user they're in (covers both Google and email/password accounts).
+  // sendEmail never throws, so a mail failure can't break the approval.
+  if (updated.status === "approved" && previous.status !== "approved") {
+    await sendEmail(
+      updated.email,
+      accountApprovedEmail(updated, env("BETTER_AUTH_URL")),
+    );
   }
 
   return json({ user: updated });

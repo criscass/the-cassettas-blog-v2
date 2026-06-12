@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  accountApprovedEmail,
   COMMENT_EXCERPT_MAX_LENGTH,
   newCommentEmail,
   newPendingUserEmail,
@@ -102,5 +103,34 @@ describe("verificationEmail", () => {
     const email = verificationEmail({ name: "Maria Rossi" }, url);
     expect(email.text).toContain("approvazione");
     expect(email.text).toContain("admin approval");
+  });
+});
+
+describe("accountApprovedEmail", () => {
+  it("addresses the user", () => {
+    const email = accountApprovedEmail({ name: "Maria Rossi" });
+    expect(email.text).toContain("Maria Rossi");
+  });
+
+  it("is bilingual: Italian and English in one message", () => {
+    const email = accountApprovedEmail({ name: "Maria Rossi" });
+    expect(email.text).toContain("è stato approvato");
+    expect(email.text).toContain("has been approved");
+    expect(email.subject).toContain("approvato");
+    expect(email.subject.toLowerCase()).toContain("approved");
+  });
+
+  it("links to both sign-in pages when a base URL is given", () => {
+    const email = accountApprovedEmail(
+      { name: "Maria Rossi" },
+      "https://example.com",
+    );
+    expect(email.text).toContain("https://example.com/it/sign-in");
+    expect(email.text).toContain("https://example.com/en/sign-in");
+  });
+
+  it("omits the links without a base URL", () => {
+    const email = accountApprovedEmail({ name: "Maria Rossi" });
+    expect(email.text).not.toContain("/sign-in");
   });
 });

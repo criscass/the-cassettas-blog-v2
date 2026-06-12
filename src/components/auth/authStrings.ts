@@ -15,6 +15,10 @@ export const AUTH_STRINGS = {
     introPlaceholder: "Es. «Sono Maria, la cugina di Luca — ci siamo visti al matrimonio!»",
     introError:
       "Scrivi qualche parola in più su chi sei e come ci conosciamo.",
+    introGoogleRequired:
+      "Anche per registrarti con Google devi prima raccontarci come ci conosciamo, nel campo qui sopra.",
+    errIntroductionRequired:
+      "Per registrarti con Google usa la pagina di registrazione e raccontaci come ci conosciamo.",
     signInButton: "Accedi",
     signUpButton: "Crea account",
     googleButton: "Continua con Google",
@@ -57,6 +61,10 @@ export const AUTH_STRINGS = {
     introPlaceholder: "E.g. “I'm Maria, Luca's cousin — we met at the wedding!”",
     introError:
       "Please write a few more words about who you are and how we know each other.",
+    introGoogleRequired:
+      "Signing up with Google also requires telling us how we know each other — fill in the field above first.",
+    errIntroductionRequired:
+      "To sign up with Google, please use the sign-up page and tell us how we know each other.",
     signInButton: "Sign in",
     signUpButton: "Create account",
     googleButton: "Continue with Google",

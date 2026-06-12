@@ -29,7 +29,8 @@ export function newPendingUserEmail(
   baseUrl?: string,
 ): NotificationEmail {
   const approveLink = baseUrl ? `\n\nApprove or reject: ${baseUrl}/admin/users` : "";
-  // Email sign-ups always carry an introduction; Google sign-ups don't.
+  // Both email and Google sign-ups carry an introduction now; stay defensive
+  // for older Google accounts created before the gate existed.
   const introduction = newUser.introduction
     ? `\n\nTheir introduction:\n${newUser.introduction}`
     : "";
@@ -88,6 +89,34 @@ please confirm your email address by opening this link:
 ${url}
 
 After verifying, your account still awaits admin approval.
+
+— The Cassettas Blog`,
+  };
+}
+
+/**
+ * Email sent to a user when an admin approves their account (both Google and
+ * email/password sign-ups). Bilingual like the verification email — the user's
+ * language isn't stored.
+ */
+export function accountApprovedEmail(
+  user: { name: string },
+  baseUrl?: string,
+): NotificationEmail {
+  const itLink = baseUrl ? `\nAccedi: ${baseUrl}/it/sign-in` : "";
+  const enLink = baseUrl ? `\nSign in: ${baseUrl}/en/sign-in` : "";
+  return {
+    subject:
+      "Il tuo account è stato approvato / Your account has been approved — The Cassettas Blog",
+    text: `Ciao ${user.name},
+
+il tuo account è stato approvato — ora puoi accedere e commentare i post.${itLink}
+
+---
+
+Hi ${user.name},
+
+your account has been approved — you can now sign in and comment on posts.${enLink}
 
 — The Cassettas Blog`,
   };

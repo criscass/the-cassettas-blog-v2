@@ -6,6 +6,8 @@ import { db } from "@db/index";
 import { user as userTable } from "@db/schema";
 import { approvalErrorMessage, requiresApproval } from "@lib/auth-approval";
 import {
+  INTRODUCTION_COOKIE,
+  introductionFromCookie,
   isValidIntroduction,
   normalizeIntroduction,
 } from "@lib/introduction";
@@ -96,9 +98,10 @@ export const auth = betterAuth({
         defaultValue: "pending",
         input: false, // never settable by the client
       },
-      // Anti-spam: email sign-ups must explain how they know the admin.
-      // `required: false` because Google sign-ups never send it — the email
-      // sign-up path enforces it in the before-hook below.
+      // Anti-spam: every sign-up must explain how they know the admin.
+      // `required: false` because Google sign-ups don't send it in the body —
+      // the email path enforces it in the before-hook below; the Google path
+      // carries it in a cookie, read by the user-create database hook.
       introduction: {
         type: "string",
         required: false,
@@ -127,6 +130,30 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
+        // Google sign-ups bypass the /sign-up/email before-hook above, so the
+        // anti-spam introduction gate for them lives here: SignUpForm stashes
+        // the text in a short-lived cookie before redirecting to Google, and
+        // this hook attaches it to the new user row. Without a valid value the
+        // sign-up is refused — Better Auth's OAuth callback catches the
+        // APIError and redirects to errorCallbackURL with ?error=<message>,
+        // which is why the message is the underscore code itself (the catch in
+        // link-account.ts forwards `e.message`, not `e.body.code`).
+        before: async (newUser, ctx) => {
+          if (isValidIntroduction(newUser.introduction)) return; // email path
+
+          const introduction = introductionFromCookie(
+            ctx?.getCookie(INTRODUCTION_COOKIE),
+          );
+          ctx?.setCookie(INTRODUCTION_COOKIE, "", { path: "/", maxAge: 0 });
+
+          if (!isValidIntroduction(introduction)) {
+            throw new APIError("BAD_REQUEST", {
+              message: "INTRODUCTION_REQUIRED",
+              code: "INTRODUCTION_REQUIRED",
+            });
+          }
+          return { data: { ...newUser, introduction } };
+        },
         // Every sign-up (email/password AND Google) creates the user row here,
         // so this single hook covers both: tell the admin someone is waiting
         // in the approval queue. sendAdminNotification never throws, so a mail

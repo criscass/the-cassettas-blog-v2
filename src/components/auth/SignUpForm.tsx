@@ -1,7 +1,9 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { signIn, signUp } from "@lib/auth-client";
 import { isValidEmail, PASSWORD_MIN_LENGTH } from "@lib/form-validation";
 import {
+  INTRODUCTION_COOKIE,
+  INTRODUCTION_COOKIE_MAX_AGE,
   INTRODUCTION_MIN_LENGTH,
   isValidIntroduction,
   normalizeIntroduction,
@@ -28,8 +30,27 @@ export default function SignUpForm({ lang }: Props) {
   const [introduction, setIntroduction] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+
+  // Surface feedback from the Google OAuth redirect (handleGoogle passes this
+  // page as errorCallbackURL): ACCOUNT_PENDING means the account WAS created
+  // and is awaiting approval (a notice, not an error).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("error");
+    if (code === "ACCOUNT_PENDING") {
+      setNotice(t.errAccountPending);
+    } else if (code === "ACCOUNT_REJECTED") {
+      setError(t.errAccountRejected);
+    } else if (code === "INTRODUCTION_REQUIRED") {
+      setError(t.introGoogleRequired);
+    } else if (code) {
+      const desc = params.get("error_description") || code;
+      setError(decodeURIComponent(desc));
+    }
+  }, []);
 
   function clearFieldError(field: keyof FieldErrors) {
     setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -76,9 +97,27 @@ export default function SignUpForm({ lang }: Props) {
 
   async function handleGoogle() {
     setError(null);
+    // Google sign-ups need the introduction too: the user row is created
+    // server-side in the OAuth callback, so the value travels in a short-lived
+    // cookie that the user-create hook reads back (see src/lib/auth.ts).
+    const normalized = normalizeIntroduction(introduction);
+    if (!isValidIntroduction(normalized)) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        introduction: normalized === "" ? t.errRequired : t.introError,
+      }));
+      setError(t.introGoogleRequired);
+      return;
+    }
+    document.cookie = `${INTRODUCTION_COOKIE}=${encodeURIComponent(normalized)}; path=/; max-age=${INTRODUCTION_COOKIE_MAX_AGE}; samesite=lax`;
     // Google creates the user, then the session-create hook blocks the session
-    // for the new `pending` account — the user lands back with the gate message.
-    await signIn.social({ provider: "google", callbackURL: `/${lang}` });
+    // for the new `pending` account — the user lands back here (?error=…),
+    // where the effect above shows the awaiting-approval notice.
+    await signIn.social({
+      provider: "google",
+      callbackURL: `/${lang}`,
+      errorCallbackURL: `/${lang}/sign-up`,
+    });
   }
 
   if (done) {
@@ -103,6 +142,15 @@ export default function SignUpForm({ lang }: Props) {
           className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-700 dark:text-rose-300"
         >
           {error}
+        </p>
+      )}
+
+      {!error && notice && (
+        <p
+          role="status"
+          className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm"
+        >
+          {notice}
         </p>
       )}
 
