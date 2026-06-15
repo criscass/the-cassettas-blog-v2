@@ -54,19 +54,24 @@ const blog = (await getCollection("blog"))
 			</section>
 
 			<section class="animate space-y-4">
-				<h2 class="font-semibold text-black dark:text-white">Restiamo in contatto</h2>
+				<h2 class="text-2xl font-semibold text-black dark:text-white">Restiamo in contatto</h2>
+				<article>
+					<p>
+						Hai qualcosa da dirci? Ci farebbe piacere sentirti — inviaci un messaggio e ti risponderemo.
+					</p>
+				</article>
+				<a
+					href="/it/contact"
+					class="not-prose inline-block rounded-lg border border-accent px-4 py-2 font-medium text-accent no-underline transition-colors hover:bg-accent/10"
+				>
+					Contattaci
+				</a>
 				<article>
 					<p>
 						Vuoi sapere quando pubblichiamo un nuovo post? Unisciti al nostro gruppo WhatsApp — lo usiamo solo per
 						annunciare i nuovi post. Entrerai dopo una rapida approvazione.
 					</p>
 				</article>
-				<a
-					href="/it/contact"
-					class="not-prose mr-3 inline-block rounded-lg border border-accent px-4 py-2 font-medium text-accent no-underline transition-colors hover:bg-accent/10"
-				>
-					Contattaci
-				</a>
 				<a
 					href={WHATSAPP_GROUPS.it}
 					target="_blank"
