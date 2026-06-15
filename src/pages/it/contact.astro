@@ -1,0 +1,19 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
+import ContactForm from "@components/ContactForm.tsx";
+---
+
+<Layout title="Contatti" description="Inviaci un messaggio">
+	<Container>
+		<div class="space-y-8">
+			<section class="animate space-y-4">
+				<h1 class="font-semibold text-black dark:text-white">Contattaci</h1>
+				<p>Hai qualcosa da dirci? Inviaci un messaggio e ti risponderemo.</p>
+			</section>
+			<section class="animate">
+				<ContactForm client:load lang="it" />
+			</section>
+		</div>
+	</Container>
+</Layout>

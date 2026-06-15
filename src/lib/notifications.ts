@@ -19,6 +19,8 @@ const env = (key: string): string | undefined =>
 export type NotificationEmail = {
   subject: string;
   text: string;
+  /** Optional Reply-To; lets the recipient reply straight to the sender. */
+  replyTo?: string;
 };
 
 export const COMMENT_EXCERPT_MAX_LENGTH = 300;
@@ -60,6 +62,23 @@ export function newCommentEmail(
   return {
     subject: `New comment by ${input.authorName} on ${input.postId} (${input.language})`,
     text: `${input.authorName} commented on ${input.postId} (${input.language}):\n\n${excerpt}${postLink}`,
+  };
+}
+
+/**
+ * Email sent to the admin when a reader submits the public contact form.
+ * Sets Reply-To to the reader's address so a reply goes straight to them,
+ * keeping the admin's own address off the page.
+ */
+export function contactFormEmail(input: {
+  name: string;
+  email: string;
+  message: string;
+}): NotificationEmail {
+  return {
+    subject: `New contact message from ${input.name}`,
+    text: `${input.name} (${input.email}) sent a message via the contact form:\n\n${input.message}`,
+    replyTo: input.email,
   };
 }
 
@@ -145,7 +164,13 @@ export async function sendEmail(
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from, to, subject: email.subject, text: email.text }),
+      body: JSON.stringify({
+        from,
+        to,
+        subject: email.subject,
+        text: email.text,
+        ...(email.replyTo ? { reply_to: email.replyTo } : {}),
+      }),
     });
     if (!res.ok) {
       console.error(
