@@ -1,13 +1,11 @@
 import { config, collection, fields } from '@keystatic/core';
 
-// GitHub storage in production (commits posts to repo → triggers Vercel rebuild);
-// local storage in dev (reads/writes files directly, no GitHub auth needed).
-const storage = import.meta.env.PROD
-  ? ({
-      kind: 'github' as const,
-      repo: { owner: 'criscass', name: 'the-cassettas-blog-v2' },
-    })
-  : ({ kind: 'local' as const });
+// Local-first authoring: Keystatic always reads/writes files in the working
+// directory (no GitHub auth needed). Posts are reviewed locally, then committed
+// and pushed by hand — never committed straight to the repo by the live admin.
+// (As a result the deployed /keystatic can't persist changes: the serverless
+// filesystem is ephemeral. Author locally via `npm run dev`.)
+const storage = { kind: 'local' as const };
 
 const postSchema = (defaultLanguage: 'it' | 'en') => ({
   title: fields.slug({ name: { label: 'Title' } }),
@@ -18,17 +16,18 @@ const postSchema = (defaultLanguage: 'it' | 'en') => ({
   }),
   draft: fields.checkbox({ label: 'Draft', defaultValue: false }),
   language: fields.text({ label: 'Language', defaultValue: defaultLanguage }),
-  content: fields.document({
+  // `fields.mdx` with `extension: 'md'` writes plain `.md` files (Keystatic's
+  // rich-text fields otherwise emit `.mdoc`/`.mdx`, which the Astro content
+  // loader — globbing `**/*.{md,mdx}` — would only partly pick up). This keeps
+  // CMS posts identical in shape to the hand-written `.md` posts.
+  content: fields.mdx({
     label: 'Content',
-    formatting: true,
-    dividers: true,
-    links: true,
-    // Images are stored in public/uploads/ and served at /uploads/<filename>.
-    // They won't go through Astro's image pipeline, but that's acceptable for
-    // CMS-authored posts. Relative-path images in existing markdown still work.
-    images: {
-      directory: 'public/uploads',
-      publicPath: '/uploads/',
+    extension: 'md',
+    options: {
+      // No `directory`/`publicPath`: images are co-located next to the post's
+      // index.md and referenced with a relative path, so they go through
+      // Astro's image pipeline like the relative images in hand-written posts.
+      image: {},
     },
   }),
 });
