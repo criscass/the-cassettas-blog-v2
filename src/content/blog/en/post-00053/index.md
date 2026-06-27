@@ -36,7 +36,7 @@ Little by little, partly out of necessity, partly because things reveal themselv
 
 ![Matteo and Brunella](../../../../assets/images/post-53/pic-4.jpg "Out and about in the Groene Hart with Matteo and Brunella")
 
-Around Alphen you see plenty of houses decked out in orange and with the symbols of the Dutch national football team. And the flags are everywhere. The Dutch are as football-mad as the Italians, and they love gathering in groups to watch the World Cup matches in which the Netherlands plays. Two years ago we watched a few of the Euros matches, when we were in Zwolle doing pet-sitting. We're watching a lot of matches and we're rooting for the Netherlands a bit too, but maybe more for Spain, Brazil, Egypt, and Saudi Arabia. The last two for sentimental reasons of Gemma's and Sophia's.
+Around Alphen you see plenty of houses decked out in orange and with the symbols of the Dutch national football team. And the flags are everywhere. The Dutch are as football-mad as the Italians, and they love gathering in groups to watch the World Cup matches in which the Netherlands plays. Two years ago we watched a few of the Euros matches, when we were in Zwolle doing pet-sitting. We're watching a lot of matches and we're rooting for the Netherlands a bit too, but mainly for South Africa, and then a bit for Spain, Brazil, Egypt, and Saudi Arabia. The last two for sentimental reasons of Gemma's and Sophia's.
 
 
 In the morning, before going to work, I've started stopping by the gym for an hour of training. The gym isn't far from Alphen station. Once I've worked up a sweat, I take a nice shower, have a coffee, and then hop back on the bike to go park at the station, in the huge bike-parking apple, where I catch the train to work.
@@ -48,7 +48,8 @@ I've been following this routine for a month and a half now, five days a week, a
 
 ![Inside the big apple](../../../../assets/images/post-53/pic-7.jpg "The solution is brilliant, it's a spiral that can fit a lot of bikes")
 
-My job is going well. Every day there's some problem to solve between one chat and another with colleagues or guests. When I move from one hotel to the next, I make my way through the hordes of tourists and locals. Den Haag is full of life this time of year, but it's a pleasant, energizing chaos. Within about fifty meters of the hotel there are some Italian fast-food spots. One of them makes stuffed Tuscan schiacciata. They look good, but I haven't tried them yet. A schiacciata with ham and cheese costs 17 euros.
+My job is going well.
+Every day there's some problem to solve between one chat and another with colleagues or guests. When I move from one hotel to the next, I make my way through the hordes of tourists and locals. Den Haag is full of life this time of year, but it's a pleasant, energizing chaos. Within about fifty meters of the hotel there are some Italian fast-food spots. One of them makes stuffed Tuscan schiacciata. They look good, but I haven't tried them yet. A schiacciata with ham and cheese costs 17 euros.
 For lunch I always eat the leftovers from the guests' breakfast that would otherwise be thrown away.
 Little baked sausages, cooked ham, brie, smoked salmon, hard-boiled eggs, orange juice, fruit.\
 All for free!\
