@@ -24,10 +24,31 @@ const postSchema = (defaultLanguage: 'it' | 'en') => ({
     label: 'Content',
     extension: 'md',
     options: {
-      // No `directory`/`publicPath`: images are co-located next to the post's
-      // index.md and referenced with a relative path, so they go through
-      // Astro's image pipeline like the relative images in hand-written posts.
-      image: {},
+      image: {
+        // Store uploads beside the post's index.md, referenced relatively, so
+        // they go through Astro's image pipeline like hand-written posts.
+        //
+        // `directory` (NOT `publicPath`) is what controls the on-disk location:
+        // Keystatic writes the binary to `{directory}/{slug}/{filename}` — and
+        // since the collection path is `src/content/blog/{lang}/*/index`, the
+        // slug is the post folder, so this lands the file right next to
+        // index.md. Leaving `publicPath` unset keeps the markdown reference a
+        // bare `pic-1.jpg` (a relative path Astro resolves against index.md).
+        //
+        // Omitting `directory` is the trap: Keystatic then nests the upload
+        // under the path's trailing `index` segment + field key, i.e.
+        // `{slug}/index/content/pic-1.jpg`, which the bare reference can't find
+        // → `[ImageNotFound] Could not find requested image pic-1.jpg`.
+        directory: `src/content/blog/${defaultLanguage}`,
+        // Keystatic's image dialog shows an "Alt text" field by default but
+        // hides the markdown `title` attribute unless a schema field is given
+        // for it. We surface it as "Caption" because remark-image-captions.js
+        // turns an image's title into an italic caption line underneath it —
+        // the same role the hand-written posts' quoted title string played.
+        schema: {
+          title: fields.text({ label: 'Caption (optional)' }),
+        },
+      },
     },
   }),
 });

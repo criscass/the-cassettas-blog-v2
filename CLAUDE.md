@@ -21,25 +21,36 @@ Sanity checks: `npm test` (88 passing), `npm run build` (114 pages), `astro chec
 - **No admin bootstrap UI** (by design — the first admin can't approve itself).
   After `db:push` + sign-up, manually set that row's `role = 'admin'` and
   `status = 'approved'` in the DB to exercise the admin panel.
-- **Keystatic production setup**: `keystatic.config.ts` uses `github` storage in
-  production. Before using the CMS in production you must:
-  1. Create a **GitHub App** (not a classic OAuth App), callback URL
-     `https://your-site/api/keystatic/github/oauth/callback`, with read & write
-     permission on repository **Contents**, and install it on the repo.
-     Easiest: temporarily set `kind: 'github'` locally and visit
-     `/keystatic/setup` — Keystatic creates the app and writes its env vars to `.env`.
-  2. Add `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET` and
-     `KEYSTATIC_SECRET` (random, ≥32 chars — `/api/keystatic/github/login` 500s
-     without it) to the Vercel env vars, then **redeploy** (env changes don't
-     apply to existing deployments).
-  3. In local dev the config uses `local` storage — no GitHub credentials needed.
-  4. `security.allowedDomains` in `astro.config.mjs` must list every domain the
-     site is served from. Since Astro 5.14, unlisted hosts make SSR requests see
-     a `localhost` origin, so Keystatic sends `redirect_uri=https://localhost/…`
-     to GitHub, which rejects it ("redirect_uri is not associated").
-- **Keystatic image uploads** store files in `public/uploads/` (committed to the
-  repo in GitHub mode, written locally in local mode). They are served at
-  `/uploads/<filename>` and bypass Astro's image optimization pipeline.
+- **Keystatic is local-first**: `keystatic.config.ts` uses `kind: 'local'`
+  unconditionally (no GitHub storage). Authoring happens locally via
+  `npm run dev` → `/keystatic`, which writes straight into the working tree; you
+  then review, commit and push by hand. The deployed `/keystatic` can't persist
+  changes (Vercel's serverless filesystem is ephemeral) — don't author there.
+  Because there's no GitHub storage, the `KEYSTATIC_GITHUB_*` env vars and a
+  GitHub App are no longer needed.
+- **New posts are `.md`, not `.mdoc`**: the content field is
+  `fields.mdx({ extension: 'md' })`. Keystatic's rich-text fields otherwise emit
+  Markdoc (`.mdoc`), which the Astro loader (globbing `**/*.{md,mdx}` in
+  `src/content.config.ts`) ignores — so such posts silently never render.
+- **Keystatic post folders are slug-named**: `slugField: 'title'` derives the
+  `*/index` folder name from the title (e.g. `my-post-title/`), not the
+  `post-XXXXX` convention. To match existing posts, set the **Slug** field
+  manually (e.g. `post-00053`) when creating a post — Keystatic has no
+  auto-increment.
+- **Keystatic images co-locate with the post — via `directory`, not by omitting
+  it**: the content field's image config sets
+  `directory: 'src/content/blog/{lang}'` (and leaves `publicPath` unset), so
+  uploads land beside the post's `index.md` and are referenced relatively (e.g.
+  `![](pic-1.jpg)`) — going through Astro's image optimization pipeline like the
+  relative images in hand-written posts. The two options are independent:
+  `directory` controls the on-disk write (Keystatic stores at
+  `{directory}/{slug}/{filename}`, and the slug is the post folder, so the file
+  lands next to `index.md`); `publicPath` controls the markdown reference (unset
+  → bare `pic-1.jpg`). **Don't omit `directory`** — because the collection path
+  ends in `/index`, an unset `directory` makes Keystatic nest the upload at
+  `{slug}/index/content/pic-1.jpg`, which the bare reference can't resolve →
+  `[ImageNotFound] Could not find requested image pic-1.jpg` and the post page
+  fails to build/render.
 
 ## Tech stack
 
@@ -52,8 +63,8 @@ Sanity checks: `npm test` (88 passing), `npm run build` (114 pages), `astro chec
 | Auth | Better Auth (email+password + Google OAuth) |
 | Database | Neon serverless PostgreSQL |
 | ORM | Drizzle (`drizzle-orm` + `drizzle-kit`) |
-| CMS | Keystatic (`@keystatic/core` + `@keystatic/astro`) |
-| Image upload | Vercel Blob (`@vercel/blob`) |
+| CMS | Keystatic (`@keystatic/core` + `@keystatic/astro`), local storage |
+| Image upload | Keystatic, co-located beside the post (Astro image pipeline) |
 | Email | Resend HTTP API via plain `fetch` (`src/lib/notifications.ts`, no SDK) |
 | Class utils | `clsx` + `tailwind-merge` |
 
@@ -168,6 +179,15 @@ set to an address on a domain verified in Resend.
 - Path aliases: `@*` → `./src/*` (e.g. `@components/Foo`, `@lib/utils`).
 - Older posts use mixed image naming (`post-1`…`post-41`, then `post-00042`+) —
   preserve existing names; use the zero-padded form for new posts.
+- **Translating IT → EN**: posts are written in Italian first; the
+  `/translate-post` skill (`.claude/skills/translate-post/SKILL.md`) mirrors one
+  into English. Run `/translate-post post-XXXXX` — it reads
+  `blog/it/post-XXXXX/index.md` and writes `blog/en/post-XXXXX/index.md` (same
+  folder name, same shared image paths) as an idiomatic translation: translates
+  `title`/`description`, image alt text and `"caption"` titles; keeps `date`/
+  `draft`; sets `language: "en"`; preserves all other Markdown. Images aren't
+  copied (they're shared assets). It doesn't build or commit — review the diff
+  and commit both folders by hand.
 
 ## Design system
 
@@ -214,11 +234,6 @@ BETTER_AUTH_SECRET=                 # random 32-char string
 BETTER_AUTH_URL=                    # site base URL
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
-BLOB_READ_WRITE_TOKEN=
-KEYSTATIC_GITHUB_CLIENT_ID=
-KEYSTATIC_GITHUB_CLIENT_SECRET=
-KEYSTATIC_SECRET=                   # random 32+ char string
-PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=   # optional, links UI to app install page
 RESEND_API_KEY=                     # all outgoing email (Resend); blank = skipped, verify links logged instead
 NOTIFY_EMAIL_TO=                    # admin inbox for the notifications
 NOTIFY_EMAIL_FROM=                  # sender; must be a verified-domain address for user-facing verification emails
