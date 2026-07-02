@@ -3,6 +3,7 @@ import {
   canUserComment,
   COMMENT_MAX_LENGTH,
   isSupportedLanguage,
+  POST_ID_MAX_LENGTH,
   validateCommentInput,
 } from "@lib/comments";
 
@@ -51,6 +52,15 @@ describe("validateCommentInput", () => {
   it("rejects a missing/blank postId", () => {
     expect(validateCommentInput({ ...valid, postId: "" }).ok).toBe(false);
     expect(validateCommentInput({ ...valid, postId: undefined }).ok).toBe(false);
+  });
+
+  it("rejects a postId with an invalid charset or over the length cap", () => {
+    expect(validateCommentInput({ ...valid, postId: "post-00042/../x" }).ok).toBe(false);
+    expect(validateCommentInput({ ...valid, postId: "POST-00042" }).ok).toBe(false);
+    expect(validateCommentInput({ ...valid, postId: "post 00042" }).ok).toBe(false);
+    expect(
+      validateCommentInput({ ...valid, postId: `post-${"0".repeat(POST_ID_MAX_LENGTH)}` }).ok,
+    ).toBe(false);
   });
 
   it("rejects an unsupported language", () => {

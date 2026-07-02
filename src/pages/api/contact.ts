@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { isHoneypotTripped, validateContactInput } from "@lib/contact";
 import { contactFormEmail, sendAdminNotification } from "@lib/notifications";
+import { createRateLimiter } from "@lib/rate-limit";
 
 // SSR — sends mail per request.
 export const prerender = false;
@@ -12,21 +13,9 @@ function json(data: unknown, status = 200): Response {
   });
 }
 
-// Lightweight in-memory sliding-window rate limit, keyed by client IP.
-// Caveat: serverless instances don't share memory and recycle, so this only
-// throttles bursts on a single warm instance — adequate for a small blog, not
-// a hard guarantee. Pair it with the honeypot rather than relying on it alone.
-const RATE_LIMIT_MAX = 5;
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
-const hits = new Map<string, number[]>();
-
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(key) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-  recent.push(now);
-  hits.set(key, recent);
-  return recent.length > RATE_LIMIT_MAX;
-}
+// Rate limit keyed by client IP; pair it with the honeypot rather than
+// relying on it alone (see the caveat in @lib/rate-limit).
+const isRateLimited = createRateLimiter(5, 10 * 60 * 1000); // 5 per 10 minutes
 
 // POST /api/contact  body: { name, email, message, website (honeypot) }
 export const POST: APIRoute = async ({ request, clientAddress }) => {

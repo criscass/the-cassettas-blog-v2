@@ -5,9 +5,13 @@ import { comment, user } from "@db/schema";
 import { canUserComment, validateCommentInput } from "@lib/comments";
 import { isAdmin } from "@lib/admin";
 import { newCommentEmail, sendAdminNotification } from "@lib/notifications";
+import { createRateLimiter } from "@lib/rate-limit";
 
 // SSR — reads/writes the database per request.
 export const prerender = false;
+
+// Per-user comment throttle (see the serverless caveat in @lib/rate-limit).
+const isRateLimited = createRateLimiter(10, 10 * 60 * 1000); // 10 per 10 minutes
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -49,6 +53,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
   if (!canUserComment(currentUser)) {
     return json({ error: "Your account is not approved to comment" }, 403);
+  }
+  if (isRateLimited(currentUser.id)) {
+    return json({ error: "Too many comments — please try again later." }, 429);
   }
 
   let body: unknown;

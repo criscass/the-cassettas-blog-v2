@@ -26,6 +26,18 @@ const env = (key: string): string | undefined =>
 const googleClientId = env("GOOGLE_CLIENT_ID");
 const googleClientSecret = env("GOOGLE_CLIENT_SECRET");
 
+// Better Auth signs session cookies with `secret` and keys its origin/CSRF
+// checks off `baseURL` — running without either silently weakens both, so
+// refuse to boot in production instead.
+if (
+  import.meta.env.PROD &&
+  (!env("BETTER_AUTH_URL") || !env("BETTER_AUTH_SECRET"))
+) {
+  throw new Error(
+    "[auth] BETTER_AUTH_URL and BETTER_AUTH_SECRET must be set in production",
+  );
+}
+
 export const auth = betterAuth({
   baseURL: env("BETTER_AUTH_URL"),
   secret: env("BETTER_AUTH_SECRET"),
@@ -53,11 +65,19 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }) => {
       const sent = await sendEmail(user.email, verificationEmail(user, url));
       if (!sent) {
-        // Resend unconfigured (local dev) or send failure: surface the link in
-        // the server log so the flow stays completable.
-        console.warn(
-          `[auth] verification email NOT sent to ${user.email}; link: ${url}`,
-        );
+        if (env("RESEND_API_KEY")) {
+          // Real send failure: the URL is a live verification token, so it
+          // must never reach the (production) logs.
+          console.warn(
+            `[auth] verification email to ${user.email} failed to send`,
+          );
+        } else {
+          // Resend unconfigured (local dev): surface the link in the server
+          // log so the flow stays completable.
+          console.warn(
+            `[auth] verification email NOT sent to ${user.email}; link: ${url}`,
+          );
+        }
       }
     },
   },

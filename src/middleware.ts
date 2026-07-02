@@ -1,6 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { auth } from "@lib/auth";
-import { isAdminRoute } from "@lib/routes";
+import { isAdminRoute, isSameOrigin, requiresSameOrigin } from "@lib/routes";
 
 // Build a locale-aware sign-in URL so the redirect keeps the user's language.
 function signInUrl(pathname: string): string {
@@ -16,6 +16,19 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.locals.user = null;
     context.locals.session = null;
     return next();
+  }
+
+  // CSRF defense-in-depth for our own state-changing API routes (Better Auth
+  // covers /api/auth/** itself): reject anything whose Origin doesn't match
+  // the request host, before touching the session.
+  if (
+    requiresSameOrigin(context.url.pathname, context.request.method) &&
+    !isSameOrigin(context.request.headers.get("origin"), context.url)
+  ) {
+    return new Response(JSON.stringify({ error: "Cross-origin request rejected" }), {
+      status: 403,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const result = await auth.api.getSession({ headers: context.request.headers });

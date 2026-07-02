@@ -8,6 +8,11 @@ import { requiresApproval } from "@lib/auth-approval";
  */
 
 export const COMMENT_MAX_LENGTH = 2000;
+// Post ids are folder names like `post-00042`; the charset check keeps
+// arbitrary strings out of the table (and out of the admin email) without
+// hard-coding the exact numbering scheme.
+export const POST_ID_MAX_LENGTH = 64;
+const POST_ID_PATTERN = /^[a-z0-9-]+$/;
 export const SUPPORTED_LANGUAGES = ["it", "en"] as const;
 export type CommentLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
@@ -51,6 +56,13 @@ export function validateCommentInput(input: CommentInput): ValidationResult {
   if (typeof postId !== "string" || postId.trim() === "") {
     return { ok: false, error: "Missing postId" };
   }
+  const trimmedPostId = postId.trim();
+  if (
+    trimmedPostId.length > POST_ID_MAX_LENGTH ||
+    !POST_ID_PATTERN.test(trimmedPostId)
+  ) {
+    return { ok: false, error: "Invalid postId" };
+  }
   if (typeof language !== "string" || !isSupportedLanguage(language)) {
     return { ok: false, error: "Invalid language" };
   }
@@ -71,6 +83,6 @@ export function validateCommentInput(input: CommentInput): ValidationResult {
 
   return {
     ok: true,
-    value: { postId: postId.trim(), language, content: trimmed },
+    value: { postId: trimmedPostId, language, content: trimmed },
   };
 }
